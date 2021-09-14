@@ -1,0 +1,12 @@
+pub fn i32_to_f32(source: i32) -> f32 {
+    unsafe { std::mem::transmute::<i32, f32>(source) }
+}
+
+pub fn f32_to_i32(source: f32) -> i32 {
+    unsafe { std::mem::transmute::<f32, i32>(source) }
+}
+
+
+pub fn i64_to_i32seq(source: i64) -> [i32; 2] {
+    unsafe { std::mem::transmute::<i64, [i32; 2]>(source) }
+}
