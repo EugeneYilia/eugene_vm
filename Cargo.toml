@@ -7,3 +7,4 @@ authors = ["EugeneLiu <583076221@qq.com>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+byteorder = "1.4.3"
