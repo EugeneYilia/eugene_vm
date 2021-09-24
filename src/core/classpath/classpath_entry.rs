@@ -17,7 +17,7 @@ impl ClasspathEntry {
             let path_buf_vec = read_dir(base_path)
                 .unwrap()
                 .map(|entry_result| entry_result.unwrap())
-                .map(|entry| entry.path())
+                .map(|entry| entry.path());
                 .filter(|path_buf| {
                     path_buf
                         .extension()

@@ -1,4 +1,5 @@
 use crate::core::classpath::classpath_entry::ClasspathEntry;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 pub struct ClassPath {
@@ -19,6 +20,6 @@ impl ClassPath {
     }
 
     fn parse_user_classpath(user_classpath: Option<String>) -> ClasspathEntry {
-        Cla
+
     }
 }
