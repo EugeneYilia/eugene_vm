@@ -1,5 +1,0 @@
-# TiDB
-
-### TiKV
-
-### TiKV

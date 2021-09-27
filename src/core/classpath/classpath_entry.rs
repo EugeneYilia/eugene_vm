@@ -17,14 +17,17 @@ impl ClasspathEntry {
             let path_buf_vec = read_dir(base_path)
                 .unwrap()
                 .map(|entry_result| entry_result.unwrap())
-                .map(|entry| entry.path());
+                .map(|entry| entry.path())
                 .filter(|path_buf| {
                     path_buf
                         .extension()
-                        .map(|ext_str_option| ext_str_option.to_str().unwrap())
+                        // 只保留后缀为jar的文件
+                        .map(|ext_str_option| ext_str_option.to_str().unwrap() == "jar")
+                        .unwrap_or(false)
                 })
+                .collect();
             ClasspathEntry::Wildcard {
-                path_buf_vec:vec![]
+                path_buf_vec
             }
         } else if path.ends_with(".jar") {
             ClasspathEntry::Zip {
