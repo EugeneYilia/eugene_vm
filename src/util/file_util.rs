@@ -1,5 +1,17 @@
 use std::path::Path;
 
-fn is_file_exist(file_path: &str) -> bool {
+#[test]
+fn test_is_exist() {
+    let result = is_path_exist("eugene_test");
+    println!("{}", result);//true
+    let result = is_path_exist("eugene_test2");
+    println!("{}", result);//false
+    let result = is_path_exist("eugene_test/aaa");
+    println!("{}", result);//false
+    let result = is_path_exist("eugene_test/bbb");
+    println!("{}", result);//true
+}
+
+pub fn is_path_exist(file_path: &str) -> bool {
     Path::new(file_path).exists()
 }

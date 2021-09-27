@@ -10,7 +10,7 @@ pub enum ClasspathEntry {
 }
 
 impl ClasspathEntry {
-    fn new(path: &str) -> ClasspathEntry {
+    pub fn new(path: &str) -> ClasspathEntry {
         if path.ends_with("*") {
             let base_path = &path[..(path.len() - 1)];
 
