@@ -6,8 +6,8 @@ fn main() {
     let class_name = source_class_name.replace(".","/");
     let bootstrap_option = BootstrapOption{
         class_name,
-        classpath_option:None,
-        jre_option:None,
+        user_classpath_option:None,
+        boot_classpath_option:None,
         args:vec![]
     };
     start_jvm(bootstrap_option);
