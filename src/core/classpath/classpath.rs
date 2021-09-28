@@ -1,7 +1,7 @@
 use crate::core::classpath::classpath_entry::ClasspathEntry;
 use crate::util::file_util::is_path_exist;
 
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 
 
 
@@ -25,13 +25,17 @@ impl ClassPath {
             Some(path) if is_path_exist(&path)=>{
                 real_boot_classpath = path.as_str();
             }
-            None=>{
+            // None   and  (Some if false)
+            _ =>{
                 if is_path_exist("jre") {
                     real_boot_classpath = "jre";
                 } else {
                     match std::env::var_os("JAVA_HOME") {
                         Some(java_home)=>{
-
+                            real_boot_classpath = Path::new(&java_home)
+                                .join("jre")
+                                .to_str()
+                                .unwrap()
                         }
                         None=>{
                             panic!("Can't find JRE directory.")
@@ -41,7 +45,13 @@ impl ClassPath {
             }
         }
 
-        ClasspathEntry::new("")
+        let jre_lib_path = Path::new(real_boot_classpath)
+            .join("lib")
+            .join("*")
+            .to_str()
+            .unwrap();
+
+        ClasspathEntry::new(jre_lib_path)
     }
 
     fn parse_user_classpath(user_classpath: Option<String>) -> ClasspathEntry {
