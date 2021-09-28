@@ -40,7 +40,10 @@ pub enum ConstantInfo {
     },
 
     // 描述一个隶属于接口的方法的引用
-    InterfaceMethodRef{
-
-    }
+    InterfaceMethodRef {
+        // 指向该方法所在的Class的引用
+        class_index: u16,
+        // 指向描述该方法名称和描述符的引用
+        name_and_type_index: u16,
+    },
 }

@@ -8,3 +8,4 @@ authors = ["EugeneLiu <583076221@qq.com>"]
 
 [dependencies]
 byteorder = "1.4.3"
+zip = "0.5.2"
