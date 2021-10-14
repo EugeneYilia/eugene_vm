@@ -1,0 +1,40 @@
+https://blog.csdn.net/PlayGrrrrr/article/details/79008124
+https://www.jianshu.com/p/4e412f48e820
+浏览器引擎https://rustcc.cn/article?id=77637b15-3941-4847-93c3-2f629447dc85
+学习 https://zhuanlan.zhihu.com/p/410655959
+kafka https://www.cnblogs.com/cxuanBlog/p/11949238.html
+时间轮https://www.cnblogs.com/cxuanBlog/p/11949238.html
+rust 爬虫https://blog.csdn.net/m0_37696990/article/details/82812729
+rust css解析器解析网页 https://blog.csdn.net/u013195275/article/details/107694546
+协程实现本质 https://www.google.com.hk/search?q=%E5%8D%8F%E7%A8%8B%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84&oq=%E5%8D%8F%E7%A8%8B%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84&aqs=chrome..69i57.6545j0j7&sourceid=chrome&ie=UTF-8
+flink 代码之架构 https://blog.csdn.net/define_us/article/details/113757278
+rust global mut单例 https://stackoverflow.com/questions/27791532/how-do-i-create-a-global-mutable-singleton
+rust 全局可变map https://www.coder.work/article/2555533
+jvm字节码指令 http://gityuan.com/2015/10/24/jvm-bytecode-grammar/
+自己动手写jvm https://bboyjing.github.io/2017/02/16/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%86%99JVM%E4%BA%8C%E5%8D%81%E4%BA%8C%E3%80%90%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%BA%94%EF%BC%89%E3%80%91/
+rust jvm实现 https://github.com/zachaxy/JVM/tree/master/Java/src/runtimedata/heap
+class文件结构 https://icefrozen.github.io/article/bytecode-analysis/
+rust进阶 http://llever.com/gentle-intro/3-filesystem.zh.html
+rust copy clone mov https://www.jianshu.com/p/ea1b96cbf0a1
+oracle jvm doc https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7
+flink教程 https://www.cnblogs.com/javazhiyin/p/13597319.html
+lucene原理 https://www.cnblogs.com/sessionbest/articles/8689030.html
+rust ref & https://www.coder.work/article/2554046
+flink教程https://github.com/zhisheng17/flink-learning
+商品实时推荐系统by flink https://github.com/CheckChe0803/flink-recommandSystem-demo
+Prometheus https://www.jianshu.com/p/93c840025f01
+micrometer https://blog.csdn.net/zjcsuct/article/details/107172014
+rust-jvm https://github.com/maxmcc/rust-jvm/blob/master/src/vm/value.rs
+获取比特币价格的网站
+1. https://zhuanlan.zhihu.com/p/130263816
+2. https://documenter.getpostman.com/view/5728777/RzZ6HfX2
+3. https://cloud.tencent.com/developer/article/1423879
+生成rust编译llvm ir  https://play.rust-lang.org/
+分布式系统核心问题  https://blog.csdn.net/zyhlwzy/article/details/78658002
+typed-index-collection https://github.com/zheland/typed-index-collections
+typed-index-collectuon-doc  https://docs.rs/typed-index-collections/3.0.3/typed_index_collections/
+vec_map_rs  https://github.com/p-avital/vec-map-rs
+flink进阶 https://www.infoq.cn/article/wkgozmqqexq6xm5ejl1e
+
+
+
