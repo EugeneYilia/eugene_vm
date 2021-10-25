@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::core::class::class::Class;
+use crate::runtime::heap::class::class::Class;
 use crate::core::classpath::classpath::ClassPath;
 
 pub struct ClassLoader {
