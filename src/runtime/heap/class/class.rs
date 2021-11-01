@@ -21,7 +21,8 @@
 //
 // 链接：https://www.jianshu.com/p/ae3f860499aa
 
-use crate::runtime::method_area::constant_pool::ConstantPool;
+
+use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 
 #[derive(Debug)]
 pub struct Class {
