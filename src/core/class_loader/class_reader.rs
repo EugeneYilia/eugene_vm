@@ -1,6 +1,8 @@
 use crate::runtime::method_area::classfile::version_info::VersionInfo;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::method_area::constant_pool::ConstantPool;
+use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
+use crate::runtime::method_area::classfile::member_info::MemberInfo;
 
 trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
@@ -24,6 +26,8 @@ trait ClassReader {
     fn read_this_class(&self)->(u16,&[u8]);
     fn read_super_class(&self)->(u16,&[u8]);
     fn read_interfaces(&self)->(Vec<u16>,&[u8]);
+    fn read_member(&self, constant_pool:&ConstantPool) -> (MemberInfo,&[u8]);
+    fn read_members(&self, constant_pool:&ConstantPool) -> (Vec<MemberInfo>,&[u8]);
 
 
 }

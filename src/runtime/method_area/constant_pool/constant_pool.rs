@@ -33,11 +33,11 @@ impl ConstantPool {
         index:  具体Class对应的index
         return: 使用index找到对应的class后根据name_index找到对应的name的&string 之后返回字面量只读视图&str
      */
-    pub fn get_class_name(&self, index: usize) -> &str {
-        let constant_info = self.get(index);
+    pub fn get_class_name(&self, class_index: usize) -> &str {
+        let constant_info = self.get(class_index);
         match constant_info {
             ConstantInfo::Class { ref name_index } => self.get_utf8(*name_index as usize),
-            _ => panic!(format!("Wrong index not match class: {}", index))
+            _ => panic!(format!("Wrong index not match class: {}", class_index))
         }
     }
 }
