@@ -5,5 +5,5 @@ use crate::core::classpath::classpath::ClassPath;
 // user_classpath and boot_classpath需要先解析出来
 pub fn start_jvm(bootstrap_option:BootstrapOption){
     let classpath = ClassPath::parse_classpath(bootstrap_option.boot_classpath_option,bootstrap_option.user_classpath_option);
-    let class_loader =
+    // let class_loader =
 }

@@ -1,13 +1,15 @@
+use byteorder::{BigEndian, ByteOrder};
 use crate::runtime::method_area::classfile::version_info::VersionInfo;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-use crate::runtime::method_area::constant_pool::ConstantPool;
-use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::method_area::classfile::member_info::MemberInfo;
 use crate::runtime::method_area::classfile::attribute_info::exception_table_entry::ExceptionTableEntry;
 use crate::runtime::method_area::classfile::attribute_info::line_number_table_entry::LineNumberTableEntry;
 use crate::runtime::method_area::classfile::attribute_info::local_variable_table_entry::LocalVariableTableEntry;
 use crate::runtime::method_area::classfile::attribute_info::attribute_info::AttributeInfo;
 use crate::runtime::method_area::classfile::classfile::ClassFile;
+use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
+
+use crate::core::annotation::loop_n;
 
 trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
@@ -41,16 +43,23 @@ trait ClassReader {
     fn parse(&self) -> ClassFile;
 }
 
-impl ClassReader for [u8]  {
+impl ClassReader for [u8] {
     fn read_u8(&self) -> (u8, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(1);
+        (temp[0], left)
     }
 
     fn read_u16(&self) -> (u16, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(2);
+        (BigEndian::read_u16(temp), left)
     }
 
     fn read_u16s(&self) -> (Vec<u16>, &[u8]) {
+        let (u16_length, mut left) = self.read_u16();
+        let mut target: Vec<u16> = Vec::with_capacity(u16_length as usize);
+        loopn!(u16_length,{
+            println!("HelloWorld")
+        });
         todo!()
     }
 

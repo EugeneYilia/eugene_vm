@@ -4,7 +4,6 @@ use crate::util::file_util::is_path_exist;
 use std::path::{PathBuf, Path};
 
 
-
 #[derive(Debug)]
 pub struct ClassPath {
     boot_classpath: ClasspathEntry,
@@ -20,38 +19,53 @@ impl ClassPath {
     }
 
     fn parse_boot_classpath(boot_classpath: Option<String>) -> ClasspathEntry {
-        let real_boot_classpath:&str;
+        fn build_classpath_entry(boot_classpath: &str) -> ClasspathEntry {
+            let path =
+                Path::new(boot_classpath)
+                    .join("lib")
+                    .join("*");
+
+            let result = path.to_str()
+                .unwrap();
+            println!("{}", result);
+            ClasspathEntry::new(
+                result
+            )
+
+            // ClasspathEntry::new(
+            //     Path::new(boot_classpath)
+            //         .join("lib")
+            //         .join("*")
+            //         .to_str()
+            //         .unwrap()
+            // )
+        }
+
         match boot_classpath {
-            Some(path) if is_path_exist(&path)=>{
-                real_boot_classpath = path.as_str();
+            Some(ref path) if is_path_exist(&path) => {
+                build_classpath_entry(path.as_str())
             }
             // None   and  (Some if false)
-            _ =>{
+            _ => {
                 if is_path_exist("jre") {
-                    real_boot_classpath = "jre";
+                    build_classpath_entry("jre")
                 } else {
                     match std::env::var_os("JAVA_HOME") {
-                        Some(java_home)=>{
-                            real_boot_classpath = Path::new(&java_home)
-                                .join("jre")
-                                .to_str()
-                                .unwrap()
+                        Some(java_home) => {
+                            build_classpath_entry(
+                                Path::new(&java_home)
+                                    .join("jre")
+                                    .to_str()
+                                    .unwrap()
+                            )
                         }
-                        None=>{
+                        None => {
                             panic!("Can't find JRE directory.")
                         }
                     }
                 }
             }
         }
-
-        let jre_lib_path = Path::new(real_boot_classpath)
-            .join("lib")
-            .join("*")
-            .to_str()
-            .unwrap();
-
-        ClasspathEntry::new(jre_lib_path)
     }
 
     fn parse_user_classpath(user_classpath: Option<String>) -> ClasspathEntry {
