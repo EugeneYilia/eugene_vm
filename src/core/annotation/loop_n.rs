@@ -1,4 +1,3 @@
-#[macro_export]
 macro_rules! loopn {
     ($n:expr,$body:block) => {
         for _ in 0..$n
@@ -9,6 +8,6 @@ macro_rules! loopn {
 #[test]
 fn test_loopn (){
     loopn!(3,{
-        println!("Hello World");
+        println!("Hello Eugene Liu");
     })
 }

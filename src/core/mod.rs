@@ -1,4 +1,5 @@
 pub mod code_reader;
 pub mod classpath;
-pub mod class_loader;
+#[macro_use]
 pub mod annotation;
+pub mod class_loader;
