@@ -66,23 +66,28 @@ impl ClassReader for [u8] {
     }
 
     fn read_u32(&self) -> (u32, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(4);
+        (BigEndian::read_u32(temp), left)
     }
 
     fn read_i32(&self) -> (i32, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(4);
+        (BigEndian::read_i32(temp), left)
     }
 
     fn read_i64(&self) -> (i64, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(8);
+        (BigEndian::read_i64(temp), left)
     }
 
     fn read_f32(&self) -> (f32, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(4);
+        (BigEndian::read_f32(temp), left)
     }
 
     fn read_f64(&self) -> (f64, &[u8]) {
-        todo!()
+        let (temp, left) = self.split_at(8);
+        (BigEndian::read_f64(temp), left)
     }
 
     fn read_bytes(&self, n: usize) -> (&[u8], &[u8]) {
@@ -156,11 +161,11 @@ impl ClassReader for [u8] {
 
 //
 #[test]
-pub fn test_read_u16s(){
-    let u8_array :[u8;10] = [0,2,1,1,0,7,0,2,1,2];
+pub fn test_read_u16s() {
+    let u8_array: [u8; 10] = [0, 2, 1, 1, 0, 7, 0, 2, 1, 2];
     // result: 257  7   left 0 2 1 2
-    let (result,left) = u8_array.read_u16s();
-    println!("{:?}",result);
+    let (result, left) = u8_array.read_u16s();
+    println!("{:?}", result);
     println!();
-    println!("{:?}",left);
+    println!("{:?}", left);
 }
