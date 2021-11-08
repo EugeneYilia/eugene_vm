@@ -63,7 +63,7 @@ fn test_loopn (){
 // 1. mod顺序   宏的引用在mod.rs的声明有顺序要求   (1。测试是否方法导出  调用引用也有顺序需求(测试结果方法不需要)  2。是否只是宏才有顺序要求(测试结果只有宏才需要))
 // 比如class_loader包需要使用annotation包里面的注解
 // #[macro_use]
-// pub mod annotation;
+// pub mod macro;
 // pub mod class_loader;
 // 需要在core的mod.rs按照上述顺序进行声明  才可以在class_loader包内引用到annotation包内定义的宏
 //
@@ -74,9 +74,9 @@ fn test_loopn (){
 // pub mod loop_n;
 // 然后再core的包里面加上
 // #[macro_use]
-// pub mod annotation;
+// pub mod macro;
 // 以后在对应的文件里
-// use crate::core::annotation::loop_n;
+// use crate::core::macro::loop_n;
 // 就可以使用该宏了
 
 

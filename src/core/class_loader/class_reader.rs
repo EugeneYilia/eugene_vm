@@ -8,8 +8,10 @@ use crate::runtime::method_area::classfile::attribute_info::local_variable_table
 use crate::runtime::method_area::classfile::attribute_info::attribute_info::AttributeInfo;
 use crate::runtime::method_area::classfile::classfile::ClassFile;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
+use crate::runtime::method_area::constant_pool::constant_info_tag::*;
 
-use crate::core::annotation::loop_n;
+use crate::core::r#macro::loop_n;
+use std::collections::HashMap;
 
 trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
@@ -39,10 +41,31 @@ trait ClassReader {
     fn read_line_number_table(&self) -> (Vec<LineNumberTableEntry>, &[u8]);
     fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]);
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]);
-    fn find_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]);
+    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]);
     fn parse(&self) -> ClassFile;
 }
 
+//
+// ClassFile {
+//     u4             magic;
+//     u2             minor_version;
+//     u2             major_version;
+//     u2             constant_pool_count;
+//     cp_info        constant_pool[constant_pool_count-1];
+//     u2             access_flags;
+//     u2             this_class;
+//     u2             super_class;
+//     u2             interfaces_count;
+//     u2             interfaces[interfaces_count];
+//     u2             fields_count;
+//     field_info     fields[fields_count];
+//     u2             methods_count;
+//     method_info    methods[methods_count];
+//     u2             attributes_count;
+//     attribute_info attributes[attributes_count];
+// }
+// Class文件结构：https://blog.csdn.net/qq_39888626/article/details/120606371
+//
 impl ClassReader for [u8] {
     fn read_u8(&self) -> (u8, &[u8]) {
         let (temp, left) = self.split_at(1);
@@ -55,9 +78,9 @@ impl ClassReader for [u8] {
     }
 
     fn read_u16s(&self) -> (Vec<u16>, &[u8]) {
-        let (u16_length, mut left) = self.read_u16();
-        let mut target: Vec<u16> = Vec::with_capacity(u16_length as usize);
-        loopn!(u16_length,{
+        let (u16_amount, mut left) = self.read_u16();
+        let mut target: Vec<u16> = Vec::with_capacity(u16_amount as usize);
+        loopn!(u16_amount,{
             let (u16_value, u8_left) = left.read_u16();
             left = u8_left;
             target.push(u16_value);
@@ -91,47 +114,147 @@ impl ClassReader for [u8] {
     }
 
     fn read_bytes(&self, n: usize) -> (&[u8], &[u8]) {
-        todo!()
+        self.split_at(n)
     }
 
+    // Magic Number:   0xCAFEBABE    u32
     fn read_and_check_magic_number(&self) -> (u32, &[u8]) {
-        todo!()
+        let result = self.read_u32();
+        let (magic_number, _left) = result;
+        assert_eq!(magic_number, 0xCAFEBABE);
+        result
     }
-
+    //                                          major_version   minor_version
+    // 目前校验的版本是按照jdk1.8编译出来的class文件       52              0
     fn read_and_check_version(&self) -> (VersionInfo, &[u8]) {
-        todo!()
+        let (minor_version, left) = self.read_u16();
+        let (major_version, left) = left.read_u16();
+        assert_eq!(major_version, 52);
+        assert_eq!(minor_version, 0);
+        let version_info = VersionInfo {
+            major_version,
+            minor_version,
+        };
+        (version_info, left)
     }
 
     fn read_constant_info(&self) -> (ConstantInfo, &[u8]) {
-        todo!()
+        let (constant_info_tag, left) = self.read_u8();
+        match constant_info_tag {
+            CONSTANT_UTF8_INFO_TAG => {
+                let (utf8_string_length, left) = left.read_u16();
+                let (bytes, left) = left.read_bytes(utf8_string_length as usize);
+
+                todo!()
+                // (ConstantInfo::UTF8(""), left)
+            }
+            CONSTANT_INTEGER_INFO_TAG => {
+                let (value, left) = left.read_i32();
+                (ConstantInfo::Integer(value), left)
+            }
+            CONSTANT_FLOAT_INFO_TAG => {
+                let (value, left) = left.read_f32();
+                (ConstantInfo::Float(value), left)
+            }
+            CONSTANT_LONG_INFO_TAG => {
+                let (value, left) = left.read_i64();
+                (ConstantInfo::Long(value), left)
+            }
+            CONSTANT_DOUBLE_INFO_TAG => {
+                let (value, left) = left.read_f64();
+                (ConstantInfo::Double(value), left)
+            }
+            CONSTANT_CLASS_INFO_TAG => {
+                let (name_index, left) = left.read_u16();
+                (ConstantInfo::Class { name_index }, left)
+            }
+            CONSTANT_STRING_INFO_TAG => {
+                let (value, left) = left.read_u16();
+                (ConstantInfo::String(value), left)
+            }
+            CONSTANT_FIELD_REF_INFO_TAG => {
+                let (class_index, left) = left.read_u16();
+                let (name_and_type_index, left) = left.read_u16();
+                (ConstantInfo::FieldRef { class_index, name_and_type_index }, left)
+            }
+            CONSTANT_METHOD_REF_INFO_TAG => {
+                let (class_index, left) = left.read_u16();
+                let (name_and_type_index, left) = left.read_u16();
+                (ConstantInfo::MethodRef { class_index, name_and_type_index }, left)
+            }
+            CONSTANT_INTERFACE_METHOD_REF_INFO_TAG => {
+                let (class_index, left) = left.read_u16();
+                let (name_and_type_index, left) = left.read_u16();
+                (ConstantInfo::InterfaceMethodRef { class_index, name_and_type_index }, left)
+            }
+            CONSTANT_NAME_AND_TYPE_INFO_TAG => {
+                let (name_index, left) = left.read_u16();
+                let (descriptor_index, left) = left.read_u16();
+                (ConstantInfo::NameAndType { name_index, descriptor_index }, left)
+            }
+            _ => {
+                panic!("Wrong constant_info_tag type");
+            }
+        }
     }
 
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]) {
+        let (constant_pool_count, left) = self.read_u16();
+        // let mut constant_pool = ConstantPool{constant_info_map:HashMap::with_capacity()}
         todo!()
     }
 
     fn read_access_flags(&self) -> (u16, &[u8]) {
-        todo!()
+        self.read_u16()
     }
 
     fn read_this_class(&self) -> (u16, &[u8]) {
-        todo!()
+        self.read_u16()
     }
 
     fn read_super_class(&self) -> (u16, &[u8]) {
-        todo!()
+        self.read_u16()
     }
 
     fn read_interfaces(&self) -> (Vec<u16>, &[u8]) {
-        todo!()
+        self.read_u16s()
     }
 
     fn read_member(&self, constant_pool: &ConstantPool) -> (MemberInfo, &[u8]) {
-        todo!()
+        let (access_flags, left) = self.read_access_flags();
+        let (name_index, left) = left.read_u16();
+        let (descriptor_index, left) = left.read_u16();
+
+        let (attributes, left) = left.read_attributes(constant_pool);
+        let name = match constant_pool.get(name_index as usize) {
+            ConstantInfo::UTF8(ref name) => name.to_owned(),
+            _ => panic!("name_index not point to UTF8 String")
+        };
+        let descriptor = match constant_pool.get(descriptor_index as usize) {
+            ConstantInfo::UTF8(ref name) => name.to_owned(),
+            _ => panic!("descriptor_index not point to UTF8 String")
+        };
+        (
+            MemberInfo {
+                access_flags,
+                name,
+                name_index,
+                descriptor,
+                descriptor_index,
+                attributes,
+            },
+            left
+        )
     }
 
     fn read_members(&self, constant_pool: &ConstantPool) -> (Vec<MemberInfo>, &[u8]) {
-        todo!()
+        let (member_info_amount, left) = self.read_u16();
+        let mut member_info_vec = Vec::with_capacity(member_info_amount as usize);
+        loopn!(member_info_amount,{
+            let (member_info, left) = left.read_member(constant_pool);
+            member_info_vec.push(member_info);
+        });
+        (member_info_vec, left)
     }
 
     fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]) {
@@ -147,25 +270,76 @@ impl ClassReader for [u8] {
     }
 
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
-        todo!()
+
     }
 
-    fn find_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]) {
-        todo!()
+    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]) {
+        let (attribute_info_amount, left) = self.read_u16();
+        let mut attribute_info_vec = Vec::with_capacity(attribute_info_amount as usize);
+        loopn!(attribute_info_amount, {
+            let (attribute_info, left) = left.read_attribute(constant_pool);
+            attribute_info_vec.push(attribute_info);
+        });
+        (attribute_info_vec, left)
     }
 
     fn parse(&self) -> ClassFile {
-        todo!()
+        let (_, left) = self.read_and_check_magic_number();
+        let (VersionInfo { major_version, minor_version }, left) = left.read_and_check_version();
+        let (constant_pool, left) = left.read_constant_pool();
+        let (access_flags, left) = left.read_access_flags();
+        let (this_class, left) = left.read_this_class();
+        let (super_class, left) = left.read_super_class();
+        let (interfaces, left) = left.read_interfaces();
+        let (fields, left) = left.read_members(&constant_pool);
+        let (methods, left) = left.read_members(&constant_pool);
+        let (attributes, left) = left.read_attributes(&constant_pool);
+        ClassFile {
+            major_version,
+            minor_version,
+            constant_pool,
+            access_flags,
+            this_class,
+            super_class,
+            interfaces,
+            fields,
+            methods,
+            attributes,
+        }
     }
 }
 
-//
+#[cfg(test)]
+mod tests {
+    use crate::core::class_loader::class_reader::ClassReader;
+
+    #[test]
+    pub fn test_read_u16s() {
+        let u8_array: [u8; 10] = [0, 2, 1, 1, 0, 7, 0, 2, 1, 2];
+        // result: 257  7   left 0 2 1 2
+        let (result, left) = u8_array.read_u16s();
+        println!("{:?}", result);
+        println!();
+        println!("{:?}", left);
+    }
+}
+
 #[test]
-pub fn test_read_u16s() {
-    let u8_array: [u8; 10] = [0, 2, 1, 1, 0, 7, 0, 2, 1, 2];
-    // result: 257  7   left 0 2 1 2
-    let (result, left) = u8_array.read_u16s();
-    println!("{:?}", result);
+pub fn test_loop_n() {
+    // [1, 3]    include 1, 2, 3
+    for _ in 1..=3 {
+        println!("123")
+    }
     println!();
-    println!("{:?}", left);
+
+    // [1,3)     include 1, 2
+    for _ in 1..3 {
+        println!("abc")
+    }
+    println!();
+
+    // [1, 3]     include 1, 2, 3
+    loopn!(3,{
+        println!("666");
+    });
 }
