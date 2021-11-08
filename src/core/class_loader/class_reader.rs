@@ -228,11 +228,11 @@ impl ClassReader for [u8] {
         let (attributes, left) = left.read_attributes(constant_pool);
         let name = match constant_pool.get(name_index as usize) {
             ConstantInfo::UTF8(ref name) => name.to_owned(),
-            _ => panic!("name_index not point to UTF8 String")
+            _ => panic!("name_index doesn't point to UTF8 String")
         };
         let descriptor = match constant_pool.get(descriptor_index as usize) {
             ConstantInfo::UTF8(ref name) => name.to_owned(),
-            _ => panic!("descriptor_index not point to UTF8 String")
+            _ => panic!("descriptor_index doesn't point to UTF8 String")
         };
         (
             MemberInfo {
@@ -270,7 +270,37 @@ impl ClassReader for [u8] {
     }
 
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
+        let (attribute_name_index, left) = self.read_u16();
+        let attribute_name = match constant_pool.get(attribute_name_index as usize) {
+            ConstantInfo::UTF8(attribute_name) => attribute_name,
+            _ => panic!("attribute_name_index doesn't point to UTF8 String")
+        };
+        let (attribute_length, left) = left.read_u32();
 
+        match attribute_name.as_str() {
+            "Code" => {
+                let (max_stack, left) = left.read_u16();
+                let (max_locals, left) = left.read_u16();
+                let (code_length, left) = left.read_u32();
+                let (code, left) = left.read_bytes(code_length as usize);
+                let (exception_table, left) = left.read_exception_table();
+                let (attributes, left) = left.read_attributes(constant_pool);
+
+                (
+                    AttributeInfo::Code {
+                        max_stack,
+                        max_locals,
+                        code: code.to_vec(),
+                        exception_table,
+                        attributes,
+                    },
+                    left
+                )
+            }
+            _ => {
+                panic!("");
+            }
+        }
     }
 
     fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]) {
@@ -342,4 +372,10 @@ pub fn test_loop_n() {
     loopn!(3,{
         println!("666");
     });
+}
+
+#[test]
+pub fn test_enum_name() {
+    let result = format!("{:?}", AttributeInfo::ConstantValue.as_static());
+    assert_eq!(result, "ConstantValue");
 }
