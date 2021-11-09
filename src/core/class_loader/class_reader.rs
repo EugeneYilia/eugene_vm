@@ -144,9 +144,16 @@ impl ClassReader for [u8] {
             CONSTANT_UTF8_INFO_TAG => {
                 let (utf8_string_length, left) = left.read_u16();
                 let (bytes, left) = left.read_bytes(utf8_string_length as usize);
+                // from_java_cesu8
+                // Convert Java's modified UTF-8 data to a Rust string, re-encoding only if necessary.
+                // Returns an error if the data cannot be represented as valid UTF-8.
+                let modified_utf8_result = cesu8::from_java_cesu8(bytes);
+                let value: String = match modified_utf8_result {
+                    Ok(modified_utf8_str) => modified_utf8_str.to_string(),
+                    Err(error) => panic!("constant_utf8_info {:?} is invalid Modified UTF-8 sequence: {}", bytes, error),
+                };
 
-                todo!()
-                // (ConstantInfo::UTF8(""), left)
+                (ConstantInfo::UTF8(value), left)
             }
             CONSTANT_INTEGER_INFO_TAG => {
                 let (value, left) = left.read_i32();
@@ -372,10 +379,4 @@ pub fn test_loop_n() {
     loopn!(3,{
         println!("666");
     });
-}
-
-#[test]
-pub fn test_enum_name() {
-    let result = format!("{:?}", AttributeInfo::ConstantValue.as_static());
-    assert_eq!(result, "ConstantValue");
 }
