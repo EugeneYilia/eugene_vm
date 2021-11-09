@@ -265,11 +265,29 @@ impl ClassReader for [u8] {
     }
 
     fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]) {
-        todo!()
+        let (exception_table_length, left) = self.read_u16();
+        let mut exception_table: Vec<ExceptionTableEntry> = Vec::with_capacity(exception_table_length as usize);
+        loopn!(exception_table_length, {
+            let (start_pc, left) = left.read_u16();
+            let (end_pc, left) = left.read_u16();
+            let (handle_pc, left) = left.read_u16();
+            let (catch_type, left) = left.read_u16();
+            let exception_table_entry = ExceptionTableEntry{ start_pc, end_pc, handle_pc, catch_type };
+            exception_table.push(exception_table_entry);
+        });
+        (exception_table, left)
     }
 
     fn read_line_number_table(&self) -> (Vec<LineNumberTableEntry>, &[u8]) {
-        todo!()
+        let (line_number_table_length, left) = self.read_u16();
+        let mut line_number_table: Vec<LineNumberTableEntry> = Vec::with_capacity(line_number_table_length as usize);
+        loopn!(line_number_table_length, {
+            let start_pc = left.read_u16();
+            let line_number = left.read_u16();
+            let line_number_table_entry = LineNumberTableEntry{ start_pc, line_number };
+            line_number_table.push(line_number_table_entry)
+        });
+        (line_number_table, left)
     }
 
     fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]) {
