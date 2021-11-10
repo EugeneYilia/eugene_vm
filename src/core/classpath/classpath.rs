@@ -20,25 +20,13 @@ impl ClassPath {
 
     fn parse_boot_classpath(boot_classpath: Option<String>) -> ClasspathEntry {
         fn build_classpath_entry(boot_classpath: &str) -> ClasspathEntry {
-            let path =
+            ClasspathEntry::new(
                 Path::new(boot_classpath)
                     .join("lib")
-                    .join("*");
-
-            let result = path.to_str()
-                .unwrap();
-            println!("{}", result);
-            ClasspathEntry::new(
-                result
+                    .join("*")
+                    .to_str()
+                    .unwrap()
             )
-
-            // ClasspathEntry::new(
-            //     Path::new(boot_classpath)
-            //         .join("lib")
-            //         .join("*")
-            //         .to_str()
-            //         .unwrap()
-            // )
         }
 
         match boot_classpath {
@@ -71,5 +59,9 @@ impl ClassPath {
     fn parse_user_classpath(user_classpath: Option<String>) -> ClasspathEntry {
         let transformed_user_classpath = user_classpath.unwrap_or(".".to_owned());
         ClasspathEntry::new(&transformed_user_classpath)
+    }
+
+    pub fn read_class(&self, class_name: &str) -> Result<Vec<u8>, std::io::Error> {
+        self.boot_classpath
     }
 }
