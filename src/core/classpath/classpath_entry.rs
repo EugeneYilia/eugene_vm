@@ -1,7 +1,7 @@
 use std::path::{PathBuf, Path};
 use std::collections::hash_map::Entry;
 use std::fs::{File, read_dir};
-use std::io::Read;
+use std::io::{Read, Error, ErrorKind};
 
 #[derive(Debug)]
 pub enum ClasspathEntry {
@@ -46,15 +46,15 @@ impl ClasspathEntry {
 
     pub fn read_class(&self, class_file_name: &str) -> Result<Vec<u8>, std::io::Error> {
         match self {
-            ClasspathEntry::Dir{path_buf} =>{
+            ClasspathEntry::Dir { path_buf } => {
                 let file_path = Path::new(path_buf).join(class_file_name);
                 let mut file = File::open(file_path)?;
                 let file_meta_data = file.metadata()?;
                 let mut file_bytes_buf = Vec::<u8>::with_capacity(file_meta_data.len() as usize);
-                file.read_to_end(& mut file_bytes_buf)?;
+                file.read_to_end(&mut file_bytes_buf)?;
                 Ok(file_bytes_buf)
             }
-            ClasspathEntry::Zip{path_buf} => {
+            ClasspathEntry::Zip { path_buf } => {
                 let zip_file = File::open(path_buf)?;
                 let mut zip_file = zip::ZipArchive::new(zip_file)?;
                 let mut class_file = zip_file.by_name(class_file_name)?;
@@ -62,9 +62,14 @@ impl ClasspathEntry {
                 class_file.read(&mut file_bytes_buf)?;
                 Ok(file_bytes_buf)
             }
-            ClasspathEntry::Wildcard{path_buf_vec} =>{
-                path_buf_vec.iter()
-                    .
+            ClasspathEntry::Wildcard { path_buf_vec } => {
+                path_buf_vec
+                    .iter()
+                    // 得到ClasspathEntry::Zip   即为jar包的ClasspathEntry
+                    .map(|path_buf| ClasspathEntry::new(path_buf.to_str().unwrap()))
+                    .map(|classpath_entry_zip| classpath_entry_zip.read_class(class_file_name))
+                    .find(|result| result.is_ok())
+                    .unwrap_or(Err(Error::new(ErrorKind::Other, "Class not found")))
             }
         }
     }

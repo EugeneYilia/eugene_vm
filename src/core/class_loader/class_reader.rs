@@ -357,18 +357,6 @@ impl ClassReader for [u8] {
                     left
                 )
             }
-            "EnclosingMethod" => {
-                (
-                    AttributeInfo::EnclosingMethod,
-                    left
-                )
-            }
-            "InnerClasses" => {
-                (
-                    AttributeInfo::InnerClasses,
-                    left
-                )
-            }
             "LineNumberTable" => {
                 let (line_number_table, left) = left.read_line_number_table();
                 (
@@ -378,9 +366,39 @@ impl ClassReader for [u8] {
                     left
                 )
             }
-            "Local"
+            "LocalVariableTable" => {
+                let (local_variable_table, left) = left.read_local_variable_table();
+                (
+                    AttributeInfo::LocalVariableTable {
+                        local_variable_table
+                    },
+                    left
+                )
+            }
+            "SourceFile" => {
+                let (source_file_index, left) = left.read_u16();
+                (
+                    AttributeInfo::SourceFile {
+                        source_file_index
+                    },
+                    left
+                )
+            }
+            "Synthetic" => {
+                (
+                    AttributeInfo::Synthetic,
+                    left
+                )
+            }
             _ => {
-                panic!("");
+                let (_, left) = left.read_bytes(attribute_length as usize);
+                (
+                    AttributeInfo::Unparsed {
+                        attribute_name: attribute_name.to_string(),
+                        attribute_length,
+                    },
+                    left
+                )
             }
         }
     }

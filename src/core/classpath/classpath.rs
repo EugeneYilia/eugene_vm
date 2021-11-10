@@ -62,6 +62,8 @@ impl ClassPath {
     }
 
     pub fn read_class(&self, class_name: &str) -> Result<Vec<u8>, std::io::Error> {
-        self.boot_classpath
+        let class_file_name = class_name.to_owned() + ".class";
+        self.boot_classpath.read_class(&class_file_name)
+            .or_else(self.user_classpath.read_class(&class_file_name))
     }
 }
