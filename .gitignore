@@ -3,3 +3,5 @@
 /.idea
 
 **/*.rs.bk
+
+/eugene_test/byte_code/rt
