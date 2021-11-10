@@ -291,7 +291,18 @@ impl ClassReader for [u8] {
     }
 
     fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]) {
-        todo!()
+        let (local_variable_table_length, left) = self.read_u16();
+        let mut local_variable_table = Vec::with_capacity(local_variable_table_length as usize);
+        loopn!(local_variable_table_length, {
+            let (start_pc, left) = left.read_u16();
+            let (length, left) = left.read_u16();
+            let (name_index, left) = left.read_u16();
+            let (descriptor_index, left) = left.read_u16();
+            let (index, left) = left.read_u16();
+            let local_variable_table_entry = LocalVariableTableEntry{ start_pc, length, name_index, descriptor_index, index};
+            local_variable_table.push(local_variable_table_entry);
+        });
+        (local_variable_table, left)
     }
 
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
@@ -322,6 +333,52 @@ impl ClassReader for [u8] {
                     left
                 )
             }
+            "ConstantValue" => {
+                let (constant_value_index, left) = left.read_u16();
+                (
+                    AttributeInfo::ConstantValue {
+                        constant_value_index
+                    },
+                    left
+                )
+            }
+            "Deprecated" => {
+                (
+                    AttributeInfo::Deprecated,
+                    left
+                )
+            }
+            "Exceptions" => {
+                let (exception_index_table, left) = left.read_u16s();
+                (
+                    AttributeInfo::Exceptions {
+                        exception_index_table
+                    },
+                    left
+                )
+            }
+            "EnclosingMethod" => {
+                (
+                    AttributeInfo::EnclosingMethod,
+                    left
+                )
+            }
+            "InnerClasses" => {
+                (
+                    AttributeInfo::InnerClasses,
+                    left
+                )
+            }
+            "LineNumberTable" => {
+                let (line_number_table, left) = left.read_line_number_table();
+                (
+                    AttributeInfo::LineNumberTable {
+                        line_number_table
+                    },
+                    left
+                )
+            }
+            "Local"
             _ => {
                 panic!("");
             }
