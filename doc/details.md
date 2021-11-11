@@ -13,7 +13,9 @@
    官方直接要求使用usize，且不允许隐式转换。
    如果是u32在64位平台就没法覆盖全部寻址空间，u64在32位平台就需要将一条指令的事情转换为两条指令
 5. rt.jar代表runtime JAR，并且包含引导类（bootstrap classes）——来自Core Java API的所有类。
-6. 
+6. [question mark operator and unwrap](https://m4rw3r.github.io/rust-questionmark-operator)
+   1. ?操作符要求方法返回值要是Result才可以   unwrap()不需要对方法返回值做限定  遇到问题直接会调用panic!()进行抛出异常
+7. 
 
 
 

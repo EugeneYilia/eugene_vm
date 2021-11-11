@@ -25,7 +25,7 @@ impl ConstantPool {
     fn get_utf8(&self, index: usize) -> &str {
         match self.get(index) {
             ConstantInfo::UTF8(ref name) => name.as_str(),
-            _ => panic!(format!("Wrong index not match utf8 : {}", index))
+            _ => panic!("Wrong index not match utf8 : {}", index)
         }
     }
 
@@ -37,7 +37,7 @@ impl ConstantPool {
         let constant_info = self.get(class_index);
         match constant_info {
             ConstantInfo::Class { ref name_index } => self.get_utf8(*name_index as usize),
-            _ => panic!(format!("Wrong index not match class: {}", class_index))
+            _ => panic!("Wrong index not match class: {}", class_index)
         }
     }
 }

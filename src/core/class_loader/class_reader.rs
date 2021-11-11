@@ -206,9 +206,21 @@ impl ClassReader for [u8] {
     }
 
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]) {
-        let (constant_pool_count, left) = self.read_u16();
-        // let mut constant_pool = ConstantPool{constant_info_map:HashMap::with_capacity()}
-        todo!()
+        let (can_not_reach_start_index, mut left) = self.read_u16();
+        let mut constant_pool = ConstantPool { constant_info_map: HashMap::new() };
+
+        let mut constant_info_index: usize = 1;
+        while constant_info_index < (can_not_reach_start_index as usize) {
+            let (constant_info,current_left) = left.read_constant_info();
+            left = current_left;
+            let add_amount = match constant_info {
+                ConstantInfo::Long(_) | ConstantInfo::Double(_) => 2,
+                _ => 1
+            };
+            constant_pool.insert(constant_info_index,constant_info);
+            constant_info_index += add_amount;
+        }
+        (constant_pool, left)
     }
 
     fn read_access_flags(&self) -> (u16, &[u8]) {
@@ -255,23 +267,25 @@ impl ClassReader for [u8] {
     }
 
     fn read_members(&self, constant_pool: &ConstantPool) -> (Vec<MemberInfo>, &[u8]) {
-        let (member_info_amount, left) = self.read_u16();
+        let (member_info_amount, mut left) = self.read_u16();
         let mut member_info_vec = Vec::with_capacity(member_info_amount as usize);
         loopn!(member_info_amount,{
-            let (member_info, left) = left.read_member(constant_pool);
+            let (member_info, u8_left) = left.read_member(constant_pool);
+            left = u8_left;
             member_info_vec.push(member_info);
         });
         (member_info_vec, left)
     }
 
     fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]) {
-        let (exception_table_length, left) = self.read_u16();
+        let (exception_table_length, mut left) = self.read_u16();
         let mut exception_table: Vec<ExceptionTableEntry> = Vec::with_capacity(exception_table_length as usize);
         loopn!(exception_table_length, {
-            let (start_pc, left) = left.read_u16();
-            let (end_pc, left) = left.read_u16();
-            let (handle_pc, left) = left.read_u16();
-            let (catch_type, left) = left.read_u16();
+            let (start_pc, u8_left) = left.read_u16();
+            let (end_pc, u8_left) = u8_left.read_u16();
+            let (handle_pc, u8_left) = u8_left.read_u16();
+            let (catch_type, u8_left) = u8_left.read_u16();
+            left = u8_left;
             let exception_table_entry = ExceptionTableEntry{ start_pc, end_pc, handle_pc, catch_type };
             exception_table.push(exception_table_entry);
         });
@@ -279,11 +293,12 @@ impl ClassReader for [u8] {
     }
 
     fn read_line_number_table(&self) -> (Vec<LineNumberTableEntry>, &[u8]) {
-        let (line_number_table_length, left) = self.read_u16();
+        let (line_number_table_length, mut left) = self.read_u16();
         let mut line_number_table: Vec<LineNumberTableEntry> = Vec::with_capacity(line_number_table_length as usize);
         loopn!(line_number_table_length, {
-            let start_pc = left.read_u16();
-            let line_number = left.read_u16();
+            let (start_pc, u8_left) = left.read_u16();
+            let (line_number, u8_left) = u8_left.read_u16();
+            left = u8_left;
             let line_number_table_entry = LineNumberTableEntry{ start_pc, line_number };
             line_number_table.push(line_number_table_entry)
         });
@@ -291,14 +306,15 @@ impl ClassReader for [u8] {
     }
 
     fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]) {
-        let (local_variable_table_length, left) = self.read_u16();
+        let (local_variable_table_length, mut left) = self.read_u16();
         let mut local_variable_table = Vec::with_capacity(local_variable_table_length as usize);
         loopn!(local_variable_table_length, {
-            let (start_pc, left) = left.read_u16();
-            let (length, left) = left.read_u16();
-            let (name_index, left) = left.read_u16();
-            let (descriptor_index, left) = left.read_u16();
-            let (index, left) = left.read_u16();
+            let (start_pc, u8_left) = left.read_u16();
+            let (length, u8_left) = u8_left.read_u16();
+            let (name_index, u8_left) = u8_left.read_u16();
+            let (descriptor_index, u8_left) = u8_left.read_u16();
+            let (index, u8_left) = u8_left.read_u16();
+            left = u8_left;
             let local_variable_table_entry = LocalVariableTableEntry{ start_pc, length, name_index, descriptor_index, index};
             local_variable_table.push(local_variable_table_entry);
         });
@@ -404,10 +420,11 @@ impl ClassReader for [u8] {
     }
 
     fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]) {
-        let (attribute_info_amount, left) = self.read_u16();
+        let (attribute_info_amount, mut left) = self.read_u16();
         let mut attribute_info_vec = Vec::with_capacity(attribute_info_amount as usize);
         loopn!(attribute_info_amount, {
-            let (attribute_info, left) = left.read_attribute(constant_pool);
+            let (attribute_info, u8_left) = left.read_attribute(constant_pool);
+            left = u8_left;
             attribute_info_vec.push(attribute_info);
         });
         (attribute_info_vec, left)
@@ -439,9 +456,34 @@ impl ClassReader for [u8] {
     }
 }
 
+// 测试直接从文件里读取和从jar包里读取对应的class文件
 #[cfg(test)]
 mod tests {
+    use std::fs::File;
+    use std::io::Read;
     use crate::core::class_loader::class_reader::ClassReader;
+    use crate::runtime::method_area::classfile::classfile::ClassFile;
+
+    #[test]
+    fn parse_from_file() {
+        let path: &str = "eugene_test/byte_code/rt/java/lang/Object.class";
+        let file = File::open(path).unwrap();
+        let file_bytes: Vec<u8> = file.bytes().map(|result_u8| result_u8.unwrap()).collect();
+        let class_file = file_bytes.parse();
+        println!("{:?}", class_file);
+        // let ClassFile{
+        //     major_version,
+        //     minor_version,
+        //     constant_pool,
+        //     access_flags,
+        //     this_class,
+        //     super_class,
+        //     interfaces,
+        //     fields,
+        //     methods,
+        //     attributes
+        // } = class_file;
+    }
 
     #[test]
     pub fn test_read_u16s() {
