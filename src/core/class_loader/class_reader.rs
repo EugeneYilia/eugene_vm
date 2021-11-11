@@ -153,7 +153,7 @@ impl ClassReader for [u8] {
                     Err(error) => panic!("constant_utf8_info {:?} is invalid Modified UTF-8 sequence: {}", bytes, error),
                 };
 
-                (ConstantInfo::UTF8(value), left)
+                (ConstantInfo::ModifiedUTF8(value), left)
             }
             CONSTANT_INTEGER_INFO_TAG => {
                 let (value, left) = left.read_i32();
@@ -211,13 +211,13 @@ impl ClassReader for [u8] {
 
         let mut constant_info_index: usize = 1;
         while constant_info_index < (can_not_reach_start_index as usize) {
-            let (constant_info,current_left) = left.read_constant_info();
+            let (constant_info, current_left) = left.read_constant_info();
             left = current_left;
             let add_amount = match constant_info {
                 ConstantInfo::Long(_) | ConstantInfo::Double(_) => 2,
                 _ => 1
             };
-            constant_pool.insert(constant_info_index,constant_info);
+            constant_pool.insert(constant_info_index, constant_info);
             constant_info_index += add_amount;
         }
         (constant_pool, left)
@@ -246,11 +246,11 @@ impl ClassReader for [u8] {
 
         let (attributes, left) = left.read_attributes(constant_pool);
         let name = match constant_pool.get(name_index as usize) {
-            ConstantInfo::UTF8(ref name) => name.to_owned(),
+            ConstantInfo::ModifiedUTF8(ref name) => name.to_owned(),
             _ => panic!("name_index doesn't point to UTF8 String")
         };
         let descriptor = match constant_pool.get(descriptor_index as usize) {
-            ConstantInfo::UTF8(ref name) => name.to_owned(),
+            ConstantInfo::ModifiedUTF8(ref name) => name.to_owned(),
             _ => panic!("descriptor_index doesn't point to UTF8 String")
         };
         (
@@ -324,7 +324,7 @@ impl ClassReader for [u8] {
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
         let (attribute_name_index, left) = self.read_u16();
         let attribute_name = match constant_pool.get(attribute_name_index as usize) {
-            ConstantInfo::UTF8(attribute_name) => attribute_name,
+            ConstantInfo::ModifiedUTF8(attribute_name) => attribute_name,
             _ => panic!("attribute_name_index doesn't point to UTF8 String")
         };
         let (attribute_length, left) = left.read_u32();
@@ -440,7 +440,7 @@ impl ClassReader for [u8] {
         let (interfaces, left) = left.read_interfaces();
         let (fields, left) = left.read_members(&constant_pool);
         let (methods, left) = left.read_members(&constant_pool);
-        let (attributes, left) = left.read_attributes(&constant_pool);
+        let (attributes, _left) = left.read_attributes(&constant_pool);
         ClassFile {
             major_version,
             minor_version,
@@ -456,13 +456,278 @@ impl ClassReader for [u8] {
     }
 }
 
+// javap -v Object.class
+//   Last modified 2020年11月6日; size 1497 bytes
+//   SHA-256 checksum 91e9554ea0fac57b7ca9595ab777fe2578af2e5b111e8c240e1793f1a3686292
+//   Compiled from "Object.java"
+// public class java.lang.Object
+//   minor version: 0
+//   major version: 52
+//   flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+//   this_class: #17                         // java/lang/Object
+//   super_class: #0
+//   interfaces: 0, fields: 0, methods: 14, attributes: 1
+// Constant pool:
+//    #1 = Class              #49            // java/lang/StringBuilder
+//    #2 = Methodref          #1.#50         // java/lang/StringBuilder."<init>":()V
+//    #3 = Methodref          #17.#51        // java/lang/Object.getClass:()Ljava/lang/Class;
+//    #4 = Methodref          #52.#53        // java/lang/Class.getName:()Ljava/lang/String;
+//    #5 = Methodref          #1.#54         // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+//    #6 = String             #55            // @
+//    #7 = Methodref          #17.#56        // java/lang/Object.hashCode:()I
+//    #8 = Methodref          #57.#58        // java/lang/Integer.toHexString:(I)Ljava/lang/String;
+//    #9 = Methodref          #1.#59         // java/lang/StringBuilder.toString:()Ljava/lang/String;
+//   #10 = Class              #60            // java/lang/IllegalArgumentException
+//   #11 = String             #61            // timeout value is negative
+//   #12 = Methodref          #10.#62        // java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+//   #13 = Integer            999999
+//   #14 = String             #63            // nanosecond timeout value out of range
+//   #15 = Methodref          #17.#64        // java/lang/Object.wait:(J)V
+//   #16 = Methodref          #17.#65        // java/lang/Object.registerNatives:()V
+//   #17 = Class              #66            // java/lang/Object
+//   #18 = Utf8               <init>
+//   #19 = Utf8               ()V
+//   #20 = Utf8               Code
+//   #21 = Utf8               LineNumberTable
+//   #22 = Utf8               registerNatives
+//   #23 = Utf8               getClass
+//   #24 = Utf8               ()Ljava/lang/Class;
+//   #25 = Utf8               Signature
+//   #26 = Utf8               ()Ljava/lang/Class<*>;
+//   #27 = Utf8               hashCode
+//   #28 = Utf8               ()I
+//   #29 = Utf8               equals
+//   #30 = Utf8               (Ljava/lang/Object;)Z
+//   #31 = Utf8               StackMapTable
+//   #32 = Utf8               clone
+//   #33 = Utf8               ()Ljava/lang/Object;
+//   #34 = Utf8               Exceptions
+//   #35 = Class              #67            // java/lang/CloneNotSupportedException
+//   #36 = Utf8               toString
+//   #37 = Utf8               ()Ljava/lang/String;
+//   #38 = Utf8               notify
+//   #39 = Utf8               notifyAll
+//   #40 = Utf8               wait
+//   #41 = Utf8               (J)V
+//   #42 = Class              #68            // java/lang/InterruptedException
+//   #43 = Utf8               (JI)V
+//   #44 = Utf8               finalize
+//   #45 = Class              #69            // java/lang/Throwable
+//   #46 = Utf8               <clinit>
+//   #47 = Utf8               SourceFile
+//   #48 = Utf8               Object.java
+//   #49 = Utf8               java/lang/StringBuilder
+//   #50 = NameAndType        #18:#19        // "<init>":()V
+//   #51 = NameAndType        #23:#24        // getClass:()Ljava/lang/Class;
+//   #52 = Class              #70            // java/lang/Class
+//   #53 = NameAndType        #71:#37        // getName:()Ljava/lang/String;
+//   #54 = NameAndType        #72:#73        // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+//   #55 = Utf8               @
+//   #56 = NameAndType        #27:#28        // hashCode:()I
+//   #57 = Class              #74            // java/lang/Integer
+//   #58 = NameAndType        #75:#76        // toHexString:(I)Ljava/lang/String;
+//   #59 = NameAndType        #36:#37        // toString:()Ljava/lang/String;
+//   #60 = Utf8               java/lang/IllegalArgumentException
+//   #61 = Utf8               timeout value is negative
+//   #62 = NameAndType        #18:#77        // "<init>":(Ljava/lang/String;)V
+//   #63 = Utf8               nanosecond timeout value out of range
+//   #64 = NameAndType        #40:#41        // wait:(J)V
+//   #65 = NameAndType        #22:#19        // registerNatives:()V
+//   #66 = Utf8               java/lang/Object
+//   #67 = Utf8               java/lang/CloneNotSupportedException
+//   #68 = Utf8               java/lang/InterruptedException
+//   #69 = Utf8               java/lang/Throwable
+//   #70 = Utf8               java/lang/Class
+//   #71 = Utf8               getName
+//   #72 = Utf8               append
+//   #73 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+//   #74 = Utf8               java/lang/Integer
+//   #75 = Utf8               toHexString
+//   #76 = Utf8               (I)Ljava/lang/String;
+//   #77 = Utf8               (Ljava/lang/String;)V
+// {
+//   public java.lang.Object();
+//     descriptor: ()V
+//     flags: (0x0001) ACC_PUBLIC
+//     Code:
+//       stack=0, locals=1, args_size=1
+//          0: return
+//       LineNumberTable:
+//         line 37: 0
+//
+//   public final native java.lang.Class<?> getClass();
+//     descriptor: ()Ljava/lang/Class;
+//     flags: (0x0111) ACC_PUBLIC, ACC_FINAL, ACC_NATIVE
+//     Signature: #26                          // ()Ljava/lang/Class<*>;
+//
+//   public native int hashCode();
+//     descriptor: ()I
+//     flags: (0x0101) ACC_PUBLIC, ACC_NATIVE
+//
+//   public boolean equals(java.lang.Object);
+//     descriptor: (Ljava/lang/Object;)Z
+//     flags: (0x0001) ACC_PUBLIC
+//     Code:
+//       stack=2, locals=2, args_size=2
+//          0: aload_0
+//          1: aload_1
+//          2: if_acmpne     9
+//          5: iconst_1
+//          6: goto          10
+//          9: iconst_0
+//         10: ireturn
+//       LineNumberTable:
+//         line 149: 0
+//       StackMapTable: number_of_entries = 2
+//         frame_type = 9 /* same */
+//         frame_type = 64 /* same_locals_1_stack_item */
+//           stack = [ int ]
+//
+//   protected native java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+//     descriptor: ()Ljava/lang/Object;
+//     flags: (0x0104) ACC_PROTECTED, ACC_NATIVE
+//     Exceptions:
+//       throws java.lang.CloneNotSupportedException
+//
+//   public java.lang.String toString();
+//     descriptor: ()Ljava/lang/String;
+//     flags: (0x0001) ACC_PUBLIC
+//     Code:
+//       stack=2, locals=1, args_size=1
+//          0: new           #1                  // class java/lang/StringBuilder
+//          3: dup
+//          4: invokespecial #2                  // Method java/lang/StringBuilder."<init>":()V
+//          7: aload_0
+//          8: invokevirtual #3                  // Method getClass:()Ljava/lang/Class;
+//         11: invokevirtual #4                  // Method java/lang/Class.getName:()Ljava/lang/String;
+//         14: invokevirtual #5                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+//         17: ldc           #6                  // String @
+//         19: invokevirtual #5                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+//         22: aload_0
+//         23: invokevirtual #7                  // Method hashCode:()I
+//         26: invokestatic  #8                  // Method java/lang/Integer.toHexString:(I)Ljava/lang/String;
+//         29: invokevirtual #5                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+//         32: invokevirtual #9                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+//         35: areturn
+//       LineNumberTable:
+//         line 236: 0
+//
+//   public final native void notify();
+//     descriptor: ()V
+//     flags: (0x0111) ACC_PUBLIC, ACC_FINAL, ACC_NATIVE
+//
+//   public final native void notifyAll();
+//     descriptor: ()V
+//     flags: (0x0111) ACC_PUBLIC, ACC_FINAL, ACC_NATIVE
+//
+//   public final native void wait(long) throws java.lang.InterruptedException;
+//     descriptor: (J)V
+//     flags: (0x0111) ACC_PUBLIC, ACC_FINAL, ACC_NATIVE
+//     Exceptions:
+//       throws java.lang.InterruptedException
+//
+//   public final void wait(long, int) throws java.lang.InterruptedException;
+//     descriptor: (JI)V
+//     flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+//     Code:
+//       stack=4, locals=4, args_size=3
+//          0: lload_1
+//          1: lconst_0
+//          2: lcmp
+//          3: ifge          16
+//          6: new           #10                 // class java/lang/IllegalArgumentException
+//          9: dup
+//         10: ldc           #11                 // String timeout value is negative
+//         12: invokespecial #12                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+//         15: athrow
+//         16: iload_3
+//         17: iflt          26
+//         20: iload_3
+//         21: ldc           #13                 // int 999999
+//         23: if_icmple     36
+//         26: new           #10                 // class java/lang/IllegalArgumentException
+//         29: dup
+//         30: ldc           #14                 // String nanosecond timeout value out of range
+//         32: invokespecial #12                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+//         35: athrow
+//         36: iload_3
+//         37: ifle          44
+//         40: lload_1
+//         41: lconst_1
+//         42: ladd
+//         43: lstore_1
+//         44: aload_0
+//         45: lload_1
+//         46: invokevirtual #15                 // Method wait:(J)V
+//         49: return
+//       LineNumberTable:
+//         line 447: 0
+//         line 448: 6
+//         line 451: 16
+//         line 452: 26
+//         line 456: 36
+//         line 457: 40
+//         line 460: 44
+//         line 461: 49
+//       StackMapTable: number_of_entries = 4
+//         frame_type = 16 /* same */
+//         frame_type = 9 /* same */
+//         frame_type = 9 /* same */
+//         frame_type = 7 /* same */
+//     Exceptions:
+//       throws java.lang.InterruptedException
+//
+//   public final void wait() throws java.lang.InterruptedException;
+//     descriptor: ()V
+//     flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+//     Code:
+//       stack=3, locals=1, args_size=1
+//          0: aload_0
+//          1: lconst_0
+//          2: invokevirtual #15                 // Method wait:(J)V
+//          5: return
+//       LineNumberTable:
+//         line 502: 0
+//         line 503: 5
+//     Exceptions:
+//       throws java.lang.InterruptedException
+//
+//   protected void finalize() throws java.lang.Throwable;
+//     descriptor: ()V
+//     flags: (0x0004) ACC_PROTECTED
+//     Code:
+//       stack=0, locals=1, args_size=1
+//          0: return
+//       LineNumberTable:
+//         line 555: 0
+//     Exceptions:
+//       throws java.lang.Throwable
+//
+//   static {};
+//     descriptor: ()V
+//     flags: (0x0008) ACC_STATIC
+//     Code:
+//       stack=0, locals=0, args_size=0
+//          0: invokestatic  #16                 // Method registerNatives:()V
+//          3: return
+//       LineNumberTable:
+//         line 41: 0
+//         line 42: 3
+// }
+// SourceFile: "Object.java"
 // 测试直接从文件里读取和从jar包里读取对应的class文件
 #[cfg(test)]
 mod tests {
+    use std::cmp::min;
     use std::fs::File;
     use std::io::Read;
     use crate::core::class_loader::class_reader::ClassReader;
     use crate::runtime::method_area::classfile::classfile::ClassFile;
+    use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
+
+    fn panic_type_not_match(index: usize, err_msg: &str) {
+        panic!("Index {} constant_info type is not {}", index, err_msg);
+    }
 
     #[test]
     fn parse_from_file() {
@@ -471,18 +736,58 @@ mod tests {
         let file_bytes: Vec<u8> = file.bytes().map(|result_u8| result_u8.unwrap()).collect();
         let class_file = file_bytes.parse();
         println!("{:?}", class_file);
-        // let ClassFile{
-        //     major_version,
-        //     minor_version,
-        //     constant_pool,
-        //     access_flags,
-        //     this_class,
-        //     super_class,
-        //     interfaces,
-        //     fields,
-        //     methods,
-        //     attributes
-        // } = class_file;
+        let ClassFile {
+            major_version,
+            minor_version,
+            constant_pool,
+            access_flags,
+            this_class,
+            super_class,
+            interfaces,
+            fields,
+            methods,
+            attributes
+        } = class_file;
+        assert_eq!(major_version, 52u16);
+        assert_eq!(minor_version, 0u16);
+        assert_eq!(constant_pool.capacity(), 77usize);
+        match constant_pool.get(1usize) {
+            ConstantInfo::Class { name_index } => assert_eq!(*name_index, 49u16),
+            _ => panic_type_not_match(1usize, "ConstantInfo::Class")
+        };
+        match constant_pool.get(9usize) {
+            ConstantInfo::MethodRef { class_index, name_and_type_index } => {
+                assert_eq!(class_index.to_owned(), 1u16);
+                assert_eq!(name_and_type_index.to_owned(), 59u16);
+            }
+            _ => panic_type_not_match(9usize, "ConstantInfo::MethodRef")
+        };
+        match constant_pool.get(13usize) {
+            ConstantInfo::Integer(value) => assert_eq!(*value, 999999i32),
+            _ => panic_type_not_match(13usize, "ConstantInfo::Integer")
+        };
+        match constant_pool.get(22usize) {
+            ConstantInfo::ModifiedUTF8(value) => assert_eq!(value, "registerNatives"),
+            _ => panic_type_not_match(22usize, "ConstantInfo::ModifiedUTF8")
+        };
+        match constant_pool.get(50usize) {
+            ConstantInfo::NameAndType { name_index, descriptor_index } => {
+                assert_eq!(*name_index, 18u16);
+                assert_eq!(*descriptor_index, 19u16);
+            }
+            _ => panic_type_not_match(50usize, "ConstantInfo::NameAndType")
+        };
+        match constant_pool.get(77usize) {
+            ConstantInfo::ModifiedUTF8(value) => assert_eq!(value, "(Ljava/lang/String;)V"),
+            _ => panic_type_not_match(77usize, "ConstantInfo::ModifiedUTF8")
+        };
+        assert_eq!(access_flags, 33u16);
+        assert_eq!(this_class, 17u16);
+        assert_eq!(super_class, 0u16);
+        assert_eq!(interfaces.len(), 0usize);
+        assert_eq!(fields.len(), 0usize);
+        assert_eq!(methods.len(), 14usize);
+        methods.iter().for_each(|method|println!("{:?}",method));
     }
 
     #[test]

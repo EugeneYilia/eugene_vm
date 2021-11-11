@@ -6,7 +6,7 @@ pub enum ConstantInfo {
     Float(f32),
     Double(f64),
 
-    UTF8(String),
+    ModifiedUTF8(String),
     String(u16),
 
     // 描述类的常量信息

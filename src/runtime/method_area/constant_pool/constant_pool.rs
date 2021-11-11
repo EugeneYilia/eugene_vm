@@ -22,9 +22,9 @@ impl ConstantPool {
         self.constant_info_map.len()
     }
 
-    fn get_utf8(&self, index: usize) -> &str {
+    fn get_modified_utf8(&self, index: usize) -> &str {
         match self.get(index) {
-            ConstantInfo::UTF8(ref name) => name.as_str(),
+            ConstantInfo::ModifiedUTF8(ref name) => name.as_str(),
             _ => panic!("Wrong index not match utf8 : {}", index)
         }
     }
@@ -36,7 +36,7 @@ impl ConstantPool {
     pub fn get_class_name(&self, class_index: usize) -> &str {
         let constant_info = self.get(class_index);
         match constant_info {
-            ConstantInfo::Class { ref name_index } => self.get_utf8(*name_index as usize),
+            ConstantInfo::Class { ref name_index } => self.get_modified_utf8(*name_index as usize),
             _ => panic!("Wrong index not match class: {}", class_index)
         }
     }
