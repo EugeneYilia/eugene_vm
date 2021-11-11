@@ -11,7 +11,7 @@ use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::method_area::constant_pool::constant_info_tag::*;
 
 use crate::core::r#macro::loop_n;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
@@ -207,7 +207,7 @@ impl ClassReader for [u8] {
 
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]) {
         let (can_not_reach_start_index, mut left) = self.read_u16();
-        let mut constant_pool = ConstantPool { constant_info_map: HashMap::new() };
+        let mut constant_pool = ConstantPool { constant_info_map: BTreeMap::new() };
 
         let mut constant_info_index: usize = 1;
         while constant_info_index < (can_not_reach_start_index as usize) {

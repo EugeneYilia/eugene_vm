@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::ops::Deref;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 
@@ -6,7 +6,7 @@ use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 // 字面量主要指文本字符串、被声明为final的常量值。
 #[derive(Debug)]
 pub struct ConstantPool {
-    pub constant_info_map: HashMap<usize, ConstantInfo>,
+    pub constant_info_map: BTreeMap<usize, ConstantInfo>,
 }
 
 impl ConstantPool {
