@@ -740,14 +740,22 @@ mod tests {
     }
 
     #[test]
-    fn parse_from_jar(){
+    fn parse_from_jar() {
         let classpath_entry_jar = ClasspathEntry::new("eugene_test/byte_code/rt.jar");
         let file_bytes = classpath_entry_jar.read_class("java/lang/Object.class").unwrap();
 
         check_class_file(file_bytes);
     }
 
-    fn check_class_file(file_bytes:Vec<u8>){
+    #[test]
+    fn parse_from_wildcard() {
+        let classpath_entry_wildcard = ClasspathEntry::new("eugene_test/byte_code/*");
+        let file_bytes = classpath_entry_wildcard.read_class("java/lang/Object.class").unwrap();
+
+        check_class_file(file_bytes);
+    }
+
+    fn check_class_file(file_bytes: Vec<u8>) {
         let class_file = file_bytes.parse();
         println!("{:?}", class_file);
         let ClassFile {
@@ -810,43 +818,46 @@ mod tests {
             _ => panic!("classfile attribute 0 is not AttributeInfo::SourceFile")
         }
 
+        println!("methods member_info:");
         methods.iter().for_each(|method| println!("{:?}", method));
         let MemberInfo {
             access_flags,
-            name:_,
+            name: _,
             name_index,
-            descriptor:_,
+            descriptor: _,
             descriptor_index,
             attributes
         } = methods.get(2).unwrap();
         assert_eq!(*name_index, 23u16);
         assert_eq!(*descriptor_index, 24u16);
         assert_eq!(attributes.len(), 1usize);
-        assert_eq!(*access_flags,273u16);
+        assert_eq!(*access_flags, 273u16);
 
         let MemberInfo {
             access_flags,
-            name:_,
+            name: _,
             name_index,
-            descriptor:_,
+            descriptor: _,
             descriptor_index,
             attributes
         } = methods.get(12).unwrap();
+        assert_eq!(*name_index, 44u16);
+        assert_eq!(*descriptor_index, 19u16);
         assert_eq!(attributes.len(), 2usize);// finalize    [0]Code  [1]Exceptions
-        assert_eq!(*access_flags,4u16);
+        assert_eq!(*access_flags, 4u16);
 
         let MemberInfo {
             access_flags,
-            name:_,
+            name: _,
             name_index,
-            descriptor:_,
+            descriptor: _,
             descriptor_index,
             attributes
         } = methods.get(13).unwrap();
         assert_eq!(*name_index, 46u16);
         assert_eq!(*descriptor_index, 19u16);
         assert_eq!(attributes.len(), 1usize);
-        assert_eq!(*access_flags,8u16);
+        assert_eq!(*access_flags, 8u16);
         match attributes.get(0).unwrap() {
             AttributeInfo::Code {
                 max_stack,
