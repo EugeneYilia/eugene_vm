@@ -724,6 +724,8 @@ mod tests {
     use crate::core::class_loader::class_reader::ClassReader;
     use crate::runtime::method_area::classfile::classfile::ClassFile;
     use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
+    use crate::runtime::method_area::classfile::member_info::MemberInfo;
+    use crate::runtime::method_area::classfile::attribute_info::attribute_info::AttributeInfo;
 
     fn panic_type_not_match(index: usize, err_msg: &str) {
         panic!("Index {} constant_info type is not {}", index, err_msg);
@@ -787,7 +789,73 @@ mod tests {
         assert_eq!(interfaces.len(), 0usize);
         assert_eq!(fields.len(), 0usize);
         assert_eq!(methods.len(), 14usize);
-        methods.iter().for_each(|method|println!("{:?}",method));
+        methods.iter().for_each(|method| println!("{:?}", method));
+        let MemberInfo {
+            access_flags,
+            name,
+            name_index,
+            descriptor,
+            descriptor_index,
+            attributes
+        } = methods.get(2).unwrap();
+        assert_eq!(*name_index, 23u16);
+        assert_eq!(*descriptor_index, 24u16);
+        assert_eq!(attributes.len(), 1usize);
+
+        let MemberInfo {
+            access_flags,
+            name,
+            name_index,
+            descriptor,
+            descriptor_index,
+            attributes
+        } = methods.get(12).unwrap();
+        assert_eq!(attributes.len(), 2usize);// finalize    [0]Code  [1]Exceptions
+
+        let MemberInfo {
+            access_flags,
+            name,
+            name_index,
+            descriptor,
+            descriptor_index,
+            attributes
+        } = methods.get(13).unwrap();
+        assert_eq!(*name_index, 46u16);
+        assert_eq!(*descriptor_index, 19u16);
+        assert_eq!(attributes.len(), 1usize);
+        match attributes.get(0).unwrap() {
+            AttributeInfo::Code {
+                max_stack,
+                max_locals,
+                code,
+                exception_table,
+                attributes
+            } => {
+                assert_eq!(*max_stack, 0u16);
+                assert_eq!(*max_locals, 0u16);
+                assert_eq!(code.len(), 4usize);
+                assert_eq!(exception_table.len(), 0usize);
+                assert_eq!(attributes.len(), 1usize);
+                match attributes.get(0).unwrap() {
+                    AttributeInfo::LineNumberTable {
+                        line_number_table
+                    } => {
+                        assert_eq!(line_number_table.len(), 2usize);
+
+                        let line_number_table_entry_0 = line_number_table.get(0).unwrap();
+                        assert_eq!(line_number_table_entry_0.start_pc, 0u16);
+                        assert_eq!(line_number_table_entry_0.line_number, 41u16);
+
+                        let line_number_table_entry_1 = line_number_table.get(1).unwrap();
+                        assert_eq!(line_number_table_entry_1.start_pc, 3u16);
+                        assert_eq!(line_number_table_entry_1.line_number, 42u16);
+                    }
+                    _ => panic!("Method 13 attribute 0 attribute 0 is not AttributeInfo::LineNumberTable")
+                }
+            }
+            _ => panic!("Method 13 attribute 0 is not AttributeInfo::Code")
+        }
+
     }
 
     #[test]
