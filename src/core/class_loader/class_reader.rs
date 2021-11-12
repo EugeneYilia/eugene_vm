@@ -789,6 +789,15 @@ mod tests {
         assert_eq!(interfaces.len(), 0usize);
         assert_eq!(fields.len(), 0usize);
         assert_eq!(methods.len(), 14usize);
+
+        assert_eq!(attributes.len(), 1usize);
+        match attributes.get(0).unwrap() {
+            AttributeInfo::SourceFile { source_file_index } => {
+                assert_eq!(*source_file_index, 48u16)
+            }
+            _ => panic!("classfile attribute 0 is not AttributeInfo::SourceFile")
+        }
+
         methods.iter().for_each(|method| println!("{:?}", method));
         let MemberInfo {
             access_flags,
@@ -801,6 +810,7 @@ mod tests {
         assert_eq!(*name_index, 23u16);
         assert_eq!(*descriptor_index, 24u16);
         assert_eq!(attributes.len(), 1usize);
+        assert_eq!(*access_flags,273u16);
 
         let MemberInfo {
             access_flags,
@@ -811,6 +821,7 @@ mod tests {
             attributes
         } = methods.get(12).unwrap();
         assert_eq!(attributes.len(), 2usize);// finalize    [0]Code  [1]Exceptions
+        assert_eq!(*access_flags,4u16);
 
         let MemberInfo {
             access_flags,
@@ -823,6 +834,7 @@ mod tests {
         assert_eq!(*name_index, 46u16);
         assert_eq!(*descriptor_index, 19u16);
         assert_eq!(attributes.len(), 1usize);
+        assert_eq!(*access_flags,8u16);
         match attributes.get(0).unwrap() {
             AttributeInfo::Code {
                 max_stack,
@@ -855,6 +867,10 @@ mod tests {
             }
             _ => panic!("Method 13 attribute 0 is not AttributeInfo::Code")
         }
+    }
+
+    #[test]
+    fn parse_from_jar(){
 
     }
 
