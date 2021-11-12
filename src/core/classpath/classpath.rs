@@ -1,8 +1,7 @@
+use std::path::Path;
+
 use crate::core::classpath::classpath_entry::ClasspathEntry;
 use crate::util::file_util::is_path_exist;
-
-use std::path::{PathBuf, Path};
-
 
 #[derive(Debug)]
 pub struct ClassPath {

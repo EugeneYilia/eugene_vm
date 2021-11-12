@@ -10,8 +10,7 @@ use crate::runtime::method_area::classfile::classfile::ClassFile;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::method_area::constant_pool::constant_info_tag::*;
 
-use crate::core::r#macro::loop_n;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
@@ -718,10 +717,10 @@ impl ClassReader for [u8] {
 // 测试直接从文件里读取和从jar包里读取对应的class文件
 #[cfg(test)]
 mod tests {
-    use std::cmp::min;
     use std::fs::File;
     use std::io::Read;
     use crate::core::class_loader::class_reader::ClassReader;
+    use crate::core::classpath::classpath_entry::ClasspathEntry;
     use crate::runtime::method_area::classfile::classfile::ClassFile;
     use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
     use crate::runtime::method_area::classfile::member_info::MemberInfo;
@@ -736,6 +735,19 @@ mod tests {
         let path: &str = "eugene_test/byte_code/rt/java/lang/Object.class";
         let file = File::open(path).unwrap();
         let file_bytes: Vec<u8> = file.bytes().map(|result_u8| result_u8.unwrap()).collect();
+
+        check_class_file(file_bytes);
+    }
+
+    #[test]
+    fn parse_from_jar(){
+        let classpath_entry_jar = ClasspathEntry::new("eugene_test/byte_code/rt.jar");
+        let file_bytes = classpath_entry_jar.read_class("java/lang/Object.class").unwrap();
+        println!("{:?}",file_bytes);
+        check_class_file(file_bytes);
+    }
+
+    fn check_class_file(file_bytes:Vec<u8>){
         let class_file = file_bytes.parse();
         println!("{:?}", class_file);
         let ClassFile {
@@ -801,9 +813,9 @@ mod tests {
         methods.iter().for_each(|method| println!("{:?}", method));
         let MemberInfo {
             access_flags,
-            name,
+            name:_,
             name_index,
-            descriptor,
+            descriptor:_,
             descriptor_index,
             attributes
         } = methods.get(2).unwrap();
@@ -814,9 +826,9 @@ mod tests {
 
         let MemberInfo {
             access_flags,
-            name,
+            name:_,
             name_index,
-            descriptor,
+            descriptor:_,
             descriptor_index,
             attributes
         } = methods.get(12).unwrap();
@@ -825,9 +837,9 @@ mod tests {
 
         let MemberInfo {
             access_flags,
-            name,
+            name:_,
             name_index,
-            descriptor,
+            descriptor:_,
             descriptor_index,
             attributes
         } = methods.get(13).unwrap();
@@ -867,11 +879,6 @@ mod tests {
             }
             _ => panic!("Method 13 attribute 0 is not AttributeInfo::Code")
         }
-    }
-
-    #[test]
-    fn parse_from_jar(){
-
     }
 
     #[test]
