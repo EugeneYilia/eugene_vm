@@ -58,7 +58,7 @@ impl ClasspathEntry {
                 let mut zip_file = zip::ZipArchive::new(zip_file)?;
                 let mut class_file = zip_file.by_name(class_file_name)?;
                 let mut file_bytes_buf = Vec::<u8>::with_capacity(class_file.size() as usize);
-                class_file.read(&mut file_bytes_buf)?;
+                class_file.read_to_end(&mut file_bytes_buf)?;
                 Ok(file_bytes_buf)
             }
             ClasspathEntry::Wildcard { path_buf_vec } => {
