@@ -743,7 +743,7 @@ mod tests {
     fn parse_from_jar(){
         let classpath_entry_jar = ClasspathEntry::new("eugene_test/byte_code/rt.jar");
         let file_bytes = classpath_entry_jar.read_class("java/lang/Object.class").unwrap();
-        println!("{:?}",file_bytes);
+
         check_class_file(file_bytes);
     }
 
