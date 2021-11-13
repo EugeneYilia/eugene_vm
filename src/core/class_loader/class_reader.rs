@@ -732,9 +732,18 @@ mod tests {
 
     #[test]
     fn parse_from_file() {
+        // 直接文件读取
         let path: &str = "eugene_test/byte_code/rt/java/lang/Object.class";
         let file = File::open(path).unwrap();
         let file_bytes: Vec<u8> = file.bytes().map(|result_u8| result_u8.unwrap()).collect();
+
+        check_class_file(file_bytes);
+    }
+
+    #[test]
+    fn parse_from_dir() {
+        let classpath_entry_dir = ClasspathEntry::new("eugene_test/byte_code/rt");
+        let file_bytes = classpath_entry_dir.read_class("java/lang/Object.class").unwrap();
 
         check_class_file(file_bytes);
     }
