@@ -1,12 +1,12 @@
 use byteorder::{BigEndian, ByteOrder};
-use crate::runtime::method_area::classfile::version_info::VersionInfo;
+use crate::core::classfile::version_info::VersionInfo;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-use crate::runtime::method_area::classfile::member_info::MemberInfo;
-use crate::runtime::method_area::classfile::attribute_info::exception_table_entry::ExceptionTableEntry;
-use crate::runtime::method_area::classfile::attribute_info::line_number_table_entry::LineNumberTableEntry;
-use crate::runtime::method_area::classfile::attribute_info::local_variable_table_entry::LocalVariableTableEntry;
-use crate::runtime::method_area::classfile::attribute_info::attribute_info::AttributeInfo;
-use crate::runtime::method_area::classfile::classfile::ClassFile;
+use crate::core::classfile::member_info::MemberInfo;
+use crate::core::classfile::attribute_info::exception_table_entry::ExceptionTableEntry;
+use crate::core::classfile::attribute_info::line_number_table_entry::LineNumberTableEntry;
+use crate::core::classfile::attribute_info::local_variable_table_entry::LocalVariableTableEntry;
+use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
+use crate::core::classfile::classfile::ClassFile;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::method_area::constant_pool::constant_info_tag::*;
 
@@ -721,10 +721,10 @@ mod tests {
     use std::io::Read;
     use crate::core::class_loader::class_reader::ClassReader;
     use crate::core::classpath::classpath_entry::ClasspathEntry;
-    use crate::runtime::method_area::classfile::classfile::ClassFile;
+    use crate::core::classfile::classfile::ClassFile;
     use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-    use crate::runtime::method_area::classfile::member_info::MemberInfo;
-    use crate::runtime::method_area::classfile::attribute_info::attribute_info::AttributeInfo;
+    use crate::core::classfile::member_info::MemberInfo;
+    use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 
     fn panic_type_not_match(index: usize, err_msg: &str) {
         panic!("Index {} constant_info type is not {}", index, err_msg);

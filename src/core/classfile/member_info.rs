@@ -1,4 +1,4 @@
-use crate::runtime::method_area::classfile::attribute_info::attribute_info::AttributeInfo;
+use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 
 // 因为field_info和method_info结构体中内容是一样的  因此采用member_info来表达
 #[derive(Debug)]

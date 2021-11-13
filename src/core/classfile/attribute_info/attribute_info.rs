@@ -1,6 +1,6 @@
-use crate::runtime::method_area::classfile::attribute_info::exception_table_entry::ExceptionTableEntry;
-use crate::runtime::method_area::classfile::attribute_info::line_number_table_entry::LineNumberTableEntry;
-use crate::runtime::method_area::classfile::attribute_info::local_variable_table_entry::LocalVariableTableEntry;
+use crate::core::classfile::attribute_info::exception_table_entry::ExceptionTableEntry;
+use crate::core::classfile::attribute_info::line_number_table_entry::LineNumberTableEntry;
+use crate::core::classfile::attribute_info::local_variable_table_entry::LocalVariableTableEntry;
 
 #[derive(Debug)]
 pub enum AttributeInfo {
