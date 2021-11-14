@@ -8,7 +8,7 @@ use crate::core::classfile::attribute_info::local_variable_table_entry::LocalVar
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 use crate::core::classfile::classfile::ClassFile;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-use crate::runtime::method_area::constant_pool::constant_info_tag::*;
+use crate::constants::constant_info_tag::*;
 
 use std::collections::BTreeMap;
 

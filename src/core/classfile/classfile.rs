@@ -1,7 +1,7 @@
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::core::classfile::member_info::MemberInfo;
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
-use crate::core::classfile::access_flags::{ACCESS_STATIC, ACCESS_PUBLIC};
+use crate::constants::access_flags::{ACCESS_STATIC, ACCESS_PUBLIC};
 
 #[derive(Debug)]
 pub struct ClassFile {
