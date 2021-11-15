@@ -12,6 +12,7 @@ pub struct MemberInfo {
 }
 
 impl MemberInfo {
+    // 返回方法特有的属性
     pub fn get_attribute_code(&self) -> Option<&AttributeInfo> {
         self.attributes.iter().find(|attribute_info|
             match attribute_info {
@@ -21,6 +22,7 @@ impl MemberInfo {
         )
     }
 
+    // 返回字段特有的属性
     pub fn get_attribute_constant(&self) -> Option<&AttributeInfo> {
         self.attributes.iter().find(|attribute_info|
             match attribute_info {
