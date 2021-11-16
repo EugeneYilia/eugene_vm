@@ -6,7 +6,7 @@ use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 //    public       String        author = "EugeneLiu"
 #[derive(Debug)]
 pub struct Field {
-    pub class_member: ClassMember,
+    class_member: ClassMember,
     // ConstantValue属性用于通知虚拟机在类或接口初始化阶段为被标志为ACC_STATIC的字段自动赋值，如接口中声明的字段，类中声明的静态常量字段。
     // 其它非ACC_STATIC的字段是在类的实例初始化方法中完成的。
     pub constant_value_index: Option<usize>,
@@ -27,5 +27,17 @@ impl Field {
             class_member,
             constant_value_index,
         }
+    }
+
+    pub fn get_name(&self) -> &str {
+        self.class_member.name.as_str()
+    }
+
+    pub fn get_descriptor(&self) -> &str {
+        self.class_member.descriptor.as_str()
+    }
+
+    pub fn get_access_flags(&self) -> u16 {
+        self.class_member.access_flags
     }
 }

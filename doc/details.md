@@ -15,7 +15,10 @@
 5. rt.jar代表runtime JAR，并且包含引导类（bootstrap classes）——来自Core Java API的所有类。
 6. [question mark operator and unwrap](https://m4rw3r.github.io/rust-questionmark-operator)
    1. ?操作符要求方法返回值要是Result才可以   unwrap()不需要对方法返回值做限定  遇到问题直接会调用panic!()进行抛出异常
-7. 
+7. The function syntax (Rc::clone(&rc)) makes it clear you're only making a new shared reference (cheap), 
+   rather than cloning the underlying object being referenced (maybe expensive). 
+   For arbitrary reference counted types, it may not be clear if a shallow or deep copy is occurring.
+8. 
 
 
 

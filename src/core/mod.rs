@@ -6,3 +6,4 @@ pub mod classpath;
 pub mod class_loader;
 pub mod garbage_collector;
 pub mod classfile;
+pub mod bytecode_execution_engine;

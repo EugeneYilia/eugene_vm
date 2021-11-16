@@ -6,7 +6,7 @@ use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 //  public          String       getName    (String name){}
 #[derive(Debug)]
 pub struct Method {
-    pub class_member: ClassMember,
+    class_member: ClassMember,
     pub max_stack: usize,
     pub max_locals: usize,
     pub code: Vec<u8>,
@@ -30,6 +30,30 @@ impl Method {
                     code: code.clone(),
                 }
             }
+            None => {
+                // 抽象类 或者 接口
+                Method {
+                    class_member,
+                    max_stack: 0usize,
+                    max_locals: 0usize,
+                    code: Vec::new(),
+                }
+            }
+            _ => {
+                panic!("Wow, that's amazing!")
+            }
         }
+    }
+
+    pub fn get_name(&self) -> &str {
+        self.class_member.name.as_str()
+    }
+
+    pub fn get_descriptor(&self) -> &str {
+        self.class_member.descriptor.as_str()
+    }
+
+    pub fn get_access_flags(&self) -> u16 {
+        self.class_member.access_flags
     }
 }
