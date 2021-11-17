@@ -34,14 +34,77 @@ impl StackFrame {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::BTreeMap;
     use std::rc::Rc;
     use crate::runtime::method_area::class::method::Method;
     use crate::core::classfile::member_info::MemberInfo;
+    use crate::runtime::method_area::class::class::Class;
+    use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
+    use crate::runtime::stack::local_variables_table::VariableTable;
+    use crate::runtime::stack::operand_stack::OperandStack;
+    use crate::runtime::stack::stack_frame::StackFrame;
+    use crate::runtime::stack::variable_slot::VariableSlot;
 
     #[test]
     fn test_create_frame() {
         let method_ref = Rc::new(Method::new(MemberInfo {
-
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: Vec::new(),
         }));
+        let class_ref = Rc::new(Class {
+            access_flags: 0u16,
+            class_name: "".to_string(),
+            constant_pool: ConstantPool {
+                constant_info_map: BTreeMap::new()
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            static_variable_table: VariableTable::new(),
+        });
+        let frame = StackFrame::new(class_ref, method_ref);
+        check_local_variable_table(frame.local_variable_table);
+        check_operand_stack(frame.operand_stack);
+    }
+
+    fn check_local_variable_table(mut local_variable_table: VariableTable) {
+        local_variable_table.set_variable_slot(0, VariableSlot::I32(100));
+        local_variable_table.set_variable_slot(1, VariableSlot::I32(-100));
+        match local_variable_table.get_variable_slot(0) {
+            VariableSlot::I32(value) => {
+                assert_eq!(*value, 100)
+            }
+            _ => panic!("variable slot 0 is not VariableSlot::I32(100)")
+        }
+
+        match local_variable_table.get_variable_slot(1) {
+            VariableSlot::I32(value) => {
+                assert_eq!(*value, -100)
+            }
+            _ => panic!("variable slot 0 is not VariableSlot::I32(-100)")
+        }
+    }
+
+    fn check_operand_stack(mut operand_stack: OperandStack) {
+        operand_stack.push_i32(100i32);
+        operand_stack.push_f64(2.71828182845f64);
+        operand_stack.push_i32(-100i32);
+        operand_stack.push_i64(2997924580i64);
+        operand_stack.push_f32(3.1415926f32);
+
+        let f32_value = operand_stack.pop_f32();
+        assert_eq!(f32_value, 3.1415926f32);
+        let i64_value = operand_stack.pop_i64();
+        assert_eq!(i64_value, 2997924580i64);
+        let i32_value = operand_stack.pop_i32();
+        assert_eq!(i32_value, -100i32);
+        let f64_value = operand_stack.pop_f64();
+        assert_eq!(f64_value, 2.71828182845f64);
+        let i32_value = operand_stack.pop_i32();
+        assert_eq!(i32_value, 100i32);
     }
 }
