@@ -31,7 +31,7 @@ impl Method {
                 }
             }
             None => {
-                // 抽象类 或者 接口
+                // 抽象方法  接口方法  native方法
                 Method {
                     class_member,
                     max_stack: 0usize,

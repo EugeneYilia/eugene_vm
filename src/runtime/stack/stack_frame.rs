@@ -15,7 +15,7 @@ pub struct StackFrame {
 
 impl StackFrame {
     pub fn new(class: Rc<Class>, method: Rc<Method>) -> StackFrame {
-        let Method{
+        let Method {
             max_stack,
             ..
         } = *method;
@@ -27,16 +27,21 @@ impl StackFrame {
             local_variable_table,
             operand_stack,
             method,
-            class
+            class,
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::rc::Rc;
+    use crate::runtime::method_area::class::method::Method;
+    use crate::core::classfile::member_info::MemberInfo;
 
     #[test]
-    fn test_create_frame(){
+    fn test_create_frame() {
+        let method_ref = Rc::new(Method::new(MemberInfo {
 
+        }));
     }
 }

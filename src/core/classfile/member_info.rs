@@ -12,7 +12,7 @@ pub struct MemberInfo {
 }
 
 impl MemberInfo {
-    // 返回方法特有的属性
+    // 返回方法特有的属性  并不是所有方法都有这个属性  比如说抽象方法、native方法、接口方法
     pub fn get_attribute_code(&self) -> Option<&AttributeInfo> {
         self.attributes.iter().find(|attribute_info|
             match attribute_info {
