@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::rc::Rc;
+use crate::core::class_loader::class_reader::ClassReader;
 use crate::core::classpath::classpath::ClassPath;
 use crate::runtime::method_area::class::class::Class;
 
@@ -22,5 +23,6 @@ impl ClassLoader {
 
     pub fn define(class_loader: ClassLoader, bytes_code: Vec<u8>) -> Rc<Class> {
         let class_file = bytes_code.parse();
+
     }
 }

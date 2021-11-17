@@ -12,7 +12,7 @@ use crate::constants::constant_info_tag::*;
 
 use std::collections::BTreeMap;
 
-trait ClassReader {
+pub trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
     fn read_u16(&self) -> (u16, &[u8]);
     fn read_u16s(&self) -> (Vec<u16>, &[u8]);
