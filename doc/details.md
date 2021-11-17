@@ -18,7 +18,11 @@
 7. The function syntax (Rc::clone(&rc)) makes it clear you're only making a new shared reference (cheap), 
    rather than cloning the underlying object being referenced (maybe expensive). 
    For arbitrary reference counted types, it may not be clear if a shallow or deep copy is occurring.
-8. 
+8. 对于method中max_locals的理解  
+   首先获取CodeAttribute属性会出现两种情况 一种是方法有CodeAttribute属性，一种是没有  
+   1. 当有CodeAttribute属性代表是非native、abstract、interface method，此时使用javac编译带好的max_locals作为method的max_locals就可以
+   2. 当没有CodeAttribute属性时，代表是native、abstract、interface method中的一种，因为这些方法都是没有任何方法内容，因此此时其max_locals应该为0
+9. 
 
 
 
