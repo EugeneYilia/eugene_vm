@@ -13,8 +13,8 @@ pub struct Method {
 }
 
 impl Method {
-    pub fn new(member_info: MemberInfo) -> Method {
-        let class_member = ClassMember::new(&member_info);
+    pub fn new(member_info: &MemberInfo) -> Method {
+        let class_member = ClassMember::new(member_info);
         let attribute_info = member_info.get_attribute_code();
         match attribute_info {
             Some(AttributeInfo::Code {

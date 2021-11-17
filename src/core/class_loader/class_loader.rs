@@ -4,6 +4,7 @@ use crate::core::class_loader::class_reader::ClassReader;
 use crate::core::classfile::classfile::ClassFile;
 use crate::core::classpath::classpath::ClassPath;
 use crate::runtime::method_area::class::class::Class;
+use crate::runtime::method_area::class::method::Method;
 
 // TODO: 加入双亲委派机制
 pub struct ClassLoader {
@@ -45,7 +46,19 @@ impl ClassLoader {
             methods,
             ..
         } = class_file;
+        let methods: Vec<Rc<Method>> = methods
+            .iter()
+            .map(|member_info| Rc::new(Method::new(member_info)))
+            .collect();
 
+        let class_ref = Rc::new(Class{
+            access_flags,
+            constant_pool,
+
+
+        });
+
+        (class_loader,class_ref)
     }
 }
 

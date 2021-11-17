@@ -47,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_create_frame() {
-        let method_ref = Rc::new(Method::new(MemberInfo {
+        let method_ref = Rc::new(Method::new(&MemberInfo {
             access_flags: 0u16,
             name: "".to_string(),
             name_index: 0u16,
