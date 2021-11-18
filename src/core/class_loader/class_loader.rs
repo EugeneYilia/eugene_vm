@@ -9,6 +9,7 @@ use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::stack::variables_table::VariableTable;
+use crate::constants::access_flags::{ACCESS_STATIC, ACCESS_FINAL};
 
 ///       下一个实例字段slot_id  下一个静态字段slot_id  static变量表  常量池
 type SlotIdAccumulator = (usize, usize, VariableTable, ConstantPool);
@@ -75,8 +76,19 @@ impl ClassLoader {
 
 
         fn calc_instance_slot_id(slot_id_accumulator: SlotIdAccumulator, field: &Field) -> SlotIdAccumulator {
-            let (next_instance_slot_id,next_static_slot_id,variable_table,constant_pool) = slot_id_accumulator;
+            let (next_instance_slot_id, next_static_slot_id, static_variable_table, constant_pool) = slot_id_accumulator;
+            let used_slot_amount = if field.is_need_two_slot() { 2usize } else { 1usize };
+            if field.get_access_flags() & ACCESS_STATIC != 0 {
+                if field.get_access_flags() & ACCESS_FINAL != 0 {
+                    // static final 会被编译为常量 内联到使用的地方
 
+                } else {
+
+                }
+                (next_instance_slot_id + used_slot_amount, next_static_slot_id, static_variable_table, constant_pool)
+            } else {
+                (next_instance_slot_id + used_slot_amount, next_static_slot_id, static_variable_table, constant_pool)
+            }
         }
 
         let next_instance_slot_id = super_class
