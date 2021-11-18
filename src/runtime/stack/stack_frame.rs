@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
-use crate::runtime::stack::local_variables_table::VariableTable;
+use crate::runtime::stack::variables_table::VariableTable;
 use crate::runtime::stack::operand_stack::OperandStack;
 
 #[derive(Debug)]
@@ -40,7 +40,7 @@ mod tests {
     use crate::core::classfile::member_info::MemberInfo;
     use crate::runtime::method_area::class::class::Class;
     use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-    use crate::runtime::stack::local_variables_table::VariableTable;
+    use crate::runtime::stack::variables_table::VariableTable;
     use crate::runtime::stack::operand_stack::OperandStack;
     use crate::runtime::stack::stack_frame::StackFrame;
     use crate::runtime::stack::variable_slot::VariableSlot;
@@ -64,6 +64,8 @@ mod tests {
             fields: Vec::new(),
             methods: Vec::new(),
             super_class: None,
+            next_instance_slot_id: 0,
+            next_static_slot_id: 0,
             static_variable_table: VariableTable::new(),
         });
         let frame = StackFrame::new(class_ref, method_ref);

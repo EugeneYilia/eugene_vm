@@ -1,0 +1,1 @@
+pub const ROOT_CLASS_NAME: &'static str = "java/lang/Object";

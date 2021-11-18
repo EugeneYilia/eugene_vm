@@ -1,6 +1,8 @@
+use crate::constants::field_descriptor::{DOUBLE_FIELD_DESCRIPTOR, LONG_FIELD_DESCRIPTOR};
 use crate::runtime::method_area::class::class_member::ClassMember;
 use crate::core::classfile::member_info::MemberInfo;
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
+use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo::FieldRef;
 
 // access_flags   descriptor      name
 //    public       String        author = "EugeneLiu"
@@ -13,8 +15,8 @@ pub struct Field {
 }
 
 impl Field {
-    pub fn new(member_info: MemberInfo) -> Field {
-        let class_member = ClassMember::new(&member_info);
+    pub fn new(member_info: &MemberInfo) -> Field {
+        let class_member = ClassMember::new(member_info);
 
         let constant_value_index = member_info.get_attribute_constant().map(|attribute_info| match attribute_info {
             AttributeInfo::ConstantValue {
@@ -40,4 +42,22 @@ impl Field {
     pub fn get_access_flags(&self) -> u16 {
         self.class_member.access_flags
     }
+
+    pub fn is_need_two_slot(&self) -> bool {
+        &self.class_member.descriptor == LONG_FIELD_DESCRIPTOR ||
+            &self.class_member.descriptor == DOUBLE_FIELD_DESCRIPTOR
+    }
+}
+
+#[test]
+fn test_field_descriptor(){
+    let field = Field::new(&MemberInfo {
+        access_flags: 0u16,
+        name: "".to_string(),
+        name_index: 0u16,
+        descriptor_index: 0u16,
+        descriptor: "D".to_string(),
+        attributes: Vec::new(),
+    });
+    println!("{}",field.is_need_two_slot())
 }

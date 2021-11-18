@@ -1,0 +1,10 @@
+pub const BYTE_FIELD_DESCRIPTOR: &'static str = "B";
+pub const CHAR_FIELD_DESCRIPTOR: &'static str = "C";
+pub const DOUBLE_FIELD_DESCRIPTOR: &'static str = "D";
+pub const FLOAT_FIELD_DESCRIPTOR: &'static str = "F";
+pub const INT_FIELD_DESCRIPTOR: &'static str = "I";
+pub const LONG_FIELD_DESCRIPTOR: &'static str = "J";
+pub const SHORT_FIELD_DESCRIPTOR: &'static str = "S";
+pub const BOOLEAN_FIELD_DESCRIPTOR: &'static str = "Z";
+pub const VOID_FIELD_DESCRIPTOR: &'static str = "V";
+pub const OBJ_FIELD_DESCRIPTOR : &'static str = "L";

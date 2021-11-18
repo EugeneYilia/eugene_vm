@@ -1,10 +1,17 @@
 use std::collections::HashMap;
 use std::rc::Rc;
+use crate::constants::class_constants::ROOT_CLASS_NAME;
 use crate::core::class_loader::class_reader::ClassReader;
 use crate::core::classfile::classfile::ClassFile;
 use crate::core::classpath::classpath::ClassPath;
 use crate::runtime::method_area::class::class::Class;
+use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
+use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
+use crate::runtime::stack::variables_table::VariableTable;
+
+///       下一个实例字段slot_id  下一个静态字段slot_id  static变量表  常量池
+type SlotIdAccumulator = (usize, usize, VariableTable, ConstantPool);
 
 // TODO: 加入双亲委派机制
 pub struct ClassLoader {
@@ -39,6 +46,15 @@ impl ClassLoader {
 
     fn define_class(class_loader: &mut ClassLoader, bytes_code: Vec<u8>) -> (&mut ClassLoader, Rc<Class>) {
         let class_file = bytes_code.parse();
+
+        let class_name = class_file.get_class_name().to_owned();
+        let super_class = if class_name != ROOT_CLASS_NAME {
+            let super_class_name = class_file.get_super_class_name();
+            Some(class_loader.load_class(super_class_name.to_owned()))
+        } else {
+            None
+        };
+
         let ClassFile {
             constant_pool,
             access_flags,
@@ -46,19 +62,41 @@ impl ClassLoader {
             methods,
             ..
         } = class_file;
+
+        let fields: Vec<Field> = fields
+            .iter()
+            .map(|member_info| Field::new(member_info))
+            .collect();
+
         let methods: Vec<Rc<Method>> = methods
             .iter()
             .map(|member_info| Rc::new(Method::new(member_info)))
             .collect();
 
-        let class_ref = Rc::new(Class{
-            access_flags,
-            constant_pool,
 
+        fn calc_instance_slot_id(slot_id_accumulator: SlotIdAccumulator, field: &Field) -> SlotIdAccumulator {
+            let (next_instance_slot_id,next_static_slot_id,variable_table,constant_pool) = slot_id_accumulator;
 
-        });
+        }
 
-        (class_loader,class_ref)
+        let next_instance_slot_id = super_class
+            .map(|class| class.next_instance_slot_id)
+            .unwrap_or(0);
+
+        let slot_id_accumulator: SlotIdAccumulator = (next_instance_slot_id, 0usize, VariableTable::new(), constant_pool);
+
+        todo!()
+        // let class_ref = Rc::new(Class {
+        //     access_flags,
+        //     constant_pool,
+        //     class_name,
+        //
+        //     methods,
+        //     super_class,
+        //
+        // });
+        //
+        // (class_loader, class_ref)
     }
 }
 
@@ -72,5 +110,12 @@ mod tests {
         hashmap.insert("a".to_string(), "b".to_string());
         let result = hashmap.get(&"a".to_string());
         println!("{:?}", result);
+    }
+
+    #[test]
+    fn test_fold() {
+        let source = vec![1, 2, 3, 4];
+        let result = source.iter().fold(0i32, |acc, value| { acc + value });
+        println!("{}", result)
     }
 }
