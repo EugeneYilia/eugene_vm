@@ -81,7 +81,7 @@ impl ClassLoader {
             if field.get_access_flags() & ACCESS_STATIC != 0 {
                 if field.get_access_flags() & ACCESS_FINAL != 0 {
                     // static final 会被编译为常量 内联到使用的地方
-
+                
                 } else {
 
                 }
