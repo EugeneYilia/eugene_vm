@@ -138,8 +138,9 @@ impl ClassLoader {
         }
 
         let next_instance_slot_id = super_class
+            .clone()
             .map(|class| class.next_instance_slot_id)
-            .unwrap_or(0);
+            .unwrap_or(0usize);
 
         let slot_id_accumulator: SlotIdAccumulator = (next_instance_slot_id, 0usize, VariableTable::new(), constant_pool);
 
