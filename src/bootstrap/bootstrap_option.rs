@@ -8,3 +8,15 @@ pub struct BootstrapOption {
     // 额外传入的启动参数
     pub args: Vec<String>,
 }
+
+impl BootstrapOption {
+    pub fn new(class_name: &str, user_classpath_option: Option<String>, boot_classpath_option: Option<String>, args: Vec<String>) -> BootstrapOption {
+        let class_name = class_name.replace(".", "/");
+        BootstrapOption {
+            class_name,
+            user_classpath_option,
+            boot_classpath_option,
+            args,
+        }
+    }
+}

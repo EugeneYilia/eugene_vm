@@ -22,7 +22,7 @@ pub struct Class {
 }
 
 impl Class {
-    fn get_method(&self, name: &str, descriptor: &str, access_flags: Vec<u16>) -> Rc<Method> {
+    pub fn get_method(&self, name: &str, descriptor: &str, access_flags: Vec<u16>) -> Rc<Method> {
         // Java main func:  public static void main(String[] args){}
         let method_ref = self.methods
             .iter()

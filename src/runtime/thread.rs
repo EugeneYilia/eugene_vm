@@ -21,4 +21,9 @@ impl Thread {
     pub fn pop_stack_frame(&mut self) -> StackFrame {
         self.stack.pop()
     }
+
+    /// 判断是否还有stack_frame
+    pub fn has_stack_frame(&self) -> bool {
+        !self.stack.is_empty()
+    }
 }
