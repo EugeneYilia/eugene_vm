@@ -3,15 +3,6 @@
 version = 3
 
 [[package]]
-name = "EugeneVM"
-version = "0.1.0"
-dependencies = [
- "byteorder",
- "cesu8",
- "zip",
-]
-
-[[package]]
 name = "adler"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -75,6 +66,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81156fece84ab6a9f2afdb109ce3ae577e42b1228441eded99bd77f627953b1a"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "eugene_vm"
+version = "0.1.0"
+dependencies = [
+ "byteorder",
+ "cesu8",
+ "zip",
 ]
 
 [[package]]

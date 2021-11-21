@@ -1,5 +1,5 @@
 [package]
-name = "EugeneVM"
+name = "eugene_vm"
 version = "0.1.0"
 edition = "2018"
 authors = ["EugeneLiu <583076221@qq.com>"]

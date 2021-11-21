@@ -1,5 +1,5 @@
-use EugeneVM::bootstrap::bootstrap_option::BootstrapOption;
-use EugeneVM::bootstrap::bootstrap::start_jvm;
+use eugene_vm::bootstrap::bootstrap_option::BootstrapOption;
+use eugene_vm::bootstrap::bootstrap::start_jvm;
 
 fn main() {
     let class_name = "";

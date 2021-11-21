@@ -1,4 +1,4 @@
-# EugeneVM
+# eugene_vm
 
 ## Module Description
 
