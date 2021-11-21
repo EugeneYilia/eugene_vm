@@ -1,9 +1,9 @@
 use std::rc::Rc;
+
 use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::stack::variables_table::VariableTable;
-
 use crate::util::class_util::check_access_flags_all;
 
 #[derive(Debug)]

@@ -23,7 +23,7 @@ impl Thread {
     }
 
     // 返回栈顶元素
-    pub fn get_stack_frame(&mut self)-> &mut StackFrame {
+    pub fn get_stack_frame(&mut self) -> &mut StackFrame {
         self.stack.get()
     }
 

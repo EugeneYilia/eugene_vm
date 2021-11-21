@@ -1,16 +1,17 @@
+use std::collections::BTreeMap;
+
 use byteorder::{BigEndian, ByteOrder};
-use crate::core::classfile::version_info::VersionInfo;
-use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-use crate::core::classfile::member_info::MemberInfo;
+
+use crate::constants::constant_info_tag::*;
+use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 use crate::core::classfile::attribute_info::exception_table_entry::ExceptionTableEntry;
 use crate::core::classfile::attribute_info::line_number_table_entry::LineNumberTableEntry;
 use crate::core::classfile::attribute_info::local_variable_table_entry::LocalVariableTableEntry;
-use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 use crate::core::classfile::classfile::ClassFile;
+use crate::core::classfile::member_info::MemberInfo;
+use crate::core::classfile::version_info::VersionInfo;
+use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-use crate::constants::constant_info_tag::*;
-
-use std::collections::BTreeMap;
 
 pub trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
@@ -719,12 +720,13 @@ impl ClassReader for [u8] {
 mod tests {
     use std::fs::File;
     use std::io::Read;
+
     use crate::core::class_loader::class_reader::ClassReader;
-    use crate::core::classpath::classpath_entry::ClasspathEntry;
-    use crate::core::classfile::classfile::ClassFile;
-    use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-    use crate::core::classfile::member_info::MemberInfo;
     use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
+    use crate::core::classfile::classfile::ClassFile;
+    use crate::core::classfile::member_info::MemberInfo;
+    use crate::core::classpath::classpath_entry::ClasspathEntry;
+    use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 
     fn panic_type_not_match(index: usize, err_msg: &str) {
         panic!("Index {} constant_info type is not {}", index, err_msg);

@@ -1,8 +1,9 @@
 use std::rc::Rc;
+
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
-use crate::runtime::stack::variables_table::VariableTable;
 use crate::runtime::stack::operand_stack::OperandStack;
+use crate::runtime::stack::variables_table::VariableTable;
 
 #[derive(Debug)]
 pub struct StackFrame {
@@ -35,14 +36,15 @@ impl StackFrame {
 mod tests {
     use std::collections::BTreeMap;
     use std::rc::Rc;
-    use crate::runtime::method_area::class::method::Method;
+
     use crate::core::classfile::member_info::MemberInfo;
     use crate::runtime::method_area::class::class::Class;
+    use crate::runtime::method_area::class::method::Method;
     use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-    use crate::runtime::stack::variables_table::VariableTable;
     use crate::runtime::stack::operand_stack::OperandStack;
     use crate::runtime::stack::stack_frame::StackFrame;
     use crate::runtime::stack::variable_slot::VariableSlot;
+    use crate::runtime::stack::variables_table::VariableTable;
 
     #[test]
     fn test_create_frame() {

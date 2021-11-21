@@ -6,7 +6,7 @@ macro_rules! loopn {
 }
 
 #[test]
-fn test_loopn (){
+fn test_loopn() {
     loopn!(3,{
         println!("Hello Eugene Liu");
     })

@@ -1,7 +1,7 @@
 use crate::constants::field_descriptor::{DOUBLE_FIELD_DESCRIPTOR, LONG_FIELD_DESCRIPTOR};
-use crate::runtime::method_area::class::class_member::ClassMember;
-use crate::core::classfile::member_info::MemberInfo;
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
+use crate::core::classfile::member_info::MemberInfo;
+use crate::runtime::method_area::class::class_member::ClassMember;
 
 // access_flags   descriptor      name
 //    public       String        author = "EugeneLiu"
@@ -49,7 +49,7 @@ impl Field {
 }
 
 #[test]
-fn test_field_descriptor(){
+fn test_field_descriptor() {
     let field = Field::new(&MemberInfo {
         access_flags: 0u16,
         name: "".to_string(),
@@ -58,5 +58,5 @@ fn test_field_descriptor(){
         descriptor: "D".to_string(),
         attributes: Vec::new(),
     });
-    println!("{}",field.is_need_two_slot())
+    println!("{}", field.is_need_two_slot())
 }

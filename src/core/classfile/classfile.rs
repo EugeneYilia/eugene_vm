@@ -1,7 +1,7 @@
-use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-use crate::core::classfile::member_info::MemberInfo;
+use crate::constants::access_flags::{ACCESS_PUBLIC, ACCESS_STATIC};
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
-use crate::constants::access_flags::{ACCESS_STATIC, ACCESS_PUBLIC};
+use crate::core::classfile::member_info::MemberInfo;
+use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 
 #[derive(Debug)]
 pub struct ClassFile {
@@ -18,11 +18,10 @@ pub struct ClassFile {
 }
 
 impl ClassFile {
-
-    pub fn main_method(&self) -> &MemberInfo{
+    pub fn main_method(&self) -> &MemberInfo {
         self.methods
             .iter()
-            .find(|member_info|{
+            .find(|member_info| {
                 member_info.name == "main"
                     && member_info.descriptor == "([Ljava/lang/String;)V"
                     && member_info.access_flags & ACCESS_STATIC != 0

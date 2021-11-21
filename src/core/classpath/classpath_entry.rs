@@ -1,6 +1,6 @@
-use std::path::{PathBuf, Path};
 use std::fs::{File, read_dir};
-use std::io::{Read, Error, ErrorKind};
+use std::io::{Error, ErrorKind, Read};
+use std::path::{Path, PathBuf};
 
 #[derive(Debug)]
 pub enum ClasspathEntry {

@@ -7,4 +7,4 @@ pub const LONG_FIELD_DESCRIPTOR: &'static str = "J";
 pub const SHORT_FIELD_DESCRIPTOR: &'static str = "S";
 pub const BOOLEAN_FIELD_DESCRIPTOR: &'static str = "Z";
 pub const VOID_FIELD_DESCRIPTOR: &'static str = "V";
-pub const OBJ_FIELD_DESCRIPTOR : &'static str = "L";
+pub const OBJ_FIELD_DESCRIPTOR: &'static str = "L";

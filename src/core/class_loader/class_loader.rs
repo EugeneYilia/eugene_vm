@@ -1,18 +1,19 @@
 use std::collections::HashMap;
 use std::rc::Rc;
+
+use crate::constants::access_flags::ACCESS_STATIC;
 use crate::constants::class_constants::ROOT_CLASS_NAME;
+use crate::constants::field_descriptor::*;
 use crate::core::class_loader::class_reader::ClassReader;
 use crate::core::classfile::classfile::ClassFile;
 use crate::core::classpath::classpath::ClassPath;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
-use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-use crate::runtime::stack::variables_table::VariableTable;
-use crate::constants::access_flags::ACCESS_STATIC;
-use crate::constants::field_descriptor::*;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
+use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::stack::variable_slot::VariableSlot;
+use crate::runtime::stack::variables_table::VariableTable;
 use crate::util::converter;
 
 ///       下一个实例字段slot_id  下一个静态字段slot_id  static变量表  常量池

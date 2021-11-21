@@ -1,6 +1,6 @@
-use crate::runtime::method_area::class::class_member::ClassMember;
-use crate::core::classfile::member_info::MemberInfo;
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
+use crate::core::classfile::member_info::MemberInfo;
+use crate::runtime::method_area::class::class_member::ClassMember;
 
 // access_flags   descriptor      name        descriptor
 //  public          String       getName    (String name){}

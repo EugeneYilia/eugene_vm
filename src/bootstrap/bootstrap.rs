@@ -1,13 +1,14 @@
+use std::rc::Rc;
+
 use crate::bootstrap::bootstrap_option::BootstrapOption;
-use crate::core::classpath::classpath::ClassPath;
+use crate::constants::access_flags::{ACCESS_PUBLIC, ACCESS_STATIC};
+use crate::core::bytecode_execution_engine::engine;
 use crate::core::class_loader::class_loader::ClassLoader;
-use crate::constants::access_flags::{ACCESS_STATIC, ACCESS_PUBLIC};
+use crate::core::classpath::classpath::ClassPath;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
-use std::rc::Rc;
-use crate::runtime::thread::Thread;
 use crate::runtime::stack::stack_frame::StackFrame;
-use crate::core::bytecode_execution_engine::engine;
+use crate::runtime::thread::Thread;
 
 // class_name 主函数入口
 // user_classpath and boot_classpath需要先解析出来
