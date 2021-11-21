@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::rc::Rc;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
@@ -80,14 +79,12 @@ mod tests {
             VariableSlot::I32(value) => {
                 assert_eq!(*value, 100)
             }
-            _ => panic!("variable slot 0 is not VariableSlot::I32(100)")
         }
 
         match local_variable_table.get_variable_slot(1) {
             VariableSlot::I32(value) => {
                 assert_eq!(*value, -100)
             }
-            _ => panic!("variable slot 0 is not VariableSlot::I32(-100)")
         }
     }
 

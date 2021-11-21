@@ -2,7 +2,6 @@ use crate::constants::field_descriptor::{DOUBLE_FIELD_DESCRIPTOR, LONG_FIELD_DES
 use crate::runtime::method_area::class::class_member::ClassMember;
 use crate::core::classfile::member_info::MemberInfo;
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
-use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo::FieldRef;
 
 // access_flags   descriptor      name
 //    public       String        author = "EugeneLiu"

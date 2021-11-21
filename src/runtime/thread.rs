@@ -22,6 +22,11 @@ impl Thread {
         self.stack.pop()
     }
 
+    // 返回栈顶元素
+    pub fn get_stack_frame(&mut self)-> &mut StackFrame {
+        self.stack.get()
+    }
+
     /// 判断是否还有stack_frame
     pub fn has_stack_frame(&self) -> bool {
         !self.stack.is_empty()

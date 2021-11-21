@@ -10,4 +10,3 @@ authors = ["EugeneLiu <583076221@qq.com>"]
 byteorder = "1.4.3"
 zip = "0.5.9"
 cesu8 = "1.1.0"
-lazy_static = "1.4.0"

@@ -1,5 +1,4 @@
 use std::rc::Rc;
-use crate::constants::access_flags::{ACCESS_PUBLIC, ACCESS_STATIC};
 use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;

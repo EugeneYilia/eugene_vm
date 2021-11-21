@@ -9,7 +9,7 @@ use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::stack::variables_table::VariableTable;
-use crate::constants::access_flags::{ACCESS_STATIC, ACCESS_FINAL};
+use crate::constants::access_flags::ACCESS_STATIC;
 use crate::constants::field_descriptor::*;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::stack::variable_slot::VariableSlot;
@@ -95,7 +95,7 @@ impl ClassLoader {
                                 ConstantInfo::Integer(value) => {
                                     static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(*value))
                                 }
-                                _ => panic!("constant_value_index: {} is not ConstantInfo::Integer")
+                                _ => panic!("constant_value_index: {} is not ConstantInfo::Integer", constant_value_index)
                             }
                         }
                         DOUBLE_FIELD_DESCRIPTOR => {
@@ -105,7 +105,7 @@ impl ClassLoader {
                                     static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(first));
                                     static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(second));
                                 }
-                                _ => panic!("constant_value_index: {} is not ConstantInfo::Double")
+                                _ => panic!("constant_value_index: {} is not ConstantInfo::Double", constant_value_index)
                             }
                         }
                         FLOAT_FIELD_DESCRIPTOR => {
@@ -113,7 +113,7 @@ impl ClassLoader {
                                 ConstantInfo::Float(value) => {
                                     static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(converter::f32_to_i32(*value)))
                                 }
-                                _ => panic!("constant_value_index: {} is not ConstantInfo::Float")
+                                _ => panic!("constant_value_index: {} is not ConstantInfo::Float", constant_value_index)
                             }
                         }
                         LONG_FIELD_DESCRIPTOR => {
@@ -123,7 +123,7 @@ impl ClassLoader {
                                     static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(first));
                                     static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(second));
                                 }
-                                _ => panic!("constant_value_index: {} is not ConstantInfo::Long")
+                                _ => panic!("constant_value_index: {} is not ConstantInfo::Long", constant_value_index)
                             }
                         }
                         _ => {
@@ -155,7 +155,7 @@ impl ClassLoader {
             super_class,
             next_instance_slot_id,
             next_static_slot_id,
-            static_variable_table
+            static_variable_table,
         });
 
         (class_loader, class_ref)

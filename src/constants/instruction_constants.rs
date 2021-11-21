@@ -1,24 +1,22 @@
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
-use std::collections::HashMap;
-use crate::core::bytecode_execution_engine::instruction::nop::{nop, nop2};
-    pub static  CODE_FN_MAP:HashMap<u8, Box<dyn Fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult>> = {
-        let mut map = HashMap::new();
-        map.insert(0x00u8,Box::new(nop));
-        // map.insert(0x01u8,Box::new(nop2));
-        map
-    };
+use crate::core::bytecode_execution_engine::instruction::nop::nop;
+use crate::core::bytecode_execution_engine::instruction::load::iload::{iload_0, iload_2, iload_1};
+
+pub fn get_instruction_fn(instruction_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
+    match instruction_code {
+        0x00 => nop,
+        0x1a => iload_0,
+        0x1b => iload_1,
+        0x1c => iload_2,
+        _ => panic!("illegal instruction code: {}", instruction_code)
+    }
+}
 
 #[test]
-fn test_code_fn_map() {
-    // let code_fn_map:HashMap<u8,Box<dyn Fn(CodeReader, &mut Thread) -> InstructionExecuteResult>> = {
-    //     let mut map : HashMap<u8,Box<dyn Fn(CodeReader, &mut Thread) -> InstructionExecuteResult>> = HashMap::new();
-    //     map.insert(0x00,Box::new(nop));
-    //     map
-    // };
-
-    let function = CODE_FN_MAP.get(&0x00).unwrap();
+fn test_get_instruction_fn(){
+    let function = get_instruction_fn(0x00);
     let exec_result: InstructionExecuteResult = function(&mut CodeReader::new(vec![], 0), &mut Thread::new(None));
     println!("{:?}", exec_result);
 }
