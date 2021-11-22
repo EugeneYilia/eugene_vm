@@ -14,7 +14,6 @@ impl VariableTable {
         }
     }
 
-    // 链式调用
     pub fn set_variable_slot(&mut self, index: usize, variable_slot: VariableSlot) {
         self.slot_map.insert(index, variable_slot);
     }

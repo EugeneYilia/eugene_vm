@@ -65,8 +65,8 @@ mod tests {
             fields: Vec::new(),
             methods: Vec::new(),
             super_class: None,
-            next_instance_slot_id: 0,
-            next_static_slot_id: 0,
+            next_instance_slot_id: 0usize,
+            next_static_slot_id: 0usize,
             static_variable_table: VariableTable::new(),
         });
         let frame = StackFrame::new(class_ref, method_ref);
