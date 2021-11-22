@@ -3,7 +3,8 @@ use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 
 pub fn goto(code_reader: &mut CodeReader, _thread: &mut Thread) -> InstructionExecuteResult {
-    let original_pc = code_reader.pc;
+    // original_pc is current - instruction_op_code
+    let original_pc = code_reader.pc - 1;
     let offset = code_reader.read_i16() as isize;
     InstructionExecuteResult {
         new_pc: (original_pc as isize + offset) as usize
