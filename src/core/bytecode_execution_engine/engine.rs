@@ -9,8 +9,8 @@ pub fn execute_instruction(thread: &mut Thread, pc: usize) -> InstructionExecute
         let stack_frame = thread.get_stack_frame();
         code_reader = CodeReader::new(stack_frame.method.code.clone(), pc);
     }
-    let instruction_byte_code = code_reader.read_u8();
+    let instruction_op_code = code_reader.read_u8();
 
-    let instruction_fn = instruction_constants::get_instruction_fn(instruction_byte_code);
+    let instruction_fn = instruction_constants::get_instruction_fn(instruction_op_code);
     instruction_fn(&mut code_reader, thread)
 }

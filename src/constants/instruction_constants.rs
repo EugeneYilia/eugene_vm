@@ -5,8 +5,8 @@ use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 
-pub fn get_instruction_fn(instruction_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
-    match instruction_code {
+pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
+    match instruction_op_code {
         0x00 => nop,
         0x1a => iload_0,
         0x1b => iload_1,
@@ -16,7 +16,7 @@ pub fn get_instruction_fn(instruction_code: u8) -> fn(&mut CodeReader, &mut Thre
         0x3c => istore_1,
         0x3d => istore_2,
         0x3e => istore_3,
-        _ => panic!("illegal instruction code: {}", instruction_code)
+        _ => panic!("illegal instruction op code: {}", instruction_op_code)
     }
 }
 
