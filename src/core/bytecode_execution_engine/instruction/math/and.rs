@@ -4,7 +4,7 @@ use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 
 pub fn iand(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
     let second = operand_stack.pop_i32();
@@ -16,7 +16,7 @@ pub fn iand(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 }
 
 pub fn land(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i64();
     let second = operand_stack.pop_i64();

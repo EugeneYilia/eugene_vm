@@ -27,7 +27,7 @@ impl Stack {
         }
     }
 
-    pub fn get(&mut self) -> &mut StackFrame {
+    pub fn get_mut(&mut self) -> &mut StackFrame {
         if self.is_empty() {
             panic!("Stack is empty");
         } else {

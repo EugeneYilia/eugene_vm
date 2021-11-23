@@ -6,7 +6,7 @@ use crate::runtime::thread::Thread;
 pub fn execute_instruction(thread: &mut Thread, pc: usize) -> InstructionExecuteResult {
     let mut code_reader: CodeReader;
     {
-        let stack_frame = thread.get_stack_frame();
+        let stack_frame = thread.get_stack_frame_mut();
         code_reader = CodeReader::new(stack_frame.method.code.clone(), pc);
     }
     let instruction_op_code = code_reader.read_u8();

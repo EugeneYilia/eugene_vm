@@ -5,7 +5,7 @@ use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
 
 pub fn iinc(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     let StackFrame {
         local_variable_table,
         ..

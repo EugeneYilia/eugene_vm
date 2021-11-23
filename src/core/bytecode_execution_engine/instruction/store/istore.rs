@@ -11,7 +11,7 @@ fn _istore(stack_frame: &mut StackFrame, variable_index: usize) {
 }
 
 pub fn istore_0(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     _istore(stack_frame, 0);
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -19,7 +19,7 @@ pub fn istore_0(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
 }
 
 pub fn istore_1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     _istore(stack_frame, 1);
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -27,7 +27,7 @@ pub fn istore_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
 }
 
 pub fn istore_2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     _istore(stack_frame, 2);
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -35,7 +35,7 @@ pub fn istore_2(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
 }
 
 pub fn istore_3(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     _istore(stack_frame, 3);
     InstructionExecuteResult {
         new_pc: code_reader.pc

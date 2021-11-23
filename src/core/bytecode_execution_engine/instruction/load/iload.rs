@@ -14,7 +14,7 @@ fn _iload(stack_frame: &mut StackFrame, variable_index: usize) {
 }
 
 pub fn iload_0(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let stack_frame = thread.get_stack_frame();
+    let stack_frame = thread.get_stack_frame_mut();
     _iload(stack_frame, 0);
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -22,7 +22,7 @@ pub fn iload_0(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruction
 }
 
 pub fn iload_1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let mut stack_frame = thread.get_stack_frame();
+    let mut stack_frame = thread.get_stack_frame_mut();
     _iload(&mut stack_frame, 1);
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -30,7 +30,7 @@ pub fn iload_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruction
 }
 
 pub fn iload_2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let mut stack_frame = thread.get_stack_frame();
+    let mut stack_frame = thread.get_stack_frame_mut();
     _iload(&mut stack_frame, 2);
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -38,7 +38,7 @@ pub fn iload_2(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruction
 }
 
 pub fn iload_3(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
-    let mut stack_frame = thread.get_stack_frame();
+    let mut stack_frame = thread.get_stack_frame_mut();
     _iload(&mut stack_frame, 3);
     InstructionExecuteResult {
         new_pc: code_reader.pc
