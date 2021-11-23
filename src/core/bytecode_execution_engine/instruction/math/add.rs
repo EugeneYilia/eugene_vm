@@ -53,49 +53,10 @@ pub fn dadd(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
-    use std::rc::Rc;
-
-    use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
-    use crate::core::classfile::member_info::MemberInfo;
+    use crate::core::bytecode_execution_engine::instruction::math::add::{iadd,ladd,fadd,dadd,};
+    use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
-    use crate::runtime::method_area::class::class::Class;
-    use crate::runtime::method_area::class::method::Method;
-    use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
-    use crate::runtime::stack::stack_frame::StackFrame;
-    use crate::runtime::stack::variables_table::VariableTable;
     use crate::runtime::thread::Thread;
-
-    fn mock_method() -> Rc<Method> {
-        Rc::new(Method::new(&MemberInfo {
-            access_flags: 0u16,
-            name: "".to_string(),
-            name_index: 0u16,
-            descriptor_index: 0u16,
-            descriptor: "".to_string(),
-            attributes: Vec::new(),
-        }))
-    }
-
-    fn mock_class() -> Rc<Class> {
-        Rc::new(Class {
-            access_flags: 0u16,
-            class_name: "".to_string(),
-            constant_pool: ConstantPool {
-                constant_info_map: BTreeMap::new()
-            },
-            fields: Vec::new(),
-            methods: Vec::new(),
-            super_class: None,
-            next_instance_slot_id: 0usize,
-            next_static_slot_id: 0usize,
-            static_variable_table: VariableTable::new(),
-        })
-    }
-
-    fn mock_stack_frame() -> StackFrame {
-        StackFrame::new(mock_class(), mock_method())
-    }
 
     #[test]
     fn test_iadd() {
