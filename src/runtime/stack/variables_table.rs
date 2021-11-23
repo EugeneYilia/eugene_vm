@@ -24,4 +24,11 @@ impl VariableTable {
             _ => panic!("{} does not point to VariableSlot", index)
         }
     }
+
+    pub fn get_variable_slot_mut(&mut self, index: usize) -> &mut VariableSlot {
+        match self.slot_map.get_mut(&index) {
+            Some(variable_slot) => variable_slot,
+            _ => panic!("{} does not point to VariableSlot", index)
+        }
+    }
 }
