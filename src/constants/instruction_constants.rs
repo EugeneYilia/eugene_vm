@@ -9,6 +9,7 @@ use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 use crate::core::bytecode_execution_engine::instruction::math::mul::{imul, lmul, fmul, dmul};
+use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
 
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
     match instruction_op_code {
@@ -29,6 +30,10 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
         0x69 => lmul,
         0x6a => fmul,
         0x6b => dmul,
+        0x74 => ineg,
+        0x75 => lneg,
+        0x76 => fneg,
+        0x77 => dneg,
         0x7e => iand,
         0x7f => land,
         0x84 => iinc,
