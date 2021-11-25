@@ -11,12 +11,16 @@ use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 use crate::core::bytecode_execution_engine::instruction::math::mul::{imul, lmul, fmul, dmul};
 use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
+use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc_w, ldc2_w};
 
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
     match instruction_op_code {
         0x00 => nop,
         0x10 => bipush,
         0x11 => sipush,
+        0x12 => ldc,
+        0x13 => ldc_w,
+        0x14 => ldc2_w,
         0x1a => iload_0,
         0x1b => iload_1,
         0x1c => iload_2,
