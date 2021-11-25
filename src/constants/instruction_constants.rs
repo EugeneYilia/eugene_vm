@@ -1,5 +1,6 @@
 use crate::core::bytecode_execution_engine::instruction::control::goto::goto;
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
+use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
 use crate::core::bytecode_execution_engine::instruction::load::iload::{iload_0, iload_1, iload_2, iload_3};
 use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
 use crate::core::bytecode_execution_engine::instruction::math::and::{iand, land};
@@ -14,6 +15,8 @@ use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg,
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
     match instruction_op_code {
         0x00 => nop,
+        0x10 => bipush,
+        0x11 => sipush,
         0x1a => iload_0,
         0x1b => iload_1,
         0x1c => iload_2,
