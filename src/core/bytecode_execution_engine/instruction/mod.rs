@@ -17,7 +17,7 @@ mod tests {
     use crate::runtime::stack::stack_frame::StackFrame;
     use crate::runtime::stack::variables_table::VariableTable;
 
-    pub fn mock_method() -> Rc<Method> {
+    pub fn mock_rc_method() -> Rc<Method> {
         Rc::new(Method::new(&MemberInfo {
             access_flags: 0u16,
             name: "".to_string(),
@@ -28,7 +28,7 @@ mod tests {
         }))
     }
 
-    pub fn mock_class() -> Rc<Class> {
+    pub fn mock_rc_class() -> Rc<Class> {
         Rc::new(Class {
             access_flags: 0u16,
             class_name: "".to_string(),
@@ -44,7 +44,23 @@ mod tests {
         })
     }
 
+    pub fn mock_class() -> Class {
+        Class {
+            access_flags: 0u16,
+            class_name: "".to_string(),
+            constant_pool: ConstantPool {
+                constant_info_map: BTreeMap::new()
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            next_instance_slot_id: 0usize,
+            next_static_slot_id: 0usize,
+            static_variable_table: VariableTable::new(),
+        }
+    }
+
     pub fn mock_stack_frame() -> StackFrame {
-        StackFrame::new(mock_class(), mock_method())
+        StackFrame::new(mock_rc_class(), mock_rc_method())
     }
 }
