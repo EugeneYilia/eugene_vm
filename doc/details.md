@@ -22,7 +22,9 @@
    首先获取CodeAttribute属性会出现两种情况 一种是方法有CodeAttribute属性，一种是没有  
    1. 当有CodeAttribute属性代表是非native、abstract、interface method，此时使用javac编译带好的max_locals作为method的max_locals就可以
    2. 当没有CodeAttribute属性时，代表是native、abstract、interface method中的一种，因为这些方法都是没有任何方法内容，因此此时其max_locals应该为0
-9. 
+9. 关于常量池的记录
+   * ClassFile中的常量池会在classloader将其读入到方法区的时候，将String类型的常量放到string全局常量池
+   * 常量池分为ClassFile中的ConstantPool和全局的String常量池
 
 
 

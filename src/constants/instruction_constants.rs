@@ -1,17 +1,20 @@
+use crate::core::bytecode_execution_engine::instruction::comparison::dcmp::{dcmpg, dcmpl};
+use crate::core::bytecode_execution_engine::instruction::comparison::fcmp::{fcmpg, fcmpl};
+use crate::core::bytecode_execution_engine::instruction::comparison::lcmp::lcmp;
 use crate::core::bytecode_execution_engine::instruction::control::goto::goto;
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
+use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc2_w, ldc_w};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
 use crate::core::bytecode_execution_engine::instruction::load::iload::{iload_0, iload_1, iload_2, iload_3};
 use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
 use crate::core::bytecode_execution_engine::instruction::math::and::{iand, land};
-use crate::core::bytecode_execution_engine::instruction::math::inc::{iinc};
+use crate::core::bytecode_execution_engine::instruction::math::inc::iinc;
+use crate::core::bytecode_execution_engine::instruction::math::mul::{dmul, fmul, imul, lmul};
+use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
-use crate::core::bytecode_execution_engine::instruction::math::mul::{imul, lmul, fmul, dmul};
-use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
-use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc_w, ldc2_w};
 
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
     match instruction_op_code {
@@ -44,6 +47,11 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
         0x7e => iand,
         0x7f => land,
         0x84 => iinc,
+        0x94 => lcmp,
+        0x95 => fcmpl,
+        0x96 => fcmpg,
+        0x97 => dcmpl,
+        0x98 => dcmpg,
         0xa7 => goto,
         _ => panic!("illegal instruction op code: {}", instruction_op_code)
     }
