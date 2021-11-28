@@ -6,6 +6,7 @@ use crate::core::bytecode_execution_engine::instruction::control::if_icmp::{if_i
 use crate::core::bytecode_execution_engine::instruction::control::r#if::*;
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc2_w, ldc_w};
+use crate::core::bytecode_execution_engine::instruction::load::constant::xconst::{dconst_0, dconst_1, fconst_0, fconst_1, fconst_2, iconst_0, iconst_1, iconst_2, iconst_3, iconst_4, iconst_5, iconst_m1, lconst_0, lconst_1};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
 use crate::core::bytecode_execution_engine::instruction::load::iload::{iload_0, iload_1, iload_2, iload_3};
 use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
@@ -23,6 +24,20 @@ pub const OP_CODE_LENGTH: usize = 1usize;
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
     match instruction_op_code {
         0x00 => nop,
+        0x02 => iconst_m1,
+        0x03 => iconst_0,
+        0x04 => iconst_1,
+        0x05 => iconst_2,
+        0x06 => iconst_3,
+        0x07 => iconst_4,
+        0x08 => iconst_5,
+        0x09 => lconst_0,
+        0x0a => lconst_1,
+        0x0b => fconst_0,
+        0x0c => fconst_1,
+        0x0d => fconst_2,
+        0x0e => dconst_0,
+        0x0f => dconst_1,
         0x10 => bipush,
         0x11 => sipush,
         0x12 => ldc,
