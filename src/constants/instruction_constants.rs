@@ -2,6 +2,8 @@ use crate::core::bytecode_execution_engine::instruction::comparison::dcmp::{dcmp
 use crate::core::bytecode_execution_engine::instruction::comparison::fcmp::{fcmpg, fcmpl};
 use crate::core::bytecode_execution_engine::instruction::comparison::lcmp::lcmp;
 use crate::core::bytecode_execution_engine::instruction::control::goto::goto;
+use crate::core::bytecode_execution_engine::instruction::control::if_icmp::{if_icmpeq, if_icmpge, if_icmpgt, if_icmple, if_icmplt, if_icmpne};
+use crate::core::bytecode_execution_engine::instruction::control::r#if::*;
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc2_w, ldc_w};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
@@ -15,7 +17,6 @@ use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
-use crate::core::bytecode_execution_engine::instruction::control::if_icmp::{if_icmpeq, if_icmpne, if_icmplt, if_icmpge, if_icmpgt, if_icmple};
 
 pub const OP_CODE_LENGTH: usize = 1usize;
 
@@ -55,6 +56,12 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
         0x96 => fcmpg,
         0x97 => dcmpl,
         0x98 => dcmpg,
+        0x99 => ifeq,
+        0x9a => ifne,
+        0x9b => iflt,
+        0x9c => ifge,
+        0x9d => ifgt,
+        0x9e => ifle,
         0x9f => if_icmpeq,
         0xa9 => if_icmpne,
         0xa1 => if_icmplt,
