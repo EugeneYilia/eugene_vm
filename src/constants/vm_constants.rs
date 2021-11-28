@@ -1,1 +1,1 @@
-pub const DEFAULT_MAX_STACK_SIZE: usize = 1024;
+pub const DEFAULT_MAX_STACK_SIZE: usize = 1024usize;
