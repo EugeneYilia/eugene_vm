@@ -42,4 +42,8 @@ impl Stack {
     pub fn is_full(&self) -> bool {
         self.stack_frame_vec.len() == self.max_size
     }
+
+    pub fn get_size(&self) -> usize {
+        self.stack_frame_vec.len()
+    }
 }

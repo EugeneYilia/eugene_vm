@@ -21,7 +21,9 @@ impl Field {
             AttributeInfo::ConstantValue {
                 constant_value_index
             } => *constant_value_index as usize,
-            _ => { panic!("Wow, that's amazing!") }
+            _ => {
+                unreachable!();
+            }
         });
 
         Field {

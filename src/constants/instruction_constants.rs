@@ -19,6 +19,8 @@ use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 
+use crate::core::bytecode_execution_engine::instruction::method::xreturn::r#return;
+
 pub const OP_CODE_LENGTH: usize = 1usize;
 
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
@@ -84,6 +86,7 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
         0xa3 => if_icmpgt,
         0xa4 => if_icmple,
         0xa7 => goto,
+        0xb1 => r#return,
         _ => panic!("illegal instruction op code: {}", instruction_op_code)
     }
 }

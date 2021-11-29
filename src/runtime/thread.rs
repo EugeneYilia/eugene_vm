@@ -31,4 +31,8 @@ impl Thread {
     pub fn has_stack_frame(&self) -> bool {
         !self.stack.is_empty()
     }
+
+    pub fn get_stack_size(&self) -> usize {
+        self.stack.get_size()
+    }
 }

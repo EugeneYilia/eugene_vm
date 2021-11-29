@@ -4,6 +4,7 @@ pub mod store;
 pub mod control;
 pub mod comparison;
 pub mod math;
+pub mod method;
 pub mod instruction_execute_result;
 
 #[cfg(test)]

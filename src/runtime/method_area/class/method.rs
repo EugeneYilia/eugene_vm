@@ -40,7 +40,7 @@ impl Method {
                 }
             }
             _ => {
-                panic!("Wow, that's amazing!")
+                unreachable!();
             }
         }
     }
