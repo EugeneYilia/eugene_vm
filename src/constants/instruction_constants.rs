@@ -8,12 +8,14 @@ use crate::core::bytecode_execution_engine::instruction::instruction_execute_res
 use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc2_w, ldc_w};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xconst::{dconst_0, dconst_1, fconst_0, fconst_1, fconst_2, iconst_0, iconst_1, iconst_2, iconst_3, iconst_4, iconst_5, iconst_m1, lconst_0, lconst_1};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
+use crate::core::bytecode_execution_engine::instruction::load::get::get_static;
 use crate::core::bytecode_execution_engine::instruction::load::iload::{iload_0, iload_1, iload_2, iload_3};
 use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
 use crate::core::bytecode_execution_engine::instruction::math::and::{iand, land};
 use crate::core::bytecode_execution_engine::instruction::math::inc::iinc;
 use crate::core::bytecode_execution_engine::instruction::math::mul::{dmul, fmul, imul, lmul};
 use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
+use crate::core::bytecode_execution_engine::instruction::method::invoke::invoke_virtual;
 use crate::core::bytecode_execution_engine::instruction::method::xreturn::r#return;
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
@@ -86,6 +88,8 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
         0xa4 => if_icmple,
         0xa7 => goto,
         0xb1 => r#return,
+        0xb2 => get_static,
+        0xb6 => invoke_virtual,
         _ => panic!("illegal instruction op code: {}", instruction_op_code)
     }
 }
