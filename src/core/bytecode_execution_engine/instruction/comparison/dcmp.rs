@@ -12,7 +12,7 @@ pub fn dcmpl(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionEx
     if first > second {
         operand_stack.push_i32(1i32);
     } else if first == second {
-        operand_stack.push_i32( 0i32);
+        operand_stack.push_i32(0i32);
     } else if first < second {
         operand_stack.push_i32(-1i32);
     } else {
@@ -26,8 +26,8 @@ pub fn dcmpl(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionEx
 
 pub fn dcmpg(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
-    let StackFrame{operand_stack,..} =stack_frame;
-    let second= operand_stack.pop_f64();
+    let StackFrame { operand_stack, .. } = stack_frame;
+    let second = operand_stack.pop_f64();
     let first = operand_stack.pop_f64();
     if first > second {
         operand_stack.push_i32(1i32);
@@ -46,10 +46,10 @@ pub fn dcmpg(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionEx
 
 #[cfg(test)]
 mod tests {
+    use crate::core::bytecode_execution_engine::instruction::comparison::dcmp::{dcmpg, dcmpl};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
     use crate::runtime::thread::Thread;
-    use crate::core::bytecode_execution_engine::instruction::comparison::dcmp::{dcmpl, dcmpg};
 
     #[test]
     fn test_dcmpl() {

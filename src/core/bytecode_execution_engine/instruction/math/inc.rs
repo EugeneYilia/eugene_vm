@@ -38,7 +38,7 @@ mod tests {
         stack_frame.local_variable_table.set_variable_slot(0usize, VariableSlot::I32(1i32));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = iinc(&mut CodeReader::new(vec![0u8,0u8,3u8], 1usize), &mut thread);
+        let instruction_execute_result = iinc(&mut CodeReader::new(vec![0u8, 0u8, 3u8], 1usize), &mut thread);
         match thread.pop_stack_frame().local_variable_table.get_variable_slot_mut(0) {
             VariableSlot::I32(value) => {
                 assert_eq!(*value, 4i32);

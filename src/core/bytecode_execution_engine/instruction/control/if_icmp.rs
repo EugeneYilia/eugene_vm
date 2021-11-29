@@ -140,30 +140,30 @@ pub fn if_icmple(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructi
 
 #[cfg(test)]
 mod tests {
-    use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
-    use crate::runtime::thread::Thread;
     use crate::core::bytecode_execution_engine::instruction::control::if_icmp::if_icmpeq;
+    use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
+    use crate::runtime::thread::Thread;
 
     #[test]
-    fn test_if_icmpeq_success(){
+    fn test_if_icmpeq_success() {
         let mut stack_frame = mock_stack_frame();
         stack_frame.operand_stack.push_i32(1i32);
         stack_frame.operand_stack.push_i32(1i32);
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(vec![21u8,1u8,2u8], 1usize), &mut thread);
-        assert_eq!(instruction_execute_result.new_pc,258usize);
+        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(vec![21u8, 1u8, 2u8], 1usize), &mut thread);
+        assert_eq!(instruction_execute_result.new_pc, 258usize);
     }
 
     #[test]
-    fn test_if_icmpeq_fail(){
+    fn test_if_icmpeq_fail() {
         let mut stack_frame = mock_stack_frame();
         stack_frame.operand_stack.push_i32(1i32);
         stack_frame.operand_stack.push_i32(2i32);
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(vec![21u8,32u8,1u8,2u8], 1usize), &mut thread);
-        assert_eq!(instruction_execute_result.new_pc,3usize);
+        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), &mut thread);
+        assert_eq!(instruction_execute_result.new_pc, 3usize);
     }
 }

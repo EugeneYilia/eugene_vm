@@ -53,7 +53,7 @@ pub fn dadd(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 
 #[cfg(test)]
 mod tests {
-    use crate::core::bytecode_execution_engine::instruction::math::add::{iadd,ladd,fadd,dadd,};
+    use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
     use crate::runtime::thread::Thread;

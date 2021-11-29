@@ -14,12 +14,11 @@ use crate::core::bytecode_execution_engine::instruction::math::and::{iand, land}
 use crate::core::bytecode_execution_engine::instruction::math::inc::iinc;
 use crate::core::bytecode_execution_engine::instruction::math::mul::{dmul, fmul, imul, lmul};
 use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
+use crate::core::bytecode_execution_engine::instruction::method::xreturn::r#return;
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
-
-use crate::core::bytecode_execution_engine::instruction::method::xreturn::r#return;
 
 pub const OP_CODE_LENGTH: usize = 1usize;
 

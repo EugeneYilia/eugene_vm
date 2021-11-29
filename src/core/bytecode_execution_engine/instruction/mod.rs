@@ -11,6 +11,7 @@ pub mod instruction_execute_result;
 mod tests {
     use std::collections::BTreeMap;
     use std::rc::Rc;
+
     use crate::core::classfile::member_info::MemberInfo;
     use crate::runtime::method_area::class::class::Class;
     use crate::runtime::method_area::class::method::Method;
