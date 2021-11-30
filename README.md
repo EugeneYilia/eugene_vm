@@ -15,4 +15,9 @@
 1. 字符串常量池是共有的还是class下面的常量池中各自单独存储
 2. ldc string的时候如何将ref更好的推到operand stack
 3. class_loader加入双亲委派机制
-4. 
+
+
+
+## 重构方案
+1. 将同一线程的code_reader用同一个
+2. instruction_execute_result包含调用结果返回
