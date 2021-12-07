@@ -4,6 +4,7 @@ public class TestAdd {
         int b = 1;
         int sum = a + b;
         System.out.println(sum);
+        System.out.println(sum);
     }
 }
 // Concise

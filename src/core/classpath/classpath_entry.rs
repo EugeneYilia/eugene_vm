@@ -22,11 +22,14 @@ impl ClasspathEntry {
                 .map(|entry_result| entry_result.unwrap())
                 .map(|entry| entry.path())
                 .filter(|path_buf| {
-                    path_buf
-                        .extension()
-                        // 只保留后缀为jar的文件
-                        .map(|ext_str_option| ext_str_option.to_str().unwrap() == "jar")
-                        .unwrap_or(false)
+                    // 保留jar包 class文件和目录
+                    path_buf.is_dir() ||
+                        path_buf.extension().map(
+                            |ext_str_option|
+                                ext_str_option.to_str().unwrap() == "jar" ||
+                                    ext_str_option.to_str().unwrap() == "class"
+                        )
+                            .unwrap_or(false)
                 })
                 .collect();
             ClasspathEntry::Wildcard {

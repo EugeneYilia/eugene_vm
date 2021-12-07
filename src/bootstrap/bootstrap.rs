@@ -35,3 +35,19 @@ fn execute_thread(mut thread: Thread) {
         pc = instruction_execute_result.new_pc;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::bootstrap::bootstrap::start_jvm;
+    use crate::bootstrap::bootstrap_option::BootstrapOption;
+
+    #[test]
+    fn test_invoke_virtual() {
+        let class_name = "TestAdd";
+        let user_classpath = Some("eugene_test/src_code/mine".to_owned());
+        let boot_classpath = Some("eugene_test/src_code/eugene_rt".to_owned());
+        let bootstrap_option = BootstrapOption::new(class_name, user_classpath, boot_classpath, vec![]);
+
+        start_jvm(bootstrap_option);
+    }
+}

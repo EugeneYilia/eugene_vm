@@ -10,7 +10,7 @@ pub fn execute_instruction(thread: &mut Thread, pc: usize) -> InstructionExecute
         code_reader = CodeReader::new(stack_frame.method.code.clone(), pc);
     }
     let instruction_op_code = code_reader.read_u8();
-
     let instruction_fn = instruction_constants::get_instruction_fn(instruction_op_code);
+    println!("opcode: {:02X}", instruction_op_code);
     instruction_fn(&mut code_reader, thread)
 }
