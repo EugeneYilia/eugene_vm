@@ -34,10 +34,14 @@ impl StackFrame {
 
 #[cfg(test)]
 mod tests {
+    use std::cell::RefCell;
     use std::collections::BTreeMap;
     use std::rc::Rc;
+    use crate::bootstrap::bootstrap_option::BootstrapOption;
+    use crate::core::class_loader::class_loader::ClassLoader;
 
     use crate::core::classfile::member_info::MemberInfo;
+    use crate::core::classpath::classpath::ClassPath;
     use crate::runtime::method_area::class::class::Class;
     use crate::runtime::method_area::class::method::Method;
     use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
@@ -45,6 +49,13 @@ mod tests {
     use crate::runtime::stack::stack_frame::StackFrame;
     use crate::runtime::stack::variable_slot::VariableSlot;
     use crate::runtime::stack::variables_table::VariableTable;
+
+     fn mock_classpath() -> ClassPath {
+        let user_classpath = Some("eugene_test/src_code/mine".to_owned());
+        let boot_classpath = Some("eugene_test/src_code/eugene_rt".to_owned());
+        let bootstrap_option = BootstrapOption::new("", user_classpath, boot_classpath, vec![]);
+        ClassPath::parse_classpath(bootstrap_option.boot_classpath_option, bootstrap_option.user_classpath_option)
+    }
 
     #[test]
     fn test_create_frame() {
@@ -68,6 +79,7 @@ mod tests {
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
             static_variable_table: VariableTable::new(),
+            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath()))))
         });
         let frame = StackFrame::new(class_ref, method_ref);
         check_local_variable_table(frame.local_variable_table);

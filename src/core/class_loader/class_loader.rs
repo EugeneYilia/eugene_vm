@@ -1,4 +1,7 @@
+use std::borrow::{Borrow, BorrowMut};
+use std::cell::{RefCell, RefMut};
 use std::collections::HashMap;
+use std::ops::Deref;
 use std::rc::Rc;
 
 use crate::constants::access_flags::ACCESS_STATIC;
@@ -20,6 +23,7 @@ use crate::util::converter;
 type SlotIdAccumulator = (usize, usize, VariableTable, ConstantPool);
 
 // TODO: 加入双亲委派机制
+#[derive(Debug)]
 pub struct ClassLoader {
     classpath: ClassPath,
     class_map: HashMap<String, Rc<Class>>,
@@ -33,13 +37,13 @@ impl ClassLoader {
         }
     }
 
-    pub fn load_class(&mut self, class_name: String) -> Rc<Class> {
-        if self.class_map.contains_key(&class_name) {
-            Rc::clone(self.class_map.get(&class_name).unwrap())
+    pub fn load_class(mut class_loader: Rc<RefCell<ClassLoader>>, class_name: String) -> Rc<Class> {
+        if class_loader.deref().borrow().class_map.contains_key(&class_name) {
+            Rc::clone(class_loader.deref().borrow().class_map.get(&class_name).unwrap())
         } else {
-            let byte_code = self.read_class(&class_name);
-            let (class_loader, class_ref) = ClassLoader::define_class(self, byte_code);
-            class_loader.class_map.insert(class_name, Rc::clone(&class_ref));
+            let byte_code = class_loader.deref().borrow().read_class(&class_name);
+            let (mut class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code);
+            class_loader.deref().borrow_mut().class_map.insert(class_name, Rc::clone(&class_ref));
             class_ref
         }
     }
@@ -50,13 +54,13 @@ impl ClassLoader {
             .expect(format!("Class not found: {}", class_name).as_str())
     }
 
-    fn define_class(class_loader: &mut ClassLoader, bytes_code: Vec<u8>) -> (&mut ClassLoader, Rc<Class>) {
+    fn define_class(class_loader: Rc<RefCell<ClassLoader>>, bytes_code: Vec<u8>) -> (Rc<RefCell<ClassLoader>>, Rc<Class>) {
         let class_file = bytes_code.parse();
 
         let class_name = class_file.get_class_name().to_owned();
         let super_class = if class_name != ROOT_CLASS_NAME {
             let super_class_name = class_file.get_super_class_name();
-            Some(class_loader.load_class(super_class_name.to_owned()))
+            Some(ClassLoader::load_class(Rc::clone(&class_loader), super_class_name.to_owned()))
         } else {
             None
         };
@@ -157,6 +161,7 @@ impl ClassLoader {
             next_instance_slot_id,
             next_static_slot_id,
             static_variable_table,
+            class_loader: Some(Rc::clone(&class_loader)),
         });
 
         (class_loader, class_ref)
