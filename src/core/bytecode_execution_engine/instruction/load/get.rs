@@ -27,6 +27,7 @@ pub fn get_static(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruct
                     if let ConstantInfo::NameAndType{name_index, descriptor_index} = class.constant_pool.get(*name_and_type_index as usize) {
                         if let ConstantInfo::ModifiedUTF8(field_name) = class.constant_pool.get(*name_index as usize) {
                             if let ConstantInfo::ModifiedUTF8(field_descriptor) = class.constant_pool.get(*descriptor_index as usize) {
+                                
                                 println!("static field field_name: {}  field_descriptor: {}", field_name, field_descriptor);
                             } else {
                                 panic!("name_and_type_index: {}  descriptor_index: {} should point to ConstantInfo::ModifiedUTF8", name_and_type_index, descriptor_index);

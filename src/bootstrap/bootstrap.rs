@@ -1,4 +1,4 @@
-use std::cell::{Ref, RefCell};
+use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::bootstrap::bootstrap_option::BootstrapOption;
@@ -15,8 +15,8 @@ use crate::runtime::thread::Thread;
 // user_classpath and boot_classpath需要先解析出来
 pub fn start_jvm(bootstrap_option: BootstrapOption) {
     let classpath = ClassPath::parse_classpath(bootstrap_option.boot_classpath_option, bootstrap_option.user_classpath_option);
-    let class_loader: Rc<RefCell<ClassLoader>>= Rc::new(RefCell::new(ClassLoader::new(classpath)));
-    let class_ref = ClassLoader::load_class(class_loader,bootstrap_option.class_name);
+    let class_loader: Rc<RefCell<ClassLoader>> = Rc::new(RefCell::new(ClassLoader::new(classpath)));
+    let class_ref = ClassLoader::load_class(class_loader, bootstrap_option.class_name);
 
     let method_ref = class_ref.get_method("main", "([Ljava/lang/String;)V", vec![ACCESS_PUBLIC, ACCESS_STATIC]);
     start_interpret(class_ref, method_ref)
