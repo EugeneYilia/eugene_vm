@@ -93,6 +93,7 @@ impl ClassLoader {
                 } else {
                     // 添加到static variable table中
                     let constant_value_index = field.constant_value_index.unwrap();
+                    println!("field: {:?}  ", field);
                     match field.get_descriptor() {
                         BYTE_FIELD_DESCRIPTOR | CHAR_FIELD_DESCRIPTOR | INT_FIELD_DESCRIPTOR | SHORT_FIELD_DESCRIPTOR | BOOLEAN_FIELD_DESCRIPTOR | OBJ_FIELD_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
