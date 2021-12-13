@@ -15,7 +15,9 @@
 1. 字符串常量池是共有的
 2. ldc string的时候如何将ref更好的推到operand stack
 3. class_loader加入双亲委派机制
-
+4. descriptor的校验
+5. constant_value_index的校验
+6. 重构自己码执行引擎  a. 使用空的struct继承trait  b. 方法执行完后的返回结果
 
 
 ## 重构方案
