@@ -11,7 +11,7 @@ mod tests {
     fn test_wrapping() {
         let zero = Wrapping(0u8);
         let one = Wrapping(1u8);
-        let result = zero -one;
+        let result = zero - one;
         println!("{}", result);
     }
 
