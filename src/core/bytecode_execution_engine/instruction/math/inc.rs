@@ -13,11 +13,10 @@ pub fn iinc(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let local_variable_index = code_reader.read_u8() as usize;
     let change_value = code_reader.read_u8() as i32;
 
-    let local_variable_original_value = local_variable_table.get_variable_slot_mut(local_variable_index);
-    match local_variable_original_value {
-        VariableSlot::I32(value) => {
-            *value += change_value;
-        }
+    if let VariableSlot::I32(value) = local_variable_table.get_variable_slot_mut(local_variable_index){
+        *value += change_value;
+    } else {
+        panic!("variable_index: {} not point to VariableSlot::I32", local_variable_index);
     }
     InstructionExecuteResult {
         new_pc: code_reader.pc
@@ -42,6 +41,9 @@ mod tests {
         match thread.pop_stack_frame().local_variable_table.get_variable_slot_mut(0) {
             VariableSlot::I32(value) => {
                 assert_eq!(*value, 4i32);
+            }
+            _=>{
+                panic!("variable_index: {} not point to VariableSlot::I32", 0);
             }
         }
         assert_eq!(instruction_execute_result.new_pc, 3usize);

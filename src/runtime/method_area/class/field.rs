@@ -66,8 +66,8 @@ fn test_field_descriptor() {
 #[test]
 fn test_get_field_descriptor(){
     let descriptor = "Ljava/lang/String;".to_owned();
-    let real_descriptor = descriptor.chars().next().unwrap();
-    let real_descriptor = descriptor.chars().next().unwrap();
+    let _real_descriptor = descriptor.chars().next().unwrap();
+    let _real_descriptor = descriptor.chars().next().unwrap();
     let real_descriptor = descriptor.chars().next().unwrap();
     println!("{}",real_descriptor);
     println!("{}",real_descriptor);

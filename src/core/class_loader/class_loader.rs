@@ -36,12 +36,12 @@ impl ClassLoader {
         }
     }
 
-    pub fn load_class(mut class_loader: Rc<RefCell<ClassLoader>>, class_name: String) -> Rc<Class> {
+    pub fn load_class(class_loader: Rc<RefCell<ClassLoader>>, class_name: String) -> Rc<Class> {
         if class_loader.deref().borrow().class_map.contains_key(&class_name) {
             Rc::clone(class_loader.deref().borrow().class_map.get(&class_name).unwrap())
         } else {
             let byte_code = class_loader.deref().borrow().read_class(&class_name);
-            let (mut class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code);
+            let (class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code);
             class_loader.deref().borrow_mut().class_map.insert(class_name, Rc::clone(&class_ref));
             class_ref
         }
@@ -131,7 +131,15 @@ impl ClassLoader {
                             }
                         }
                         OBJ_FIELD_DESCRIPTOR => {
-
+                            if let ConstantInfo::String(utf8_index) = constant_pool.get(constant_value_index) {
+                                if let ConstantInfo::ModifiedUTF8(value) = constant_pool.get(*utf8_index as usize) {
+                                    println!("value: {}", value);
+                                } else {
+                                    panic!("constant_value_index: {}  utf8_index: {} is not ConstantInfo::ModifiedUTF8", constant_value_index, utf8_index);
+                                }
+                            } else {
+                                panic!("constant_value_index: {} is not ConstantInfo::String", constant_value_index);
+                            }
                         }
                         _ => {
                             panic!("Invalid descriptor type: {} name: {}", field.get_descriptor(), field.get_name())

@@ -21,6 +21,9 @@ impl OperandStack {
         let variable_slot = self.variable_slot_vec.pop().unwrap();
         match variable_slot {
             VariableSlot::I32(value) => value,
+            _=>{
+                panic!("variable_slot: {:?} is not VariableSlot::I32", variable_slot);
+            }
         }
     }
 

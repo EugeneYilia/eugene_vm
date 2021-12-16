@@ -93,11 +93,17 @@ mod tests {
             VariableSlot::I32(value) => {
                 assert_eq!(*value, 100)
             }
+            _=>{
+                panic!("variable_index: {} not point to VariableSlot::I32", 0);
+            }
         }
 
         match local_variable_table.get_variable_slot(1) {
             VariableSlot::I32(value) => {
                 assert_eq!(*value, -100)
+            }
+            _=>{
+                panic!("variable_index: {} not point to VariableSlot::I32", 1);
             }
         }
     }

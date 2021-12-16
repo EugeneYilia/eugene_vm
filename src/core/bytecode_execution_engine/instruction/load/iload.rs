@@ -7,9 +7,10 @@ use crate::runtime::thread::Thread;
 /// 将局部变量表上的数据 读取到 操作数栈上
 
 fn _iload(stack_frame: &mut StackFrame, variable_index: usize) {
-    let variable_slot = stack_frame.local_variable_table.get_variable_slot(variable_index);
-    match variable_slot {
-        VariableSlot::I32(value) => stack_frame.operand_stack.push_i32(*value),
+    if let VariableSlot::I32(value) = stack_frame.local_variable_table.get_variable_slot(variable_index) {
+        stack_frame.operand_stack.push_i32(*value)
+    } else {
+        panic!("variable_index: {} not point to VariableSlot::I32", variable_index);
     }
 }
 
