@@ -12,4 +12,8 @@ public class System {
     public static final PrintStream out = new PrintStream(new EugeneStream());
     public static final String author = "EugeneLiu";
     public static final Object obj = new Object();
+
+    public static native void arraycopy(Object src, int srcPos, Object dest, int destPos, int length);
+
+    private System(){}
 }
