@@ -9,7 +9,7 @@ import java.io.PrintStream;
  */
 
 public class System {
-    public static PrintStream out = new PrintStream(new EugeneStream());
+    public static final PrintStream out = new PrintStream(new EugeneStream());
     public static final String author = "EugeneLiu";
     public static final Object obj = new Object();
 }

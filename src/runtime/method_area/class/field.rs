@@ -36,8 +36,8 @@ impl Field {
         self.class_member.name.as_str()
     }
 
-    pub fn get_descriptor(&self) -> &str {
-        self.class_member.descriptor.as_str()
+    pub fn get_descriptor(&self) -> char {
+        self.class_member.descriptor.chars().next().unwrap()
     }
 
     pub fn get_access_flags(&self) -> u16 {
@@ -45,8 +45,8 @@ impl Field {
     }
 
     pub fn is_need_two_slot(&self) -> bool {
-        &self.class_member.descriptor == LONG_FIELD_DESCRIPTOR ||
-            &self.class_member.descriptor == DOUBLE_FIELD_DESCRIPTOR
+        self.get_descriptor() == LONG_FIELD_DESCRIPTOR ||
+            self.get_descriptor() == DOUBLE_FIELD_DESCRIPTOR
     }
 }
 
@@ -61,4 +61,16 @@ fn test_field_descriptor() {
         attributes: Vec::new(),
     });
     println!("{}", field.is_need_two_slot())
+}
+
+#[test]
+fn test_get_field_descriptor(){
+    let descriptor = "Ljava/lang/String;".to_owned();
+    let real_descriptor = descriptor.chars().next().unwrap();
+    let real_descriptor = descriptor.chars().next().unwrap();
+    let real_descriptor = descriptor.chars().next().unwrap();
+    println!("{}",real_descriptor);
+    println!("{}",real_descriptor);
+    println!("{}",descriptor);
+    println!("{}",descriptor);
 }

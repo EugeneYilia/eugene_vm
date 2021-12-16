@@ -18,7 +18,7 @@
 4. descriptor的校验
 5. constant_value_index的校验
 6. 重构自己码执行引擎  a. 使用空的struct继承trait  b. 方法执行完后的返回结果
-
+7. load class之后执行clinit方法
 
 ## 重构方案
 1. 将同一线程的code_reader用同一个
