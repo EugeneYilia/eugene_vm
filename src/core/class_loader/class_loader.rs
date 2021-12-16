@@ -88,7 +88,7 @@ impl ClassLoader {
             let used_slot_amount = if field.is_need_two_slot() { 2usize } else { 1usize };
             if field.get_access_flags() & ACCESS_STATIC != 0 {
                 if field.constant_value_index.is_none() {
-                    // 此时应该是static final variable_name = primitive value  会被编译为常量 内联到使用的地方 不会更新static variable table 和 next_static_slot_id
+                    // 普通静态变量
                     (next_instance_slot_id, next_static_slot_id, static_variable_table, constant_pool)
                 } else {
                     // 添加到static variable table中
