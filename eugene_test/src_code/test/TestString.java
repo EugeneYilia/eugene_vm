@@ -21,13 +21,13 @@ public class TestString {
     }
 
     public static byte[] getBytes(char[] value) {
-        // only support UTF-16 Big-Endian now
+        // only support UTF-16 now
         byte[] bytes = new byte[2 * value.length + 2];
         bytes[0] = -2;
         bytes[1] = -1;
         for (int i = 0; i < value.length; i++) {
-            bytes[i * 2 + 2] = (byte) (value[i] >> 8);
-            bytes[i * 2 + 1 + 2] = (byte) (value[i] & 0xff);
+            bytes[i * 2 + 2] = (byte) ((value[i] & 0xff00) >>> 8);
+            bytes[i * 2 + 1 + 2] = (byte) (value[i] & 0x00ff);
         }
         return bytes;
     }
