@@ -1,6 +1,11 @@
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+/**
+ * @author EugeneLiu
+ * @date 2021-12-17
+ */
+
 public class TestString {
     public static void main(String[] args) {
         // [-2, -1, 0, 69, 0, 117, 0, 103, 0, 101, 0, 110, 0, 101, 0, 76, 0, 105, 0, 117]

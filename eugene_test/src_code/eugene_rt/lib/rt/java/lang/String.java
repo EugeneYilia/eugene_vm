@@ -1,7 +1,5 @@
 package java.lang;
 
-import java.nio.charset.StandardCharsets;
-
 
 /**
  * @author EugeneLiu
@@ -34,8 +32,8 @@ public final class String {
         bytes[0] = -2;
         bytes[1] = -1;
         for (int i = 0; i < value.length; i++) {
-            bytes[i * 2 + 2] = (byte) (value[i] >> 8);
-            bytes[i * 2 + 1 + 2] = (byte) (value[i] & 0xff);
+            bytes[i * 2 + 2] = (byte) ((value[i] & 0xff00) >>> 8);
+            bytes[i * 2 + 1 + 2] = (byte) (value[i] & 0x00ff);
         }
         return bytes;
     }
