@@ -64,3 +64,17 @@ class Data {
                 '}';
     }
 }
+
+class XA {
+    String name = "X";
+}
+
+class XB extends XA{
+    String name = "c";
+
+    public static void main(String[] args) {
+        XB b = new XB();
+        System.out.println(b.name);
+        System.out.println(b.getClass());
+    }
+}
