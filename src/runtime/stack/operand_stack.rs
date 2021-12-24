@@ -1,5 +1,4 @@
 use crate::runtime::stack::variable_slot::VariableSlot;
-use crate::util::converter;
 
 /// 操作数栈上不管是int 还是 long都是占据一个槽位的大小
 /// long在操作数栈上占据一个槽位  但是long在局部变量表中占据两个槽位
@@ -66,6 +65,14 @@ impl OperandStack {
         } else {
             panic!("variable_slot: {:?} is not VariableSlot::F64", variable_slot);
         }
+    }
+
+    pub fn push(&mut self, variable_slot: VariableSlot) {
+        self.variable_slot_vec.push(variable_slot);
+    }
+
+    pub fn pop(&mut self) -> VariableSlot {
+        self.variable_slot_vec.pop().unwrap()
     }
 }
 

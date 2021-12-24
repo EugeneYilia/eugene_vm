@@ -1,8 +1,4 @@
-use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
-
 use crate::core::classfile::member_info::MemberInfo;
-use crate::runtime::stack::variable_slot::VariableSlot;
 
 #[derive(Debug)]
 pub struct ClassMember {

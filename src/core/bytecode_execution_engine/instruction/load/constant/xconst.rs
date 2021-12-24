@@ -1,6 +1,7 @@
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::stack::stack_frame::StackFrame;
+use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
 
 pub fn iconst_m1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
@@ -124,6 +125,15 @@ pub fn dconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_f64(1f64);
+    InstructionExecuteResult {
+        new_pc: code_reader.pc
+    }
+}
+
+pub fn aconst_null(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+    let stack_frame = thread.get_stack_frame_mut();
+    let StackFrame { operand_stack, .. } = stack_frame;
+    operand_stack.push(VariableSlot::NullReference);
     InstructionExecuteResult {
         new_pc: code_reader.pc
     }
