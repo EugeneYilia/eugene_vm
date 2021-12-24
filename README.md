@@ -26,8 +26,7 @@ InstructionExecuteResult {
         new_pc:code_reader.pc
     }
 ```
-
-10. 检测float double是否需要wrapping
+11. 增加更多的字节码指令
 
 ## 重构方案
 

@@ -9,5 +9,10 @@ public class TestInt {
         long e = Long.MAX_VALUE;
         long f = d + e;
         System.out.println(f);
+
+        float z = Float.MAX_VALUE;
+        float x = Float.MAX_VALUE;
+        float q = z + x;
+        System.out.println(q);
     }
 }

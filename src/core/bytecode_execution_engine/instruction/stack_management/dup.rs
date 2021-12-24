@@ -27,4 +27,9 @@ fn test_wrapping() {
     println!("{}", g > h);
     println!("{}", g <= h);
     println!("{}", g + h);
+
+    let z = f32::MAX;
+    let x = f32::MAX;
+    let q = z + x;
+    println!("{}", q);
 }
