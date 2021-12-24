@@ -5,6 +5,7 @@ pub mod control;
 pub mod comparison;
 pub mod math;
 pub mod method;
+pub mod stack_management;
 pub mod instruction_execute_result;
 
 #[cfg(test)]
@@ -12,9 +13,9 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::BTreeMap;
     use std::rc::Rc;
+
     use crate::bootstrap::bootstrap_option::BootstrapOption;
     use crate::core::class_loader::class_loader::ClassLoader;
-
     use crate::core::classfile::member_info::MemberInfo;
     use crate::core::classpath::classpath::ClassPath;
     use crate::runtime::method_area::class::class::Class;

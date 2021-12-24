@@ -53,6 +53,8 @@ pub fn dmul(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 
 #[cfg(test)]
 mod tests {
+    use std::num::Wrapping;
+
     use crate::core::bytecode_execution_engine::instruction::math::mul::{dmul, fmul, imul, lmul};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
@@ -61,26 +63,26 @@ mod tests {
     #[test]
     fn test_imul() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i32(2i32);
-        stack_frame.operand_stack.push_i32(3i32);
+        stack_frame.operand_stack.push_i32(Wrapping(2i32));
+        stack_frame.operand_stack.push_i32(Wrapping(3i32));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = imul(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 6i32);
+        assert_eq!(result.0, 6i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 
     #[test]
     fn test_lmul() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i64(1234567890i64);
-        stack_frame.operand_stack.push_i64(2997924580i64);
+        stack_frame.operand_stack.push_i64(Wrapping(1234567890i64));
+        stack_frame.operand_stack.push_i64(Wrapping(2997924580i64));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = lmul(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i64();
-        assert_eq!(result, 3701141423109736200i64);
+        assert_eq!(result.0, 3701141423109736200i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 

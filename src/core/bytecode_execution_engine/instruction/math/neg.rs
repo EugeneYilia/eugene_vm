@@ -46,6 +46,8 @@ pub fn dneg(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 
 #[cfg(test)]
 mod tests {
+    use std::num::Wrapping;
+
     use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
@@ -54,24 +56,24 @@ mod tests {
     #[test]
     fn test_ineg() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i32(234556i32);
+        stack_frame.operand_stack.push_i32(Wrapping(234556i32));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ineg(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, -234556i32);
+        assert_eq!(result.0, -234556i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 
     #[test]
     fn test_lneg() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i64(-54875845748435i64);
+        stack_frame.operand_stack.push_i64(Wrapping(-54875845748435i64));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = lneg(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i64();
-        assert_eq!(result, 54875845748435i64);
+        assert_eq!(result.0, 54875845748435i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 

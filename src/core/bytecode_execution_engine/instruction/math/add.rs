@@ -53,6 +53,8 @@ pub fn dadd(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 
 #[cfg(test)]
 mod tests {
+    use std::num::Wrapping;
+
     use crate::core::bytecode_execution_engine::instruction::math::add::{dadd, fadd, iadd, ladd};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
@@ -61,26 +63,26 @@ mod tests {
     #[test]
     fn test_iadd() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i32(2i32);
-        stack_frame.operand_stack.push_i32(4i32);
+        stack_frame.operand_stack.push_i32(Wrapping(2i32));
+        stack_frame.operand_stack.push_i32(Wrapping(4i32));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = iadd(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 6i32);
+        assert_eq!(result.0, 6i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 
     #[test]
     fn test_ladd() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i64(12345678969i64);
-        stack_frame.operand_stack.push_i64(2997924580i64);
+        stack_frame.operand_stack.push_i64(Wrapping(12345678969i64));
+        stack_frame.operand_stack.push_i64(Wrapping(2997924580i64));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ladd(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i64();
-        assert_eq!(result, 15343603549i64);
+        assert_eq!(result.0, 15343603549i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 

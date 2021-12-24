@@ -1,3 +1,5 @@
+use std::num::Wrapping;
+
 use crate::runtime::stack::variable_slot::VariableSlot;
 
 /// 操作数栈上不管是int 还是 long都是占据一个槽位的大小
@@ -15,11 +17,11 @@ impl OperandStack {
         }
     }
 
-    pub fn push_i32(&mut self, value: i32) {
+    pub fn push_i32(&mut self, value: Wrapping<i32>) {
         self.variable_slot_vec.push(VariableSlot::I32(value));
     }
 
-    pub fn pop_i32(&mut self) -> i32 {
+    pub fn pop_i32(&mut self) -> Wrapping<i32> {
         let variable_slot = self.variable_slot_vec.pop().unwrap();
         if let VariableSlot::I32(value) = variable_slot {
             value
@@ -28,11 +30,11 @@ impl OperandStack {
         }
     }
 
-    pub fn push_i64(&mut self, value: i64) {
+    pub fn push_i64(&mut self, value: Wrapping<i64>) {
         self.variable_slot_vec.push(VariableSlot::I64(value));
     }
 
-    pub fn pop_i64(&mut self) -> i64 {
+    pub fn pop_i64(&mut self) -> Wrapping<i64> {
         let variable_slot = self.variable_slot_vec.pop().unwrap();
         if let VariableSlot::I64(value) = variable_slot {
             value

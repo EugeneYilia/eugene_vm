@@ -1,3 +1,5 @@
+use std::num::Wrapping;
+
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::stack::stack_frame::StackFrame;
@@ -10,13 +12,13 @@ pub fn dcmpl(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionEx
     let first = operand_stack.pop_f64();
 
     if first > second {
-        operand_stack.push_i32(1i32);
+        operand_stack.push_i32(Wrapping(1i32));
     } else if first == second {
-        operand_stack.push_i32(0i32);
+        operand_stack.push_i32(Wrapping(0i32));
     } else if first < second {
-        operand_stack.push_i32(-1i32);
+        operand_stack.push_i32(Wrapping(-1i32));
     } else {
-        operand_stack.push_i32(-1i32);
+        operand_stack.push_i32(Wrapping(-1i32));
     }
 
     InstructionExecuteResult {
@@ -30,13 +32,13 @@ pub fn dcmpg(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionEx
     let second = operand_stack.pop_f64();
     let first = operand_stack.pop_f64();
     if first > second {
-        operand_stack.push_i32(1i32);
+        operand_stack.push_i32(Wrapping(1i32));
     } else if first == second {
-        operand_stack.push_i32(0i32);
+        operand_stack.push_i32(Wrapping(0i32));
     } else if first < second {
-        operand_stack.push_i32(-1i32);
+        operand_stack.push_i32(Wrapping(-1i32));
     } else {
-        operand_stack.push_i32(1i32);
+        operand_stack.push_i32(Wrapping(1i32));
     }
 
     InstructionExecuteResult {
@@ -60,7 +62,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = dcmpl(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, -1i32);
+        assert_eq!(result.0, -1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 
@@ -73,7 +75,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = dcmpg(&mut CodeReader::new(vec![], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 1i32);
+        assert_eq!(result.0, 1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
 }

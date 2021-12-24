@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::num::Wrapping;
 use std::ops::Deref;
 use std::rc::Rc;
 
@@ -97,7 +98,7 @@ impl ClassLoader {
                         BYTE_FIELD_DESCRIPTOR | CHAR_FIELD_DESCRIPTOR | INT_FIELD_DESCRIPTOR | SHORT_FIELD_DESCRIPTOR | BOOLEAN_FIELD_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Integer(value) => {
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(*value))
+                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(*value)))
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Integer", constant_value_index)
                             }
@@ -106,8 +107,8 @@ impl ClassLoader {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Double(value) => {
                                     let [first, second] = converter::f64_to_i32seq(*value);
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(first));
-                                    static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(second));
+                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(first)));
+                                    static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(Wrapping(second)));
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Double", constant_value_index)
                             }
@@ -115,7 +116,7 @@ impl ClassLoader {
                         FLOAT_FIELD_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Float(value) => {
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(converter::f32_to_i32(*value)))
+                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::F32(*value))
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Float", constant_value_index)
                             }
@@ -124,8 +125,8 @@ impl ClassLoader {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Long(value) => {
                                     let [first, second] = converter::i64_to_i32seq(*value);
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(first));
-                                    static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(second));
+                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(first)));
+                                    static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(Wrapping(second)));
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Long", constant_value_index)
                             }

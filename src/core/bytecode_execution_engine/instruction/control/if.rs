@@ -16,7 +16,7 @@ pub fn ifeq(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
-    if first == 0 {
+    if first.0 == 0 {
         InstructionExecuteResult {
             new_pc: (original_pc as isize + offset) as usize
         }
@@ -36,7 +36,7 @@ pub fn ifne(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
-    if first != 0 {
+    if first.0 != 0 {
         InstructionExecuteResult {
             new_pc: (original_pc as isize + offset) as usize
         }
@@ -56,7 +56,7 @@ pub fn iflt(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
-    if first < 0 {
+    if first.0 < 0 {
         InstructionExecuteResult {
             new_pc: (original_pc as isize + offset) as usize
         }
@@ -76,7 +76,7 @@ pub fn ifge(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
-    if first >= 0 {
+    if first.0 >= 0 {
         InstructionExecuteResult {
             new_pc: (original_pc as isize + offset) as usize
         }
@@ -96,7 +96,7 @@ pub fn ifgt(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
-    if first > 0 {
+    if first.0 > 0 {
         InstructionExecuteResult {
             new_pc: (original_pc as isize + offset) as usize
         }
@@ -116,7 +116,7 @@ pub fn ifle(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop_i32();
-    if first <= 0 {
+    if first.0 <= 0 {
         InstructionExecuteResult {
             new_pc: (original_pc as isize + offset) as usize
         }
@@ -129,6 +129,8 @@ pub fn ifle(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
 
 #[cfg(test)]
 mod tests {
+    use std::num::Wrapping;
+
     use crate::core::bytecode_execution_engine::instruction::control::r#if::ifeq;
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
@@ -137,7 +139,7 @@ mod tests {
     #[test]
     fn test_ifeq_success() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i32(0i32);
+        stack_frame.operand_stack.push_i32(Wrapping(0i32));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ifeq(&mut CodeReader::new(vec![21u8, 1u8, 2u8], 1usize), &mut thread);
@@ -147,7 +149,7 @@ mod tests {
     #[test]
     fn test_ifeq_fail() {
         let mut stack_frame = mock_stack_frame();
-        stack_frame.operand_stack.push_i32(1i32);
+        stack_frame.operand_stack.push_i32(Wrapping(1i32));
         let mut thread = Thread::new(None);
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ifeq(&mut CodeReader::new(vec![21u8, 1u8, 2u8], 1usize), &mut thread);

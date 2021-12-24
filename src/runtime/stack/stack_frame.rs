@@ -36,10 +36,11 @@ impl StackFrame {
 mod tests {
     use std::cell::RefCell;
     use std::collections::BTreeMap;
+    use std::num::Wrapping;
     use std::rc::Rc;
+
     use crate::bootstrap::bootstrap_option::BootstrapOption;
     use crate::core::class_loader::class_loader::ClassLoader;
-
     use crate::core::classfile::member_info::MemberInfo;
     use crate::core::classpath::classpath::ClassPath;
     use crate::runtime::method_area::class::class::Class;
@@ -50,7 +51,7 @@ mod tests {
     use crate::runtime::stack::variable_slot::VariableSlot;
     use crate::runtime::stack::variables_table::VariableTable;
 
-     fn mock_classpath() -> ClassPath {
+    fn mock_classpath() -> ClassPath {
         let user_classpath = Some("eugene_test/src_code/mine".to_owned());
         let boot_classpath = Some("eugene_test/src_code/eugene_rt".to_owned());
         let bootstrap_option = BootstrapOption::new("", user_classpath, boot_classpath, vec![]);
@@ -87,20 +88,20 @@ mod tests {
     }
 
     fn check_local_variable_table(mut local_variable_table: VariableTable) {
-        local_variable_table.set_variable_slot(0, VariableSlot::I32(100));
-        local_variable_table.set_variable_slot(1, VariableSlot::I32(-100));
+        local_variable_table.set_variable_slot(0, VariableSlot::I32(Wrapping(100)));
+        local_variable_table.set_variable_slot(1, VariableSlot::I32(Wrapping(-100)));
         match local_variable_table.get_variable_slot(0) {
             VariableSlot::I32(value) => {
-                assert_eq!(*value, 100)
+                assert_eq!((*value).0, 100)
             }
-            _=>{
+            _ => {
                 panic!("variable_index: {} not point to VariableSlot::I32", 0);
             }
         }
 
         match local_variable_table.get_variable_slot(1) {
             VariableSlot::I32(value) => {
-                assert_eq!(*value, -100)
+                assert_eq!((*value).0, -100)
             }
             _=>{
                 panic!("variable_index: {} not point to VariableSlot::I32", 1);
@@ -109,21 +110,21 @@ mod tests {
     }
 
     fn check_operand_stack(mut operand_stack: OperandStack) {
-        operand_stack.push_i32(100i32);
+        operand_stack.push_i32(Wrapping(100i32));
         operand_stack.push_f64(2.71828182845f64);
-        operand_stack.push_i32(-100i32);
-        operand_stack.push_i64(2997924580i64);
+        operand_stack.push_i32(Wrapping(-100i32));
+        operand_stack.push_i64(Wrapping(2997924580i64));
         operand_stack.push_f32(3.1415926f32);
 
         let f32_value = operand_stack.pop_f32();
         assert_eq!(f32_value, 3.1415926f32);
         let i64_value = operand_stack.pop_i64();
-        assert_eq!(i64_value, 2997924580i64);
+        assert_eq!(i64_value.0, 2997924580i64);
         let i32_value = operand_stack.pop_i32();
-        assert_eq!(i32_value, -100i32);
+        assert_eq!(i32_value.0, -100i32);
         let f64_value = operand_stack.pop_f64();
         assert_eq!(f64_value, 2.71828182845f64);
         let i32_value = operand_stack.pop_i32();
-        assert_eq!(i32_value, 100i32);
+        assert_eq!(i32_value.0, 100i32);
     }
 }

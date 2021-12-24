@@ -1,3 +1,5 @@
+use std::num::Wrapping;
+
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
@@ -12,10 +14,10 @@ pub fn ldc(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExec
     let class_ref = class.clone();
     let constant_info = class_ref.constant_pool.get(constant_pool_index as usize);
     match constant_info {
-        ConstantInfo::Integer(value) => operand_stack.push_i32(*value),
+        ConstantInfo::Integer(value) => operand_stack.push_i32(Wrapping(*value)),
         ConstantInfo::Float(value) => operand_stack.push_f32(*value),
         // TODO: 使用更好的方式将String的ref推送到操作数栈上
-        ConstantInfo::String(value) => operand_stack.push_i32(*value as i32),
+        ConstantInfo::String(value) => operand_stack.push_i32(Wrapping(*value as i32)),
         _ => panic!("Class Format Error: {:?}", class.clone())
     }
 
@@ -33,10 +35,10 @@ pub fn ldc_w(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionEx
     let class_ref = class.clone();
     let constant_info = class_ref.constant_pool.get(constant_pool_index as usize);
     match constant_info {
-        ConstantInfo::Integer(value) => operand_stack.push_i32(*value),
+        ConstantInfo::Integer(value) => operand_stack.push_i32(Wrapping(*value)),
         ConstantInfo::Float(value) => operand_stack.push_f32(*value),
         // TODO: 使用更好的方式将String的ref推送到操作数栈上
-        ConstantInfo::String(value) => operand_stack.push_i32(*value as i32),
+        ConstantInfo::String(value) => operand_stack.push_i32(Wrapping(*value as i32)),
         _ => panic!("Class Format Error: {:?}", class.clone())
     }
     InstructionExecuteResult {
@@ -53,7 +55,7 @@ pub fn ldc2_w(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionE
     let class_ref = class.clone();
     let constant_info = class_ref.constant_pool.get(constant_pool_index as usize);
     match constant_info {
-        ConstantInfo::Long(value) => operand_stack.push_i64(*value),
+        ConstantInfo::Long(value) => operand_stack.push_i64(Wrapping(*value)),
         ConstantInfo::Double(value) => operand_stack.push_f64(*value),
         _ => panic!("Class Format Error: {:?}", class.clone())
     }
@@ -82,7 +84,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ldc(&mut CodeReader::new(vec![2u8, 1u8], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 20i32);
+        assert_eq!(result.0, 20i32);
         assert_eq!(instruction_execute_result.new_pc, 2usize);
     }
 
@@ -108,7 +110,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ldc(&mut CodeReader::new(vec![2u8, 1u8], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 17i32);
+        assert_eq!(result.0, 17i32);
         assert_eq!(instruction_execute_result.new_pc, 2usize);
     }
 
@@ -121,7 +123,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ldc_w(&mut CodeReader::new(vec![2u8, 1u8, 1u8], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 32i32);
+        assert_eq!(result.0, 32i32);
         assert_eq!(instruction_execute_result.new_pc, 3usize);
     }
 
@@ -147,7 +149,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ldc_w(&mut CodeReader::new(vec![2u8, 1u8, 3u8], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i32();
-        assert_eq!(result, 66i32);
+        assert_eq!(result.0, 66i32);
         assert_eq!(instruction_execute_result.new_pc, 3usize);
     }
 
@@ -160,7 +162,7 @@ mod tests {
         thread.push_stack_frame(stack_frame);
         let instruction_execute_result = ldc2_w(&mut CodeReader::new(vec![2u8, 1u8, 4u8], 1usize), &mut thread);
         let result = thread.pop_stack_frame().operand_stack.pop_i64();
-        assert_eq!(result, 999i64);
+        assert_eq!(result.0, 999i64);
         assert_eq!(instruction_execute_result.new_pc, 3usize);
     }
 
