@@ -18,6 +18,7 @@ use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg,
 use crate::core::bytecode_execution_engine::instruction::method::invoke::invoke_virtual;
 use crate::core::bytecode_execution_engine::instruction::method::xreturn::r#return;
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
+use crate::core::bytecode_execution_engine::instruction::stack_management::dup::{dup, dup2, dup2_x1, dup2_x2, dup_x1, dup_x2};
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
@@ -55,6 +56,12 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
         0x3c => istore_1,
         0x3d => istore_2,
         0x3e => istore_3,
+        0x59 => dup,
+        0x5a => dup_x1,
+        0x5b => dup_x2,
+        0x5c => dup2,
+        0x5d => dup2_x1,
+        0x5e => dup2_x2,
         0x60 => iadd,
         0x61 => ladd,
         0x62 => fadd,

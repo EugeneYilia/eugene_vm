@@ -76,6 +76,14 @@ impl OperandStack {
     pub fn pop(&mut self) -> VariableSlot {
         self.variable_slot_vec.pop().unwrap()
     }
+
+    pub fn last(&self) -> &VariableSlot {
+        self.variable_slot_vec.last().unwrap()
+    }
+
+    pub fn extend_with_slice(&mut self, slice: &[VariableSlot]) {
+        self.variable_slot_vec.extend_from_slice(slice)
+    }
 }
 
 #[test]
