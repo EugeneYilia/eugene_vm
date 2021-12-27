@@ -26,6 +26,8 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
     invoke_method(class_ref, method_ref, Rc::clone(&main_thread))
 }
 
+// stack bottom  method: A  pc: 13                       stack head
+// stack bottom  method: A  pc: 13     method: B  pc: 2  stack head
 pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
     let stack_frame = StackFrame::new(class, method);
     thread.deref().borrow_mut().push_stack_frame(stack_frame);
