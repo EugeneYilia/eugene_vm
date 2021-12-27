@@ -23,6 +23,7 @@ mod tests {
     use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
     use crate::runtime::stack::stack_frame::StackFrame;
     use crate::runtime::stack::variables_table::VariableTable;
+    use crate::runtime::thread::Thread;
 
     fn mock_classpath() -> ClassPath {
         let user_classpath = Some("eugene_test/src_code/mine".to_owned());
@@ -55,7 +56,7 @@ mod tests {
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
             static_variable_table: VariableTable::new(),
-            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath()))))
+            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None)))))))
         })
     }
 
@@ -72,7 +73,7 @@ mod tests {
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
             static_variable_table: VariableTable::new(),
-            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath()))))
+            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None)))))))
         }
     }
 

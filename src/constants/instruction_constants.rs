@@ -1,3 +1,7 @@
+use std::cell::{RefCell, RefMut};
+use std::ops::Deref;
+use std::rc::Rc;
+
 use crate::core::bytecode_execution_engine::instruction::comparison::dcmp::{dcmpg, dcmpl};
 use crate::core::bytecode_execution_engine::instruction::comparison::fcmp::{fcmpg, fcmpl};
 use crate::core::bytecode_execution_engine::instruction::comparison::lcmp::lcmp;
@@ -25,7 +29,7 @@ use crate::runtime::thread::Thread;
 
 pub const OP_CODE_LENGTH: usize = 1usize;
 
-pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut Thread) -> InstructionExecuteResult {
+pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, RefMut<Thread>) -> InstructionExecuteResult {
     match instruction_op_code {
         0x00 => nop,
         0x01 => aconst_null,
@@ -104,7 +108,8 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, &mut T
 
 #[test]
 fn test_get_instruction_fn() {
+    let thread = Rc::new(RefCell::new(Thread::new(None)));
     let function = get_instruction_fn(0x00);
-    let exec_result: InstructionExecuteResult = function(&mut CodeReader::new(vec![], 0), &mut Thread::new(None));
+    let exec_result: InstructionExecuteResult = function(&mut CodeReader::new(vec![], 0), thread.deref().borrow_mut());
     println!("{:?}", exec_result);
 }

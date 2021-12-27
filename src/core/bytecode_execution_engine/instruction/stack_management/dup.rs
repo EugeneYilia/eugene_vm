@@ -1,17 +1,16 @@
-use std::env::var;
+use std::cell::RefMut;
 use std::num::Wrapping;
 
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::stack::stack_frame::StackFrame;
-use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
 use crate::util::instruction_util::variable_slot_type_is_kind_one;
 
 // oracle instruction doc
 // https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html
 
-pub fn dup(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dup(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let variable_slot_clone = operand_stack.last().clone();
@@ -27,7 +26,7 @@ pub fn dup(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExec
 }
 
 /// 复制栈顶数据并将复制的数据插入到栈顶第二个元素之下
-pub fn dup_x1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dup_x1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop();
@@ -46,7 +45,7 @@ pub fn dup_x1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionE
     }
 }
 
-pub fn dup_x2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dup_x2(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop();
@@ -70,19 +69,19 @@ pub fn dup_x2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionE
     }
 }
 
-pub fn dup2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dup2(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop();
     if variable_slot_type_is_kind_one(&first) {
         let second = operand_stack.pop();
         if variable_slot_type_is_kind_one(&second) {
-            operand_stack.extend_with_slice(&[second, first, second.clone(), first.clone()]);
+            operand_stack.extend_with_slice(&[second.clone(), first.clone(), second, first]);
         } else {
             panic!("dup2 error:  variable_slot second is {:?}", second);
         }
     } else {
-        operand_stack.extend_with_slice(&[first, first.clone()]);
+        operand_stack.extend_with_slice(&[first.clone(), first]);
     }
 
     InstructionExecuteResult {
@@ -90,7 +89,7 @@ pub fn dup2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExe
     }
 }
 
-pub fn dup2_x1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dup2_x1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop();
@@ -122,7 +121,7 @@ pub fn dup2_x1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruction
     }
 }
 
-pub fn dup2_x2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dup2_x2(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     let first = operand_stack.pop();
@@ -166,7 +165,10 @@ pub fn dup2_x2(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruction
 
 #[cfg(test)]
 mod tests {
+    use std::cell::RefCell;
     use std::num::Wrapping;
+    use std::ops::Deref;
+    use std::rc::Rc;
 
     use crate::core::bytecode_execution_engine::instruction::stack_management::dup::{dup, dup_x1, dup_x2};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
@@ -177,10 +179,10 @@ mod tests {
     fn test_dup() {
         let mut stack_frame = mock_stack_frame();
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dup(&mut CodeReader::new(vec![], 1usize), &mut thread);
-        let mut operand_stack = thread.pop_stack_frame().operand_stack;
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dup(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -193,10 +195,10 @@ mod tests {
         let mut stack_frame = mock_stack_frame();
         stack_frame.operand_stack.push_i32(Wrapping(9i32));
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x1(&mut CodeReader::new(vec![], 1usize), &mut thread);
-        let mut operand_stack = thread.pop_stack_frame().operand_stack;
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dup_x1(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
         let third = operand_stack.pop_i32();
@@ -212,10 +214,10 @@ mod tests {
         let mut stack_frame = mock_stack_frame();
         stack_frame.operand_stack.push_i32(Wrapping(9i32));
         stack_frame.operand_stack.push_i64(Wrapping(8i64));
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x1(&mut CodeReader::new(vec![], 1usize), &mut thread);
-        let mut operand_stack = thread.pop_stack_frame().operand_stack;
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dup_x1(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
         let third = operand_stack.pop_i32();
@@ -230,10 +232,10 @@ mod tests {
         let mut stack_frame = mock_stack_frame();
         stack_frame.operand_stack.push_i64(Wrapping(9i64));
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), &mut thread);
-        let mut operand_stack = thread.pop_stack_frame().operand_stack;
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i64();
         let third = operand_stack.pop_i32();
@@ -249,10 +251,10 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(9i32));
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
         stack_frame.operand_stack.push_i32(Wrapping(7i32));
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), &mut thread);
-        let mut operand_stack = thread.pop_stack_frame().operand_stack;
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
         let third = operand_stack.pop_i32();
@@ -271,10 +273,10 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(9i32));
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
         stack_frame.operand_stack.push_i64(Wrapping(7i64));
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), &mut thread);
-        let mut operand_stack = thread.pop_stack_frame().operand_stack;
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
         let third = operand_stack.pop_i32();

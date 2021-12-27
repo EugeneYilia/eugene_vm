@@ -17,6 +17,7 @@ use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::stack::variables_table::VariableTable;
+use crate::runtime::thread::Thread;
 use crate::util::converter;
 
 ///       下一个实例字段slot_id  下一个静态字段slot_id  static变量表  常量池
@@ -27,13 +28,15 @@ type SlotIdAccumulator = (usize, usize, VariableTable, ConstantPool);
 pub struct ClassLoader {
     classpath: ClassPath,
     class_map: HashMap<String, Rc<Class>>,
+    thread: Rc<RefCell<Thread>>,
 }
 
 impl ClassLoader {
-    pub fn new(classpath: ClassPath) -> ClassLoader {
+    pub fn new(classpath: ClassPath, thread: Rc<RefCell<Thread>>) -> ClassLoader {
         ClassLoader {
             classpath,
             class_map: HashMap::new(),
+            thread,
         }
     }
 
@@ -44,6 +47,8 @@ impl ClassLoader {
             let byte_code = class_loader.deref().borrow().read_class(&class_name);
             let (class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code);
             class_loader.deref().borrow_mut().class_map.insert(class_name, Rc::clone(&class_ref));
+            // load完之后执行clinit方法
+
             class_ref
         }
     }

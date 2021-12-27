@@ -2,6 +2,7 @@ use crate::constants::vm_constants::DEFAULT_MAX_STACK_SIZE;
 use crate::runtime::stack::stack::Stack;
 use crate::runtime::stack::stack_frame::StackFrame;
 
+#[derive(Debug)]
 pub struct Thread {
     stack: Stack,
 }

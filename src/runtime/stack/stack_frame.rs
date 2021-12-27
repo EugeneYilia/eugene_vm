@@ -11,6 +11,7 @@ pub struct StackFrame {
     pub operand_stack: OperandStack,
     pub method: Rc<Method>,
     pub class: Rc<Class>,
+    pc: usize,
 }
 
 impl StackFrame {
@@ -28,6 +29,7 @@ impl StackFrame {
             operand_stack,
             method,
             class,
+            pc: 0usize,
         }
     }
 }
@@ -50,6 +52,7 @@ mod tests {
     use crate::runtime::stack::stack_frame::StackFrame;
     use crate::runtime::stack::variable_slot::VariableSlot;
     use crate::runtime::stack::variables_table::VariableTable;
+    use crate::runtime::thread::Thread;
 
     fn mock_classpath() -> ClassPath {
         let user_classpath = Some("eugene_test/src_code/mine".to_owned());
@@ -80,7 +83,7 @@ mod tests {
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
             static_variable_table: VariableTable::new(),
-            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath()))))
+            class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None))))))),
         });
         let frame = StackFrame::new(class_ref, method_ref);
         check_local_variable_table(frame.local_variable_table);
@@ -103,7 +106,7 @@ mod tests {
             VariableSlot::I32(value) => {
                 assert_eq!((*value).0, -100)
             }
-            _=>{
+            _ => {
                 panic!("variable_index: {} not point to VariableSlot::I32", 1);
             }
         }

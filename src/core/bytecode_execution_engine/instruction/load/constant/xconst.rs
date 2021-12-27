@@ -1,3 +1,4 @@
+use std::cell::RefMut;
 use std::num::Wrapping;
 
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
@@ -6,7 +7,7 @@ use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
 
-pub fn iconst_m1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_m1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(-1i32));
@@ -15,7 +16,7 @@ pub fn iconst_m1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructi
     }
 }
 
-pub fn iconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_0(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(0i32));
@@ -24,7 +25,7 @@ pub fn iconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn iconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(1i32));
@@ -33,7 +34,7 @@ pub fn iconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn iconst_2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_2(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(2i32));
@@ -42,7 +43,7 @@ pub fn iconst_2(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn iconst_3(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_3(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(3i32));
@@ -51,7 +52,7 @@ pub fn iconst_3(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn iconst_4(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_4(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(4i32));
@@ -60,7 +61,7 @@ pub fn iconst_4(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn iconst_5(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn iconst_5(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i32(Wrapping(5i32));
@@ -69,7 +70,7 @@ pub fn iconst_5(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn lconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn lconst_0(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i64(Wrapping(0i64));
@@ -78,7 +79,7 @@ pub fn lconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn lconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn lconst_1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_i64(Wrapping(1i64));
@@ -87,7 +88,7 @@ pub fn lconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn fconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn fconst_0(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_f32(0f32);
@@ -96,7 +97,7 @@ pub fn fconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn fconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn fconst_1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_f32(1f32);
@@ -105,7 +106,7 @@ pub fn fconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn fconst_2(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn fconst_2(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_f32(2f32);
@@ -114,7 +115,7 @@ pub fn fconst_2(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn dconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dconst_0(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_f64(0f64);
@@ -123,7 +124,7 @@ pub fn dconst_0(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn dconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn dconst_1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push_f64(1f64);
@@ -132,7 +133,7 @@ pub fn dconst_1(code_reader: &mut CodeReader, thread: &mut Thread) -> Instructio
     }
 }
 
-pub fn aconst_null(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn aconst_null(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let stack_frame = thread.get_stack_frame_mut();
     let StackFrame { operand_stack, .. } = stack_frame;
     operand_stack.push(VariableSlot::NullReference);
@@ -143,6 +144,10 @@ pub fn aconst_null(code_reader: &mut CodeReader, thread: &mut Thread) -> Instruc
 
 #[cfg(test)]
 mod tests {
+    use std::cell::RefCell;
+    use std::ops::Deref;
+    use std::rc::Rc;
+
     use crate::core::bytecode_execution_engine::instruction::load::constant::xconst::{dconst_0, dconst_1, iconst_m1, lconst_0};
     use crate::core::bytecode_execution_engine::instruction::tests::mock_stack_frame;
     use crate::core::code_reader::code_reader::CodeReader;
@@ -151,10 +156,10 @@ mod tests {
     #[test]
     fn test_dconst_0() {
         let stack_frame = mock_stack_frame();
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dconst_0(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), &mut thread);
-        let result = thread.pop_stack_frame().operand_stack.pop_f64();
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dconst_0(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_f64();
         assert_eq!(result, 0f64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
@@ -162,10 +167,10 @@ mod tests {
     #[test]
     fn test_dconst_1() {
         let stack_frame = mock_stack_frame();
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = dconst_1(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), &mut thread);
-        let result = thread.pop_stack_frame().operand_stack.pop_f64();
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = dconst_1(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_f64();
         assert_eq!(result, 1f64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
@@ -173,10 +178,10 @@ mod tests {
     #[test]
     fn test_iconst_m1() {
         let stack_frame = mock_stack_frame();
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = iconst_m1(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), &mut thread);
-        let result = thread.pop_stack_frame().operand_stack.pop_i32();
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = iconst_m1(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, -1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }
@@ -184,10 +189,10 @@ mod tests {
     #[test]
     fn test_lconst_0() {
         let stack_frame = mock_stack_frame();
-        let mut thread = Thread::new(None);
-        thread.push_stack_frame(stack_frame);
-        let instruction_execute_result = lconst_0(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), &mut thread);
-        let result = thread.pop_stack_frame().operand_stack.pop_i64();
+        let thread = Rc::new(RefCell::new(Thread::new(None)));
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        let instruction_execute_result = lconst_0(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i64();
         assert_eq!(result.0, 0i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }

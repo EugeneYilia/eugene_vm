@@ -1,5 +1,6 @@
 use crate::runtime::stack::stack_frame::StackFrame;
 
+#[derive(Debug)]
 pub struct Stack {
     max_size: usize,
     stack_frame_vec: Vec<StackFrame>,

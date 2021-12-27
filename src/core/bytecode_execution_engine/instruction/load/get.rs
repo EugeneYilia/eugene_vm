@@ -1,5 +1,7 @@
+use std::cell::RefMut;
 use std::ops::Deref;
 use std::rc::Rc;
+
 use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::class_loader::class_loader::ClassLoader;
 use crate::core::code_reader::code_reader::CodeReader;
@@ -8,7 +10,7 @@ use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 
-pub fn get_static(code_reader: &mut CodeReader, thread: &mut Thread) -> InstructionExecuteResult {
+pub fn get_static(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
     let static_field_index = code_reader.read_u16() as usize;
     println!("static_field_index: {}", static_field_index);
     let stack_frame = thread.get_stack_frame_mut();
