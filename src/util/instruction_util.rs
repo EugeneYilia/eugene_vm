@@ -1,5 +1,3 @@
-use std::num::Wrapping;
-
 use crate::runtime::stack::variable_slot::VariableSlot;
 
 /// 实际类型	计算型	类别

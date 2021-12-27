@@ -26,7 +26,6 @@ pub fn sipush(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> Instr
 
 #[cfg(test)]
 mod tests {
-    use std::borrow::BorrowMut;
     use std::cell::RefCell;
     use std::ops::Deref;
     use std::rc::Rc;

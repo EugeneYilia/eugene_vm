@@ -95,7 +95,7 @@ pub fn dup2_x1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> Inst
     let first = operand_stack.pop();
     let second = operand_stack.pop();
     if variable_slot_type_is_kind_one(&first) {
-        /// first second third are all category 1
+        // first second third are all category 1
         if variable_slot_type_is_kind_one(&second) {
             let third = operand_stack.pop();
             if variable_slot_type_is_kind_one(&third) {
@@ -107,8 +107,8 @@ pub fn dup2_x1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> Inst
             panic!("dup2_x1 error:  variable_slot second is {:?}", second);
         }
     } else {
-        /// first category 2
-        /// second category 1
+        // first category 2
+        // second category 1
         if variable_slot_type_is_kind_one(&second) {
             operand_stack.extend_with_slice(&[first.clone(), second, first]);
         } else {
