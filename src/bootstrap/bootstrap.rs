@@ -22,12 +22,12 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
     let class_ref = ClassLoader::load_class(class_loader, bootstrap_option.class_name);
 
     let method_ref = class_ref.get_method("main", "([Ljava/lang/String;)V", vec![ACCESS_PUBLIC, ACCESS_STATIC]);
-    invoke_method(class_ref, method_ref, Rc::clone(&main_thread))
+    start_thread(class_ref, method_ref, Rc::clone(&main_thread))
 }
 
 // stack bottom  method: A  pc: 13                       stack head
 // stack bottom  method: A  pc: 13     method: B  pc: 2  stack head
-pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
+pub fn start_thread(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
     let stack_frame = StackFrame::new(class, method);
     thread.deref().borrow_mut().push_stack_frame(stack_frame);
     execute_thread(Rc::clone(&thread));
