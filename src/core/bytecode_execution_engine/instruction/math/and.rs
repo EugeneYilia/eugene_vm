@@ -51,7 +51,7 @@ mod tests {
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
         // 6
-        let instruction_execute_result = iand(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = iand(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 6i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -67,7 +67,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(2997924580i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = land(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = land(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i64();
         assert_eq!(result.0, 2458914912i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);

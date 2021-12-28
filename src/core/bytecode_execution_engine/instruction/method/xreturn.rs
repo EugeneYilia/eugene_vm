@@ -30,7 +30,7 @@ mod tests {
         thread.deref().borrow_mut().push_stack_frame(mock_stack_frame());
         thread.deref().borrow_mut().push_stack_frame(mock_stack_frame());
         assert_eq!(2usize, thread.deref().borrow_mut().get_stack_size());
-        let instruction_execute_result = r#return(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = r#return(&mut CodeReader::new(Rc::new(vec![21u8, 32u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         assert_eq!(1usize, thread.deref().borrow_mut().get_stack_size());
         assert_eq!(instruction_execute_result.new_pc, 1usize);
     }

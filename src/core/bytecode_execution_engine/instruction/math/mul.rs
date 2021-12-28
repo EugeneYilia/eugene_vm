@@ -72,7 +72,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(3i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = imul(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = imul(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 6i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -85,7 +85,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(2997924580i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = lmul(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = lmul(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i64();
         assert_eq!(result.0, 3701141423109736200i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -98,7 +98,7 @@ mod tests {
         stack_frame.operand_stack.push_f32(3.1415926535897926f32);
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = fmul(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = fmul(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_f32();
         assert_eq!(result, 8.53973422264514888498427947f32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -111,7 +111,7 @@ mod tests {
         stack_frame.operand_stack.push_f64(3.1415926535897926f64);
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dmul(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dmul(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_f64();
         assert_eq!(result, 8.53973422264514888498427947f64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);

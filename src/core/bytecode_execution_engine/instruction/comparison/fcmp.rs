@@ -65,7 +65,7 @@ mod tests {
         stack_frame.operand_stack.push_f32(33.3f32);
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = fcmpl(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = fcmpl(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, -1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -78,7 +78,7 @@ mod tests {
         stack_frame.operand_stack.push_f32(33.3f32);
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = fcmpg(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = fcmpg(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);

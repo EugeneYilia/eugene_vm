@@ -1,5 +1,6 @@
 use std::rc::Rc;
 
+use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::stack::operand_stack::OperandStack;
@@ -11,7 +12,7 @@ pub struct StackFrame {
     pub operand_stack: OperandStack,
     pub method: Rc<Method>,
     pub class: Rc<Class>,
-    pc: usize,
+    pub code_reader: CodeReader,
 }
 
 impl StackFrame {
@@ -25,11 +26,11 @@ impl StackFrame {
         let operand_stack = OperandStack::new(max_stack);
 
         StackFrame {
+            code_reader: CodeReader::new(Rc::clone(&method.code), 0usize),
             local_variable_table,
             operand_stack,
             method,
             class,
-            pc: 0usize,
         }
     }
 }

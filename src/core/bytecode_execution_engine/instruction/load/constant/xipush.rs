@@ -39,7 +39,7 @@ mod tests {
     fn test_bipush() {
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(mock_stack_frame());
-        let instruction_execute_result = bipush(&mut CodeReader::new(vec![12u8, 13u8, 14u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = bipush(&mut CodeReader::new(Rc::new(vec![12u8, 13u8, 14u8]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 13i32);
         assert_eq!(instruction_execute_result.new_pc, 2usize);
@@ -49,7 +49,7 @@ mod tests {
     fn test_sipush() {
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(mock_stack_frame());
-        let instruction_execute_result = sipush(&mut CodeReader::new(vec![12u8, 13u8, 14u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = sipush(&mut CodeReader::new(Rc::new(vec![12u8, 13u8, 14u8]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 13 * 256 + 14);
         assert_eq!(instruction_execute_result.new_pc, 3usize);

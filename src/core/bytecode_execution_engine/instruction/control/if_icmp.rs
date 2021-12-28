@@ -159,7 +159,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(1i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(vec![21u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(Rc::new(vec![21u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         assert_eq!(instruction_execute_result.new_pc, 258usize);
     }
 
@@ -170,7 +170,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(2i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = if_icmpeq(&mut CodeReader::new(Rc::new(vec![21u8, 32u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         assert_eq!(instruction_execute_result.new_pc, 3usize);
     }
 }

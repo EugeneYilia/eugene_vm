@@ -40,7 +40,7 @@ fn test_swap() {
     stack_frame.operand_stack.push_i32(Wrapping(9i32));
     let thread = Rc::new(RefCell::new(Thread::new(None)));
     thread.deref().borrow_mut().push_stack_frame(stack_frame);
-    let instruction_execute_result = swap(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+    let instruction_execute_result = swap(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
     let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
     let first = operand_stack.pop_i32();
     let second = operand_stack.pop_i32();

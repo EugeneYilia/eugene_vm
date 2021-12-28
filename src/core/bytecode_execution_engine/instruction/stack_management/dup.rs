@@ -181,7 +181,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dup(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dup(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
@@ -197,7 +197,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x1(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dup_x1(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
@@ -216,7 +216,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(8i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x1(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dup_x1(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
@@ -234,7 +234,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(8i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dup_x2(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i64();
@@ -253,7 +253,7 @@ mod tests {
         stack_frame.operand_stack.push_i32(Wrapping(7i32));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dup_x2(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();
@@ -275,7 +275,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(7i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dup_x2(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dup_x2(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let mut operand_stack = thread.deref().borrow_mut().pop_stack_frame().operand_stack;
         let first = operand_stack.pop_i32();
         let second = operand_stack.pop_i32();

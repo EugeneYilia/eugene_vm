@@ -1,12 +1,15 @@
+use std::rc::Rc;
+
 use byteorder::{BigEndian, ByteOrder};
 
+#[derive(Debug)]
 pub struct CodeReader {
-    code: Vec<u8>,
+    code: Rc<Vec<u8>>,
     pub pc: usize,
 }
 
 impl CodeReader {
-    pub fn new(code: Vec<u8>, pc: usize) -> CodeReader {
+    pub fn new(code: Rc<Vec<u8>>, pc: usize) -> CodeReader {
         CodeReader { code, pc }
     }
 

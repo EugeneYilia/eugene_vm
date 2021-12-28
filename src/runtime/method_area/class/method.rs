@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::core::classfile::attribute_info::attribute_info::AttributeInfo;
 use crate::core::classfile::member_info::MemberInfo;
 use crate::runtime::method_area::class::class_member::ClassMember;
@@ -9,7 +11,7 @@ pub struct Method {
     class_member: ClassMember,
     pub max_stack: usize,
     pub max_locals: usize,
-    pub code: Vec<u8>,
+    pub code: Rc<Vec<u8>>,
 }
 
 impl Method {
@@ -27,7 +29,7 @@ impl Method {
                     class_member,
                     max_stack: *max_stack as usize,
                     max_locals: *max_locals as usize,
-                    code: code.clone(),
+                    code: Rc::new(code.clone()),
                 }
             }
             None => {
@@ -36,7 +38,7 @@ impl Method {
                     class_member,
                     max_stack: 0usize,
                     max_locals: 0usize,
-                    code: Vec::new(),
+                    code: Rc::new(Vec::new()),
                 }
             }
             _ => {

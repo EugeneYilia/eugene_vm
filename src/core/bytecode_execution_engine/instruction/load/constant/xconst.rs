@@ -158,7 +158,7 @@ mod tests {
         let stack_frame = mock_stack_frame();
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dconst_0(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dconst_0(&mut CodeReader::new(Rc::new(vec![21u8, 32u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_f64();
         assert_eq!(result, 0f64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -169,7 +169,7 @@ mod tests {
         let stack_frame = mock_stack_frame();
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = dconst_1(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = dconst_1(&mut CodeReader::new(Rc::new(vec![21u8, 32u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_f64();
         assert_eq!(result, 1f64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -180,7 +180,7 @@ mod tests {
         let stack_frame = mock_stack_frame();
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = iconst_m1(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = iconst_m1(&mut CodeReader::new(Rc::new(vec![21u8, 32u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, -1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -191,7 +191,7 @@ mod tests {
         let stack_frame = mock_stack_frame();
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = lconst_0(&mut CodeReader::new(vec![21u8, 32u8, 1u8, 2u8], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = lconst_0(&mut CodeReader::new(Rc::new(vec![21u8, 32u8, 1u8, 2u8]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i64();
         assert_eq!(result.0, 0i64);
         assert_eq!(instruction_execute_result.new_pc, 1usize);

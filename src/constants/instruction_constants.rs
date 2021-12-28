@@ -112,6 +112,6 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, RefMut
 fn test_get_instruction_fn() {
     let thread = Rc::new(RefCell::new(Thread::new(None)));
     let function = get_instruction_fn(0x00);
-    let exec_result: InstructionExecuteResult = function(&mut CodeReader::new(vec![], 0), thread.deref().borrow_mut());
+    let exec_result: InstructionExecuteResult = function(&mut CodeReader::new(Rc::new(vec![]), 0), thread.deref().borrow_mut());
     println!("{:?}", exec_result);
 }

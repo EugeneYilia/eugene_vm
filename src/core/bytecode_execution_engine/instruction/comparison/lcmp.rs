@@ -43,7 +43,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(9223372036854775806i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = lcmp(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = lcmp(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -56,7 +56,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(9223372036854775807i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = lcmp(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = lcmp(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, -1i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
@@ -69,7 +69,7 @@ mod tests {
         stack_frame.operand_stack.push_i64(Wrapping(-9223372036854775806i64));
         let thread = Rc::new(RefCell::new(Thread::new(None)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        let instruction_execute_result = lcmp(&mut CodeReader::new(vec![], 1usize), thread.deref().borrow_mut());
+        let instruction_execute_result = lcmp(&mut CodeReader::new(Rc::new(vec![]), 1usize), thread.deref().borrow_mut());
         let result = thread.deref().borrow_mut().pop_stack_frame().operand_stack.pop_i32();
         assert_eq!(result.0, 0i32);
         assert_eq!(instruction_execute_result.new_pc, 1usize);
