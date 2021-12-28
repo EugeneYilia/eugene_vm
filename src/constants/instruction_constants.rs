@@ -1,6 +1,4 @@
-use std::cell::{RefCell, RefMut};
-use std::ops::Deref;
-use std::rc::Rc;
+use std::cell::RefMut;
 
 use crate::core::bytecode_execution_engine::instruction::comparison::dcmp::{dcmpg, dcmpl};
 use crate::core::bytecode_execution_engine::instruction::comparison::fcmp::{fcmpg, fcmpl};
@@ -8,7 +6,6 @@ use crate::core::bytecode_execution_engine::instruction::comparison::lcmp::lcmp;
 use crate::core::bytecode_execution_engine::instruction::control::goto::goto;
 use crate::core::bytecode_execution_engine::instruction::control::if_icmp::{if_icmpeq, if_icmpge, if_icmpgt, if_icmple, if_icmplt, if_icmpne};
 use crate::core::bytecode_execution_engine::instruction::control::r#if::*;
-use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc2_w, ldc_w};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xconst::{aconst_null, dconst_0, dconst_1, fconst_0, fconst_1, fconst_2, iconst_0, iconst_1, iconst_2, iconst_3, iconst_4, iconst_5, iconst_m1, lconst_0, lconst_1};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
@@ -25,12 +22,11 @@ use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::stack_management::dup::{dup, dup2, dup2_x1, dup2_x2, dup_x1, dup_x2};
 use crate::core::bytecode_execution_engine::instruction::stack_management::swap::swap;
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
-use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::thread::Thread;
 
 pub const OP_CODE_LENGTH: usize = 1usize;
 
-pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, RefMut<Thread>) -> InstructionExecuteResult {
+pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
     match instruction_op_code {
         0x00 => nop,
         0x01 => aconst_null,
@@ -106,12 +102,4 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut CodeReader, RefMut
         0xb6 => invoke_virtual,
         _ => panic!("illegal instruction op code: {}", instruction_op_code)
     }
-}
-
-#[test]
-fn test_get_instruction_fn() {
-    let thread = Rc::new(RefCell::new(Thread::new(None)));
-    let function = get_instruction_fn(0x00);
-    let exec_result: InstructionExecuteResult = function(&mut CodeReader::new(Rc::new(vec![]), 0), thread.deref().borrow_mut());
-    println!("{:?}", exec_result);
 }

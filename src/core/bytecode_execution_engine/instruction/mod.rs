@@ -25,6 +25,7 @@ mod tests {
     use crate::runtime::stack::variables_table::VariableTable;
     use crate::runtime::thread::Thread;
 
+    #[allow(dead_code)]
     fn mock_classpath() -> ClassPath {
         let user_classpath = Some("eugene_test/src_code/mine".to_owned());
         let boot_classpath = Some("eugene_test/src_code/eugene_rt".to_owned());
@@ -32,6 +33,7 @@ mod tests {
         ClassPath::parse_classpath(bootstrap_option.boot_classpath_option, bootstrap_option.user_classpath_option)
     }
 
+    #[allow(dead_code)]
     pub fn mock_rc_method() -> Rc<Method> {
         Rc::new(Method::new(&MemberInfo {
             access_flags: 0u16,
@@ -43,6 +45,7 @@ mod tests {
         }))
     }
 
+    #[allow(dead_code)]
     pub fn mock_rc_class() -> Rc<Class> {
         Rc::new(Class {
             access_flags: 0u16,
@@ -60,6 +63,7 @@ mod tests {
         })
     }
 
+    #[allow(dead_code)]
     pub fn mock_class() -> Class {
         Class {
             access_flags: 0u16,
@@ -77,6 +81,7 @@ mod tests {
         }
     }
 
+    #[allow(dead_code)]
     pub fn mock_stack_frame() -> StackFrame {
         StackFrame::new(mock_rc_class(), mock_rc_method())
     }

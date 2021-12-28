@@ -2,18 +2,16 @@ use std::cell::RefMut;
 use std::ops::Deref;
 use std::rc::Rc;
 
-use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
 use crate::core::class_loader::class_loader::ClassLoader;
-use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 
-pub fn get_static(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
-    let static_field_index = code_reader.read_u16() as usize;
-    println!("static_field_index: {}", static_field_index);
+pub fn get_static(thread: &mut RefMut<Thread>) {
     let stack_frame = thread.get_stack_frame_mut();
+    let static_field_index = stack_frame.code_reader.read_u16() as usize;
+    println!("static_field_index: {}", static_field_index);
     let StackFrame { class, .. } = stack_frame;
     let class = class.clone();
     if let ConstantInfo::FieldRef { class_index, name_and_type_index } = class.constant_pool.get(static_field_index) {
@@ -51,9 +49,5 @@ pub fn get_static(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> I
         }
     } else {
         panic!("class: {:?}   static_field_index: {} should point to ConstantInfo::MethodRef", class, static_field_index);
-    }
-
-    InstructionExecuteResult {
-        new_pc: code_reader.pc
     }
 }

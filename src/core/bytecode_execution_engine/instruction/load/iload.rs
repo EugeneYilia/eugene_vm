@@ -1,7 +1,5 @@
 use std::cell::RefMut;
 
-use crate::core::bytecode_execution_engine::instruction::instruction_execute_result::InstructionExecuteResult;
-use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
@@ -16,34 +14,22 @@ fn _iload(stack_frame: &mut StackFrame, variable_index: usize) {
     }
 }
 
-pub fn iload_0(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
+pub fn iload_0(thread: &mut RefMut<Thread>) {
     let stack_frame = thread.get_stack_frame_mut();
     _iload(stack_frame, 0);
-    InstructionExecuteResult {
-        new_pc: code_reader.pc
-    }
 }
 
-pub fn iload_1(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
+pub fn iload_1(thread: &mut RefMut<Thread>) {
     let mut stack_frame = thread.get_stack_frame_mut();
     _iload(&mut stack_frame, 1);
-    InstructionExecuteResult {
-        new_pc: code_reader.pc
-    }
 }
 
-pub fn iload_2(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
+pub fn iload_2(thread: &mut RefMut<Thread>) {
     let mut stack_frame = thread.get_stack_frame_mut();
     _iload(&mut stack_frame, 2);
-    InstructionExecuteResult {
-        new_pc: code_reader.pc
-    }
 }
 
-pub fn iload_3(code_reader: &mut CodeReader, mut thread: RefMut<Thread>) -> InstructionExecuteResult {
+pub fn iload_3(thread: &mut RefMut<Thread>) {
     let mut stack_frame = thread.get_stack_frame_mut();
     _iload(&mut stack_frame, 3);
-    InstructionExecuteResult {
-        new_pc: code_reader.pc
-    }
 }

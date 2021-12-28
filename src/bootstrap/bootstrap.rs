@@ -34,10 +34,9 @@ pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Th
 }
 
 fn execute_thread(thread: Rc<RefCell<Thread>>) {
-    let mut pc = 0usize;
-    while thread.deref().borrow().has_stack_frame() {
-        let instruction_execute_result = engine::execute_instruction(thread.deref().borrow_mut(), pc);
-        pc = instruction_execute_result.new_pc;
+    let mut thread = thread.deref().borrow_mut();
+    while thread.has_stack_frame() {
+        engine::execute_instruction(&mut thread);
     }
 }
 
