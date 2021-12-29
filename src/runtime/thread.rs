@@ -56,6 +56,7 @@ impl Thread {
         let stack_frame = StackFrame::new(class, method);
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
         // 栈帧调用执行
+        todo!("栈帧逻辑放到stack_frame中  一次执行完一个栈帧中的字节码指令   遇到特定指令时结束")
     }
 
     fn execute_thread(thread: Rc<RefCell<Thread>>) {

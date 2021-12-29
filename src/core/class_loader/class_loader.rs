@@ -46,7 +46,7 @@ impl ClassLoader {
         } else {
             let byte_code = class_loader.deref().borrow().read_class(&class_name);
             let (class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code);
-            let class_loader_mut = class_loader.deref().borrow_mut();
+            let mut class_loader_mut = class_loader.deref().borrow_mut();
             class_loader_mut.class_map.insert(class_name, Rc::clone(&class_ref));
             // load完之后执行clinit方法
             let method_ref = class_ref.get_method("<clinit>", "()V", vec![ACCESS_STATIC]);
