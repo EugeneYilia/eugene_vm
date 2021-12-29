@@ -52,6 +52,12 @@ impl Thread {
         Thread::execute_thread(Rc::clone(&thread));
     }
 
+    pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
+        let stack_frame = StackFrame::new(class, method);
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        // 栈帧调用执行
+    }
+
     fn execute_thread(thread: Rc<RefCell<Thread>>) {
         let mut thread = thread.deref().borrow_mut();
         while thread.has_stack_frame() {
