@@ -1,4 +1,11 @@
+use std::cell::RefCell;
+use std::ops::Deref;
+use std::rc::Rc;
+
 use crate::constants::vm_constants::DEFAULT_MAX_STACK_SIZE;
+use crate::core::bytecode_execution_engine::engine;
+use crate::runtime::method_area::class::class::Class;
+use crate::runtime::method_area::class::method::Method;
 use crate::runtime::stack::stack::Stack;
 use crate::runtime::stack::stack_frame::StackFrame;
 
@@ -35,5 +42,20 @@ impl Thread {
 
     pub fn get_stack_size(&self) -> usize {
         self.stack.get_size()
+    }
+
+    // stack bottom  method: A  pc: 13                       stack head
+    // stack bottom  method: A  pc: 13     method: B  pc: 2  stack head
+    pub fn start_thread(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
+        let stack_frame = StackFrame::new(class, method);
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        Thread::execute_thread(Rc::clone(&thread));
+    }
+
+    fn execute_thread(thread: Rc<RefCell<Thread>>) {
+        let mut thread = thread.deref().borrow_mut();
+        while thread.has_stack_frame() {
+            engine::execute_instruction(&mut thread);
+        }
     }
 }
