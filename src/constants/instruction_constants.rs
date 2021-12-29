@@ -17,7 +17,7 @@ use crate::core::bytecode_execution_engine::instruction::math::inc::iinc;
 use crate::core::bytecode_execution_engine::instruction::math::mul::{dmul, fmul, imul, lmul};
 use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
 use crate::core::bytecode_execution_engine::instruction::method::invoke::invoke_virtual;
-use crate::core::bytecode_execution_engine::instruction::method::xreturn::r#return;
+use crate::core::bytecode_execution_engine::instruction::method::xreturn::{areturn, dreturn, freturn, ireturn, lreturn, r#return};
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::stack_management::dup::{dup, dup2, dup2_x1, dup2_x2, dup_x1, dup_x2};
 use crate::core::bytecode_execution_engine::instruction::stack_management::pop::{pop, pop2};
@@ -100,6 +100,11 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
         0xa3 => if_icmpgt,
         0xa4 => if_icmple,
         0xa7 => goto,
+        0xac => ireturn,
+        0xad => lreturn,
+        0xae => freturn,
+        0xaf => dreturn,
+        0xb0 => areturn,
         0xb1 => r#return,
         0xb2 => get_static,
         0xb6 => invoke_virtual,
