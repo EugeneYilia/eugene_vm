@@ -16,9 +16,8 @@
 3. class_loader加入双亲委派机制
 4. descriptor的校验
 5. constant_value_index的校验
-6. load class之后执行clinit方法
-7. 执行<clinit>、<init>
-8. 增加更多的字节码指令
+6. 执行<clinit>、<init>
+7. 增加更多的字节码指令
 
 ## 重构方案
 
