@@ -123,6 +123,6 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
         0xb1 => r#return,
         0xb2 => get_static,
         0xb6 => invoke_virtual,
-        _ => panic!("illegal instruction op code: {}", instruction_op_code)
+        _ => panic!("illegal instruction op code: {:02X}", instruction_op_code)
     }
 }
