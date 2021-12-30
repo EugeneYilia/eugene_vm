@@ -1,3 +1,4 @@
+use crate::constants::instruction_constants::TERMINAL_INSTRUCTION_OPCODES;
 use crate::runtime::stack::variable_slot::VariableSlot;
 
 /// 实际类型	计算型	类别
@@ -16,4 +17,8 @@ pub fn variable_slot_type_is_kind_one(variable_slot: &VariableSlot) -> bool {
         VariableSlot::I64(_) | VariableSlot::F64(_) => false,
         _ => true
     }
+}
+
+pub fn is_terminal_instruction(instruction_op_code: &u8) -> bool {
+    TERMINAL_INSTRUCTION_OPCODES.contains(instruction_op_code)
 }

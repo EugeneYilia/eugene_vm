@@ -8,7 +8,7 @@ use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 
-pub fn get_static(thread: &mut RefMut<Thread>) {
+pub fn get_static(mut thread: &mut RefMut<Thread>) {
     let stack_frame = thread.get_stack_frame_mut();
     let static_field_index = stack_frame.code_reader.read_u16() as usize;
     println!("static_field_index: {}", static_field_index);
@@ -23,7 +23,7 @@ pub fn get_static(thread: &mut RefMut<Thread>) {
                 println!("class_name: {}", class_name);
                 let Class { class_loader, .. } = class.deref();
                 if let Some(class_loader) = class_loader {
-                    let class_ref = ClassLoader::load_class(Rc::clone(class_loader), class_name.to_owned());
+                    let class_ref = ClassLoader::load_class(Rc::clone(class_loader), class_name.to_owned(), &mut thread);
                     if let ConstantInfo::NameAndType{name_index, descriptor_index} = class.constant_pool.get(*name_and_type_index as usize) {
                         if let ConstantInfo::ModifiedUTF8(field_name) = class.constant_pool.get(*name_index as usize) {
                             if let ConstantInfo::ModifiedUTF8(field_descriptor) = class.constant_pool.get(*descriptor_index as usize) {

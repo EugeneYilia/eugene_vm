@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{RefCell, RefMut};
 use std::ops::Deref;
 use std::rc::Rc;
 
@@ -48,21 +48,14 @@ impl Thread {
     // stack bottom  method: A  pc: 13     method: B  pc: 2  stack head
     pub fn start_thread(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
         let stack_frame = StackFrame::new(class, method);
-        thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        Thread::execute_thread(Rc::clone(&thread));
+        let mut thread_mut = thread.deref().borrow_mut();
+        thread_mut.push_stack_frame(stack_frame);
+        engine::execute_instruction(&mut thread_mut);
     }
 
-    pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
+    pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>) {
         let stack_frame = StackFrame::new(class, method);
-        thread.deref().borrow_mut().push_stack_frame(stack_frame);
-        // 栈帧调用执行
-        todo!("栈帧逻辑放到stack_frame中  一次执行完一个栈帧中的字节码指令   遇到特定指令时结束")
-    }
-
-    fn execute_thread(thread: Rc<RefCell<Thread>>) {
-        let mut thread = thread.deref().borrow_mut();
-        while thread.has_stack_frame() {
-            engine::execute_instruction(&mut thread);
-        }
+        thread.push_stack_frame(stack_frame);
+        // thread.pop_stack_frame();
     }
 }

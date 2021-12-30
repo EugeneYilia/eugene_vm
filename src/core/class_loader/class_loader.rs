@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{RefCell, RefMut};
 use std::collections::HashMap;
 use std::num::Wrapping;
 use std::ops::Deref;
@@ -40,17 +40,18 @@ impl ClassLoader {
         }
     }
 
-    pub fn load_class(class_loader: Rc<RefCell<ClassLoader>>, class_name: String) -> Rc<Class> {
+    pub fn load_class(class_loader: Rc<RefCell<ClassLoader>>, class_name: String, mut thread: &mut RefMut<Thread>) -> Rc<Class> {
         if class_loader.deref().borrow().class_map.contains_key(&class_name) {
             Rc::clone(class_loader.deref().borrow().class_map.get(&class_name).unwrap())
         } else {
             let byte_code = class_loader.deref().borrow().read_class(&class_name);
-            let (class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code);
+            let (class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code, &mut thread);
             let mut class_loader_mut = class_loader.deref().borrow_mut();
             class_loader_mut.class_map.insert(class_name, Rc::clone(&class_ref));
             // load完之后执行clinit方法
-            let method_ref = class_ref.get_method("<clinit>", "()V", vec![ACCESS_STATIC]);
-            Thread::invoke_method(Rc::clone(&class_ref), method_ref, Rc::clone(&class_loader_mut.thread));
+            if let Some(method_ref) = class_ref.get_method("<clinit>", "()V", vec![ACCESS_STATIC]) {
+                Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread);
+            }
             class_ref
         }
     }
@@ -61,13 +62,13 @@ impl ClassLoader {
             .expect(format!("Class not found: {}", class_name).as_str())
     }
 
-    fn define_class(class_loader: Rc<RefCell<ClassLoader>>, bytes_code: Vec<u8>) -> (Rc<RefCell<ClassLoader>>, Rc<Class>) {
+    fn define_class(class_loader: Rc<RefCell<ClassLoader>>, bytes_code: Vec<u8>, mut thread: &mut RefMut<Thread>) -> (Rc<RefCell<ClassLoader>>, Rc<Class>) {
         let class_file = bytes_code.parse();
 
         let class_name = class_file.get_class_name().to_owned();
         let super_class = if class_name != ROOT_CLASS_NAME {
             let super_class_name = class_file.get_super_class_name();
-            Some(ClassLoader::load_class(Rc::clone(&class_loader), super_class_name.to_owned()))
+            Some(ClassLoader::load_class(Rc::clone(&class_loader), super_class_name.to_owned(), &mut thread))
         } else {
             None
         };

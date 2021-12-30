@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::core::class_loader::class_loader::ClassLoader;
 
+use crate::core::class_loader::class_loader::ClassLoader;
 use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
@@ -25,16 +25,14 @@ pub struct Class {
 }
 
 impl Class {
-    pub fn get_method(&self, name: &str, descriptor: &str, access_flags: Vec<u16>) -> Rc<Method> {
+    pub fn get_method(&self, name: &str, descriptor: &str, access_flags: Vec<u16>) -> Option<Rc<Method>> {
         // Java main func:  public static void main(String[] args){}
-        let method_ref = self.methods
+        self.methods
             .iter()
             .find(|ref method| {
                 method.get_name() == name &&
                     method.get_descriptor() == descriptor &&
                     check_access_flags_all(method.get_access_flags(), &access_flags)
-            })
-            .expect("Method not found");
-        Rc::clone(method_ref)
+            }).map(|method| Rc::clone(method))
     }
 }

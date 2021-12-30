@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::ops::Deref;
 use std::rc::Rc;
 
 use crate::bootstrap::bootstrap_option::BootstrapOption;
@@ -14,12 +15,14 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
 
     let classpath = ClassPath::parse_classpath(bootstrap_option.boot_classpath_option, bootstrap_option.user_classpath_option);
     let class_loader: Rc<RefCell<ClassLoader>> = Rc::new(RefCell::new(ClassLoader::new(classpath, Rc::clone(&main_thread))));
-    let class_ref = ClassLoader::load_class(class_loader, bootstrap_option.class_name);
+    let class_ref = ClassLoader::load_class(class_loader, bootstrap_option.class_name, &mut main_thread.deref().borrow_mut());
 
-    let method_ref = class_ref.get_method("main", "([Ljava/lang/String;)V", vec![ACCESS_PUBLIC, ACCESS_STATIC]);
-    Thread::start_thread(class_ref, method_ref, Rc::clone(&main_thread))
+    if let Some(method_ref) = class_ref.get_method("main", "([Ljava/lang/String;)V", vec![ACCESS_PUBLIC, ACCESS_STATIC]) {
+        Thread::start_thread(class_ref, method_ref, Rc::clone(&main_thread))
+    } else {
+        panic!("{:?} can not find main method", class_ref);
+    }
 }
-
 
 
 #[cfg(test)]

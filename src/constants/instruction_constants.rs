@@ -27,6 +27,21 @@ use crate::runtime::thread::Thread;
 
 pub const OP_CODE_LENGTH: usize = 1usize;
 
+pub const TERMINAL_INSTRUCTION_OPCODES: [u8; 6] = [
+    // ireturn
+    0xac,
+    // lreturn
+    0xad,
+    // freturn
+    0xae,
+    // dreturn
+    0xaf,
+    // areturn
+    0xb0,
+    // return
+    0xb1
+];
+
 pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
     match instruction_op_code {
         0x00 => nop,
