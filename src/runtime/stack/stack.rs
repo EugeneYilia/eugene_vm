@@ -36,6 +36,14 @@ impl Stack {
         }
     }
 
+    pub fn get(&self) -> &StackFrame {
+        if self.is_empty() {
+            panic!("Stack is empty");
+        } else {
+            self.stack_frame_vec.last().unwrap()
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.stack_frame_vec.is_empty()
     }

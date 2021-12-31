@@ -35,6 +35,10 @@ impl Thread {
         self.stack.get_mut()
     }
 
+    pub fn get_stack_frame(&self) -> &StackFrame {
+        self.stack.get()
+    }
+
     /// 判断是否还有stack_frame
     pub fn has_stack_frame(&self) -> bool {
         !self.stack.is_empty()
@@ -56,6 +60,6 @@ impl Thread {
     pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>) {
         let stack_frame = StackFrame::new(class, method);
         thread.push_stack_frame(stack_frame);
-        // thread.pop_stack_frame();
+        thread.pop_stack_frame();
     }
 }
