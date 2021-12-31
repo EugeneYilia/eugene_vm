@@ -52,9 +52,8 @@ impl Thread {
     // stack bottom  method: A  pc: 13     method: B  pc: 2  stack head
     pub fn start_thread(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
         let stack_frame = StackFrame::new(class, method);
-        let mut thread_mut = thread.deref().borrow_mut();
-        thread_mut.push_stack_frame(stack_frame);
-        engine::execute_instruction(&mut thread_mut);
+        thread.deref().borrow_mut().push_stack_frame(stack_frame);
+        engine::execute_instruction(thread);
     }
 
     pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>) {
