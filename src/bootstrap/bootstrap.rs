@@ -24,6 +24,9 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
     }
 }
 
+fn init_jvm() {
+    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+}
 
 #[cfg(test)]
 mod tests {
