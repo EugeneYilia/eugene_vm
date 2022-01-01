@@ -11,6 +11,8 @@ use crate::runtime::thread::Thread;
 // class_name 主函数入口
 // user_classpath and boot_classpath需要先解析出来
 pub fn start_jvm(bootstrap_option: BootstrapOption) {
+    init_jvm();
+
     let main_thread = Rc::new(RefCell::new(Thread::new(None)));
 
     let classpath = ClassPath::parse_classpath(bootstrap_option.boot_classpath_option, bootstrap_option.user_classpath_option);
@@ -25,7 +27,7 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
 }
 
 fn init_jvm() {
-    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
 }
 
 #[cfg(test)]

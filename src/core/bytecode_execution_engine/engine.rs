@@ -12,7 +12,7 @@ pub fn execute_instruction(thread: Rc<RefCell<Thread>>) {
     loop {
         let instruction_op_code = thread.deref().borrow_mut().get_stack_frame_mut().code_reader.read_u8();
         let instruction_fn = instruction_constants::get_instruction_fn(instruction_op_code);
-        println!("opcode: {:02X}", instruction_op_code);
+        debug!("opcode: {:02X}", instruction_op_code);
         instruction_fn(&mut thread.deref().borrow_mut());
 
         if is_terminal_instruction(&instruction_op_code) {

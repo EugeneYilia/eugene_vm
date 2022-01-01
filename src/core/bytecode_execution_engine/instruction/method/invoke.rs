@@ -14,6 +14,6 @@ pub fn invoke_virtual(thread: &mut RefMut<Thread>) {
     if let ConstantInfo::MethodRef { class_index, name_and_type_index } = class.constant_pool.get(virtual_method_index) {} else {}
 
     let value = operand_stack.pop_i32();
-    println!("{}", value);
+    info!("{}", value);
 }
 

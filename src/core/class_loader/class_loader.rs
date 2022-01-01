@@ -142,7 +142,7 @@ impl ClassLoader {
                         OBJ_FIELD_DESCRIPTOR => {
                             if let ConstantInfo::String(utf8_index) = constant_pool.get(constant_value_index) {
                                 if let ConstantInfo::ModifiedUTF8(value) = constant_pool.get(*utf8_index as usize) {
-                                    println!("value: {}", value);
+                                    warn!("value: {}", value);
                                 } else {
                                     panic!("constant_value_index: {}  utf8_index: {} is not ConstantInfo::ModifiedUTF8", constant_value_index, utf8_index);
                                 }

@@ -11,24 +11,23 @@ use crate::runtime::thread::Thread;
 pub fn get_static(mut thread: &mut RefMut<Thread>) {
     let stack_frame = thread.get_stack_frame_mut();
     let static_field_index = stack_frame.code_reader.read_u16() as usize;
-    println!("static_field_index: {}", static_field_index);
+    debug!("static_field_index: {}", static_field_index);
     let StackFrame { class, .. } = stack_frame;
     let class = class.clone();
     if let ConstantInfo::FieldRef { class_index, name_and_type_index } = class.constant_pool.get(static_field_index) {
-        println!("class_index: {}", class_index);
-        println!("name_and_type_index: {}", name_and_type_index);
+        debug!("class_index: {}", class_index);
+        debug!("name_and_type_index: {}", name_and_type_index);
         if let ConstantInfo::Class { name_index } = class.constant_pool.get(*class_index as usize) {
-            println!("name_index: {}", name_index);
+            debug!("name_index: {}", name_index);
             if let ConstantInfo::ModifiedUTF8(ref class_name) = class.constant_pool.get(*name_index as usize) {
-                println!("class_name: {}", class_name);
+                debug!("class_name: {}", class_name);
                 let Class { class_loader, .. } = class.deref();
                 if let Some(class_loader) = class_loader {
                     let class_ref = ClassLoader::load_class(Rc::clone(class_loader), class_name.to_owned(), &mut thread);
-                    if let ConstantInfo::NameAndType{name_index, descriptor_index} = class.constant_pool.get(*name_and_type_index as usize) {
+                    if let ConstantInfo::NameAndType { name_index, descriptor_index } = class.constant_pool.get(*name_and_type_index as usize) {
                         if let ConstantInfo::ModifiedUTF8(field_name) = class.constant_pool.get(*name_index as usize) {
                             if let ConstantInfo::ModifiedUTF8(field_descriptor) = class.constant_pool.get(*descriptor_index as usize) {
-                                
-                                println!("static field field_name: {}  field_descriptor: {}", field_name, field_descriptor);
+                                debug!("static field field_name: {}  field_descriptor: {}", field_name, field_descriptor);
                             } else {
                                 panic!("name_and_type_index: {}  descriptor_index: {} should point to ConstantInfo::ModifiedUTF8", name_and_type_index, descriptor_index);
                             }
