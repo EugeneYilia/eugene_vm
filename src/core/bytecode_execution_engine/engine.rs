@@ -3,7 +3,6 @@ use std::ops::Deref;
 use std::rc::Rc;
 
 use crate::constants::instruction_constants;
-use crate::runtime::stack::stack::Stack;
 use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 use crate::util::instruction_util::is_terminal_instruction;

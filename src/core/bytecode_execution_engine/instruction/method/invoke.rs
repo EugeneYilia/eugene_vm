@@ -15,5 +15,6 @@ pub fn invoke_virtual(thread: &mut RefMut<Thread>) {
 
     let value = operand_stack.pop_i32();
     info!("{}", value);
+    // println!("{}", value);
 }
 
