@@ -6,6 +6,7 @@ pub mod comparison;
 pub mod math;
 pub mod method;
 pub mod stack_management;
+pub mod object;
 pub mod instruction_execute_result;
 
 #[cfg(test)]

@@ -19,6 +19,7 @@ use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg,
 use crate::core::bytecode_execution_engine::instruction::method::invoke::invoke_virtual;
 use crate::core::bytecode_execution_engine::instruction::method::xreturn::{areturn, dreturn, freturn, ireturn, lreturn, r#return};
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
+use crate::core::bytecode_execution_engine::instruction::object::new::new;
 use crate::core::bytecode_execution_engine::instruction::stack_management::dup::{dup, dup2, dup2_x1, dup2_x2, dup_x1, dup_x2};
 use crate::core::bytecode_execution_engine::instruction::stack_management::pop::{pop, pop2};
 use crate::core::bytecode_execution_engine::instruction::stack_management::swap::swap;
@@ -123,6 +124,7 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
         0xb1 => r#return,
         0xb2 => get_static,
         0xb6 => invoke_virtual,
+        0xbb => new,
         _ => panic!("illegal instruction op code: {:02X}", instruction_op_code)
     }
 }
