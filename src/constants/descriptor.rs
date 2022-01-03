@@ -1,0 +1,10 @@
+pub const BYTE_DESCRIPTOR: char = 'B';
+pub const CHAR_DESCRIPTOR: char = 'C';
+pub const DOUBLE_DESCRIPTOR: char = 'D';
+pub const FLOAT_DESCRIPTOR: char = 'F';
+pub const INT_DESCRIPTOR: char = 'I';
+pub const LONG_DESCRIPTOR: char = 'J';
+pub const SHORT_DESCRIPTOR: char = 'S';
+pub const BOOLEAN_DESCRIPTOR: char = 'Z';
+pub const VOID_DESCRIPTOR: char = 'V';
+pub const OBJ_DESCRIPTOR: char = 'L';

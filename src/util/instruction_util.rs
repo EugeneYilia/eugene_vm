@@ -1,3 +1,4 @@
+use crate::constants::descriptor::*;
 use crate::constants::instruction_constants::TERMINAL_INSTRUCTION_OPCODES;
 use crate::runtime::stack::variable_slot::VariableSlot;
 
@@ -21,4 +22,12 @@ pub fn variable_slot_type_is_kind_one(variable_slot: &VariableSlot) -> bool {
 
 pub fn is_terminal_instruction(instruction_op_code: &u8) -> bool {
     TERMINAL_INSTRUCTION_OPCODES.contains(instruction_op_code)
+}
+
+// 获取有默认值的变量
+pub fn get_default_variable_slot(descriptor: char) -> VariableSlot {
+    match descriptor {
+        OBJ_DESCRIPTOR => VariableSlot::NullReference,
+        _ => panic!("")
+    }
 }

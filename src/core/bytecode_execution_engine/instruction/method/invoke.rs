@@ -19,3 +19,4 @@ pub fn invoke_virtual(thread: &mut RefMut<Thread>) {
     // println!("{}", value);
 }
 
+pub fn invoke_special(thread: &mut RefMut<Thread>) {}

@@ -16,7 +16,7 @@ use crate::core::bytecode_execution_engine::instruction::math::and::{iand, land}
 use crate::core::bytecode_execution_engine::instruction::math::inc::iinc;
 use crate::core::bytecode_execution_engine::instruction::math::mul::{dmul, fmul, imul, lmul};
 use crate::core::bytecode_execution_engine::instruction::math::neg::{dneg, fneg, ineg, lneg};
-use crate::core::bytecode_execution_engine::instruction::method::invoke::invoke_virtual;
+use crate::core::bytecode_execution_engine::instruction::method::invoke::{invoke_special, invoke_virtual};
 use crate::core::bytecode_execution_engine::instruction::method::xreturn::{areturn, dreturn, freturn, ireturn, lreturn, r#return};
 use crate::core::bytecode_execution_engine::instruction::nop::nop;
 use crate::core::bytecode_execution_engine::instruction::object::new::new;
@@ -24,6 +24,7 @@ use crate::core::bytecode_execution_engine::instruction::stack_management::dup::
 use crate::core::bytecode_execution_engine::instruction::stack_management::pop::{pop, pop2};
 use crate::core::bytecode_execution_engine::instruction::stack_management::swap::swap;
 use crate::core::bytecode_execution_engine::instruction::store::istore::{istore_0, istore_1, istore_2, istore_3};
+use crate::core::bytecode_execution_engine::instruction::store::put::put_static;
 use crate::runtime::thread::Thread;
 
 pub const OP_CODE_LENGTH: usize = 1usize;
@@ -123,7 +124,9 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
         0xb0 => areturn,
         0xb1 => r#return,
         0xb2 => get_static,
+        0xb3 => put_static,
         0xb6 => invoke_virtual,
+        0xb7 => invoke_special,
         0xbb => new,
         _ => panic!("illegal instruction op code: {:02X}", instruction_op_code)
     }

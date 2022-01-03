@@ -1,8 +1,19 @@
+use std::rc::Rc;
+
 use crate::runtime::method_area::class::class_member::ClassMember;
 use crate::runtime::stack::variable_slot::VariableSlot;
 
 #[derive(Debug)]
 pub struct ObjectField {
-    pub class_member: ClassMember,
+    pub class_member: Rc<ClassMember>,
     pub variable_slot: VariableSlot,
+}
+
+impl ObjectField {
+    pub fn new(class_member: Rc<ClassMember>, variable_slot: VariableSlot) -> ObjectField {
+        ObjectField {
+            class_member,
+            variable_slot,
+        }
+    }
 }

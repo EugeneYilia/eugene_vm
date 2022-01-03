@@ -6,7 +6,7 @@ use std::rc::Rc;
 
 use crate::constants::access_flags::ACCESS_STATIC;
 use crate::constants::class_constants::ROOT_CLASS_NAME;
-use crate::constants::field_descriptor::*;
+use crate::constants::descriptor::*;
 use crate::core::class_loader::class_reader::ClassReader;
 use crate::core::classfile::classfile::ClassFile;
 use crate::core::classpath::classpath::ClassPath;
@@ -102,7 +102,7 @@ impl ClassLoader {
                     // 添加到static variable table中
                     let constant_value_index = field.constant_value_index.unwrap();
                     match field.get_descriptor() {
-                        BYTE_FIELD_DESCRIPTOR | CHAR_FIELD_DESCRIPTOR | INT_FIELD_DESCRIPTOR | SHORT_FIELD_DESCRIPTOR | BOOLEAN_FIELD_DESCRIPTOR => {
+                        BYTE_DESCRIPTOR | CHAR_DESCRIPTOR | INT_DESCRIPTOR | SHORT_DESCRIPTOR | BOOLEAN_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Integer(value) => {
                                     static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(*value)))
@@ -110,7 +110,7 @@ impl ClassLoader {
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Integer", constant_value_index)
                             }
                         }
-                        DOUBLE_FIELD_DESCRIPTOR => {
+                        DOUBLE_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Double(value) => {
                                     let [first, second] = converter::f64_to_i32seq(*value);
@@ -120,7 +120,7 @@ impl ClassLoader {
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Double", constant_value_index)
                             }
                         }
-                        FLOAT_FIELD_DESCRIPTOR => {
+                        FLOAT_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Float(value) => {
                                     static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::F32(*value))
@@ -128,7 +128,7 @@ impl ClassLoader {
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Float", constant_value_index)
                             }
                         }
-                        LONG_FIELD_DESCRIPTOR => {
+                        LONG_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Long(value) => {
                                     let [first, second] = converter::i64_to_i32seq(*value);
@@ -138,7 +138,7 @@ impl ClassLoader {
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Long", constant_value_index)
                             }
                         }
-                        OBJ_FIELD_DESCRIPTOR => {
+                        OBJ_DESCRIPTOR => {
                             if let ConstantInfo::String(utf8_index) = constant_pool.get(constant_value_index) {
                                 if let ConstantInfo::ModifiedUTF8(value) = constant_pool.get(*utf8_index as usize) {
                                     warn!("value: {}", value);

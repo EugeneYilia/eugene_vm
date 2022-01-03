@@ -1,12 +1,15 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::rc::Rc;
 
 use crate::core::class_loader::class_loader::ClassLoader;
+use crate::runtime::heap::object_field::ObjectField;
 use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::method_area::constant_pool::constant_pool::ConstantPool;
 use crate::runtime::stack::variables_table::VariableTable;
 use crate::util::class_util::check_access_flags_all;
+use crate::util::instruction_util::get_default_variable_slot;
 
 // class的生命周期要长于class_loader
 #[derive(Debug)]
@@ -34,5 +37,17 @@ impl Class {
                     method.get_descriptor() == descriptor &&
                     check_access_flags_all(method.get_access_flags(), &access_flags)
             }).map(|method| Rc::clone(method))
+    }
+
+    pub fn collect_instance_fields(&self, mut fields: HashMap<String, ObjectField>) -> HashMap<String, ObjectField> {
+        if let Some(super_class) = &self.super_class {
+            fields = super_class.collect_instance_fields(fields)
+        }
+
+        self.fields.iter().for_each(|field| {
+            fields.insert(field.get_name().to_owned(), ObjectField::new(field.get_class_member(), get_default_variable_slot(field.get_descriptor())));
+        });
+
+        fields
     }
 }

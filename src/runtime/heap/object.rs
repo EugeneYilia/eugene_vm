@@ -9,3 +9,12 @@ pub struct Object {
     class: Rc<Class>,
     fields: HashMap<String, ObjectField>,
 }
+
+impl Object {
+    pub fn new(class: Rc<Class>) -> Object {
+        Object {
+            class: Rc::clone(&class),
+            fields: class.collect_instance_fields(HashMap::<String, ObjectField>::new()),
+        }
+    }
+}

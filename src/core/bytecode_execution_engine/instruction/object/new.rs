@@ -3,9 +3,9 @@ use std::ops::Deref;
 use std::rc::Rc;
 
 use crate::core::class_loader::class_loader::ClassLoader;
+use crate::runtime::heap::object::Object;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
 
 pub fn new(mut thread: &mut RefMut<Thread>) {
@@ -19,8 +19,8 @@ pub fn new(mut thread: &mut RefMut<Thread>) {
         if let ConstantInfo::ModifiedUTF8(ref class_name) = class.constant_pool.get(*name_index as usize) {
             let Class { class_loader, .. } = class.deref();
             if let Some(class_loader) = class_loader {
-                let target_class_ref = ClassLoader::load_class(Rc::clone(class_loader), class_name.to_owned(), &mut thread);
-                error!("{:?}",target_class_ref);
+                let class_ref = ClassLoader::load_class(Rc::clone(class_loader), class_name.to_owned(), &mut thread);
+                let object = Object::new(Rc::clone(&class_ref));
             } else {
                 panic!("instruction new error: classloader is None");
             }
