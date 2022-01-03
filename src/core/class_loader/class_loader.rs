@@ -97,7 +97,7 @@ impl ClassLoader {
             let used_slot_amount = if field.is_need_two_slot() { 2usize } else { 1usize };
             if field.get_access_flags() & ACCESS_STATIC != 0 {
                 if field.constant_value_index.is_none() {
-                    // 普通静态变量
+                    // 普通静态变量  需要在clinit中赋值
                     (next_instance_slot_id, next_static_slot_id, static_variable_table, constant_pool)
                 } else {
                     // 添加到static variable table中
