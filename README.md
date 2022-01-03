@@ -18,6 +18,7 @@
 5. constant_value_index的校验
 6. 执行<clinit>、<init>
 7. 增加更多的字节码指令
+8. 多线程的支持
 
 ## 重构方案
 

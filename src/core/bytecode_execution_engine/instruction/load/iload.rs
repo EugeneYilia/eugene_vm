@@ -1,4 +1,5 @@
 use std::cell::RefMut;
+use std::ops::Deref;
 
 use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::stack::variable_slot::VariableSlot;
@@ -15,21 +16,25 @@ fn _iload(stack_frame: &mut StackFrame, variable_index: usize) {
 }
 
 pub fn iload_0(thread: &mut RefMut<Thread>) {
-    let stack_frame = thread.get_stack_frame_mut();
-    _iload(stack_frame, 0);
+    let stack_frame = thread.get_stack_frame_last();
+    let mut stack_frame = stack_frame.deref().borrow_mut();
+    _iload(&mut stack_frame, 0);
 }
 
 pub fn iload_1(thread: &mut RefMut<Thread>) {
-    let mut stack_frame = thread.get_stack_frame_mut();
+    let stack_frame = thread.get_stack_frame_last();
+    let mut stack_frame = stack_frame.deref().borrow_mut();
     _iload(&mut stack_frame, 1);
 }
 
 pub fn iload_2(thread: &mut RefMut<Thread>) {
-    let mut stack_frame = thread.get_stack_frame_mut();
+    let stack_frame = thread.get_stack_frame_last();
+    let mut stack_frame = stack_frame.deref().borrow_mut();
     _iload(&mut stack_frame, 2);
 }
 
 pub fn iload_3(thread: &mut RefMut<Thread>) {
-    let mut stack_frame = thread.get_stack_frame_mut();
+    let stack_frame = thread.get_stack_frame_last();
+    let mut stack_frame = stack_frame.deref().borrow_mut();
     _iload(&mut stack_frame, 3);
 }

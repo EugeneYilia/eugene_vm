@@ -5,15 +5,14 @@ use std::rc::Rc;
 use crate::core::class_loader::class_loader::ClassLoader;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
-use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 
 pub fn get_static(mut thread: &mut RefMut<Thread>) {
-    let stack_frame = thread.get_stack_frame_mut();
+    let stack_frame = thread.get_stack_frame_last();
+    let mut stack_frame = stack_frame.deref().borrow_mut();
     let static_field_index = stack_frame.code_reader.read_u16() as usize;
     debug!("static_field_index: {}", static_field_index);
-    let StackFrame { class, .. } = stack_frame;
-    let class = class.clone();
+    let class = Rc::clone(&stack_frame.class);
     if let ConstantInfo::FieldRef { class_index, name_and_type_index } = class.constant_pool.get(static_field_index) {
         debug!("class_index: {}", class_index);
         debug!("name_and_type_index: {}", name_and_type_index);

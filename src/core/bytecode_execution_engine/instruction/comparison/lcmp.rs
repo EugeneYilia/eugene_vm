@@ -1,19 +1,20 @@
 use std::cell::RefMut;
 use std::num::Wrapping;
+use std::ops::Deref;
 
-use crate::runtime::stack::stack_frame::StackFrame;
 use crate::runtime::thread::Thread;
 
 pub fn lcmp(thread: &mut RefMut<Thread>) {
-    let stack_frame = thread.get_stack_frame_mut();
-    let StackFrame { operand_stack, .. } = stack_frame;
-    let second = operand_stack.pop_i64();
-    let first = operand_stack.pop_i64();
+    let stack_frame = thread.get_stack_frame_last();
+    let mut stack_frame = stack_frame.deref().borrow_mut();
+
+    let second = stack_frame.operand_stack.pop_i64();
+    let first = stack_frame.operand_stack.pop_i64();
     if first > second {
-        operand_stack.push_i32(Wrapping(1i32));
+        stack_frame.operand_stack.push_i32(Wrapping(1i32));
     } else if first == second {
-        operand_stack.push_i32(Wrapping(0i32));
+        stack_frame.operand_stack.push_i32(Wrapping(0i32));
     } else {
-        operand_stack.push_i32(Wrapping(-1i32));
+        stack_frame.operand_stack.push_i32(Wrapping(-1i32));
     }
 }
