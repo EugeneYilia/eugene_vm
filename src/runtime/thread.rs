@@ -54,6 +54,6 @@ impl Thread {
     pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>) {
         let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method)));
         thread.push_stack_frame(stack_frame);
-        engine::execute_instruction(thread)
+        engine::execute_instruction(thread);
     }
 }
