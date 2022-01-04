@@ -15,9 +15,6 @@ pub fn ifeq(thread: &mut RefMut<Thread>) {
 
     let offset = stack_frame.code_reader.read_u16() as isize;
 
-    let stack_frame = thread.get_stack_frame_last();
-    let mut stack_frame = stack_frame.deref().borrow_mut();
-
     let first = stack_frame.operand_stack.pop_i32();
     if first.0 == 0 {
         stack_frame.code_reader.set_pc((original_pc as isize + offset) as usize);
@@ -31,9 +28,6 @@ pub fn ifne(thread: &mut RefMut<Thread>) {
     let original_pc = stack_frame.code_reader.pc - OP_CODE_LENGTH;
 
     let offset = stack_frame.code_reader.read_u16() as isize;
-
-    let stack_frame = thread.get_stack_frame_last();
-    let mut stack_frame = stack_frame.deref().borrow_mut();
 
     let first = stack_frame.operand_stack.pop_i32();
     if first.0 != 0 {
@@ -49,9 +43,6 @@ pub fn iflt(thread: &mut RefMut<Thread>) {
 
     let offset = stack_frame.code_reader.read_u16() as isize;
 
-    let stack_frame = thread.get_stack_frame_last();
-    let mut stack_frame = stack_frame.deref().borrow_mut();
-
     let first = stack_frame.operand_stack.pop_i32();
     if first.0 < 0 {
         stack_frame.code_reader.set_pc((original_pc as isize + offset) as usize);
@@ -65,9 +56,6 @@ pub fn ifge(thread: &mut RefMut<Thread>) {
     let original_pc = stack_frame.code_reader.pc - OP_CODE_LENGTH;
 
     let offset = stack_frame.code_reader.read_u16() as isize;
-
-    let stack_frame = thread.get_stack_frame_last();
-    let mut stack_frame = stack_frame.deref().borrow_mut();
 
     let first = stack_frame.operand_stack.pop_i32();
     if first.0 >= 0 {
@@ -83,9 +71,6 @@ pub fn ifgt(thread: &mut RefMut<Thread>) {
 
     let offset = stack_frame.code_reader.read_u16() as isize;
 
-    let stack_frame = thread.get_stack_frame_last();
-    let mut stack_frame = stack_frame.deref().borrow_mut();
-
     let first = stack_frame.operand_stack.pop_i32();
     if first.0 > 0 {
         stack_frame.code_reader.set_pc((original_pc as isize + offset) as usize);
@@ -99,9 +84,6 @@ pub fn ifle(thread: &mut RefMut<Thread>) {
     let original_pc = stack_frame.code_reader.pc - OP_CODE_LENGTH;
 
     let offset = stack_frame.code_reader.read_u16() as isize;
-
-    let stack_frame = thread.get_stack_frame_last();
-    let mut stack_frame = stack_frame.deref().borrow_mut();
 
     let first = stack_frame.operand_stack.pop_i32();
     if first.0 <= 0 {
