@@ -14,6 +14,19 @@ public class TestAdd {
         System.out.println(sum);
         System.out.println(sum);
     }
+
+    public int a(int b, int c) {
+        return b + c;
+    }
+
+    // 局部变量表1 77 q 方法入参第一个
+    // 局部变量表2 88 w 方法入参第二个
+    // stack bottom - [this, 77, 88] - stack head
+    public void x() {
+        int q = 77;
+        int w = 88;
+        a(q, w);
+    }
 }
 // Concise
 // public class TestAdd {

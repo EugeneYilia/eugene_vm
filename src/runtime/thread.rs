@@ -51,6 +51,7 @@ impl Thread {
         engine::execute_instruction(&mut thread.deref().borrow_mut());
     }
 
+    // todo: 补充方法参数传入
     pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>) {
         let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method)));
         thread.push_stack_frame(stack_frame);
