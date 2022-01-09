@@ -19,7 +19,7 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
     let class_loader: Rc<RefCell<ClassLoader>> = Rc::new(RefCell::new(ClassLoader::new(classpath, Rc::clone(&main_thread))));
     let class_ref = ClassLoader::load_class(class_loader, bootstrap_option.class_name, &mut main_thread.deref().borrow_mut());
 
-    if let Some(method_ref) = class_ref.get_method("main", "([Ljava/lang/String;)V", vec![ACCESS_PUBLIC, ACCESS_STATIC]) {
+    if let Some(method_ref) = class_ref.get_method("main", Some("([Ljava/lang/String;)V"), Some(vec![ACCESS_PUBLIC, ACCESS_STATIC])) {
         Thread::start_thread(class_ref, method_ref, Rc::clone(&main_thread))
     } else {
         panic!("{:?} can not find main method", class_ref);

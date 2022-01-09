@@ -6,8 +6,8 @@ use crate::runtime::method_area::class::class::Class;
 
 #[derive(Debug)]
 pub struct Object {
-    class: Rc<Class>,
-    fields: HashMap<String, ObjectField>,
+    pub class: Rc<Class>,
+    pub fields: HashMap<String, ObjectField>,
 }
 
 impl Object {

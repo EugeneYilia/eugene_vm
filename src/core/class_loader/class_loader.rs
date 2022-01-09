@@ -48,7 +48,7 @@ impl ClassLoader {
             let (class_loader, class_ref) = ClassLoader::define_class(class_loader, byte_code, &mut thread);
             class_loader.deref().borrow_mut().class_map.insert(class_name, Rc::clone(&class_ref));
             // load完之后执行clinit方法
-            if let Some(method_ref) = class_ref.get_method("<clinit>", "()V", vec![ACCESS_STATIC]) {
+            if let Some(method_ref) = class_ref.get_method("<clinit>", Some("()V"), Some(vec![ACCESS_STATIC])) {
                 Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread);
             }
             class_ref

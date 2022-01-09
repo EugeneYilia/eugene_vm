@@ -28,14 +28,18 @@ pub struct Class {
 }
 
 impl Class {
-    pub fn get_method(&self, name: &str, descriptor: &str, access_flags: Vec<u16>) -> Option<Rc<Method>> {
+    /// name: 必要的
+    /// descriptor 和 access_flags 可选的
+    /// return -> 具体的方法
+    pub fn get_method(&self, name: &str, descriptor: Option<&str>, access_flags: Option<Vec<u16>>) -> Option<Rc<Method>> {
         // Java main func:  public static void main(String[] args){}
         self.methods
             .iter()
             .find(|ref method| {
                 method.get_name() == name &&
-                    method.get_descriptor() == descriptor &&
-                    check_access_flags_all(method.get_access_flags(), &access_flags)
+                    if descriptor.is_none() { true } else { method.get_descriptor() == descriptor.unwrap() }
+                    &&
+                    if access_flags.is_none() { true } else { check_access_flags_all(method.get_access_flags(), &access_flags.unwrap()) }
             }).map(|method| Rc::clone(method))
     }
 
