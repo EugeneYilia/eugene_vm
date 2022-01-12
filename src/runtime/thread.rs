@@ -8,6 +8,7 @@ use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::stack::stack::Stack;
 use crate::runtime::stack::stack_frame::StackFrame;
+use crate::runtime::stack::variable_slot::VariableSlot;
 
 #[derive(Debug)]
 pub struct Thread {
@@ -45,15 +46,15 @@ impl Thread {
 
     // stack bottom  method: A  pc: 13                       stack head
     // stack bottom  method: A  pc: 13     method: B  pc: 2  stack head
-    pub fn start_thread(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>) {
-        let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method)));
+    pub fn start_thread(class: Rc<Class>, method: Rc<Method>, thread: Rc<RefCell<Thread>>, args: Option<Vec<VariableSlot>>) {
+        let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method, args)));
         thread.deref().borrow_mut().push_stack_frame(stack_frame);
         engine::execute_instruction(&mut thread.deref().borrow_mut());
     }
 
     // todo: 补充方法参数传入  将方法参数存放到局部变量表上local_variable_table
-    pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>) {
-        let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method)));
+    pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>, args: Option<Vec<VariableSlot>>) {
+        let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method, args)));
         thread.push_stack_frame(stack_frame);
         engine::execute_instruction(thread);
     }

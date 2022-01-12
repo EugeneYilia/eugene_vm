@@ -84,6 +84,6 @@ mod tests {
 
     #[allow(dead_code)]
     pub fn mock_stack_frame() -> StackFrame {
-        StackFrame::new(mock_rc_class(), mock_rc_method())
+        StackFrame::new(mock_rc_class(), mock_rc_method(), None)
     }
 }

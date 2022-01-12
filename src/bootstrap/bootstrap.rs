@@ -7,6 +7,7 @@ use crate::constants::access_flags::{ACCESS_PUBLIC, ACCESS_STATIC};
 use crate::core::class_loader::class_loader::ClassLoader;
 use crate::core::classpath::classpath::ClassPath;
 use crate::runtime::thread::Thread;
+use crate::util::bootstrap_util::convert_args_to_slot_vec;
 
 // class_name 主函数入口
 // user_classpath and boot_classpath需要先解析出来
@@ -20,7 +21,7 @@ pub fn start_jvm(bootstrap_option: BootstrapOption) {
     let class_ref = ClassLoader::load_class(class_loader, bootstrap_option.class_name, &mut main_thread.deref().borrow_mut());
 
     if let Some(method_ref) = class_ref.get_method("main", Some("([Ljava/lang/String;)V"), Some(vec![ACCESS_PUBLIC, ACCESS_STATIC])) {
-        Thread::start_thread(class_ref, method_ref, Rc::clone(&main_thread))
+        Thread::start_thread(class_ref, method_ref, Rc::clone(&main_thread), Some(convert_args_to_slot_vec(bootstrap_option.args)))
     } else {
         panic!("{:?} can not find main method", class_ref);
     }

@@ -9,15 +9,16 @@ public class TestInvoke {
         int y = 2;
     }
 
-    void c(int a,int b){
+    void c(int a,long d,int b){
         System.out.println(a);
         System.out.println(b);
+        System.out.println(d);
     }
 
     void d(){
         int a = 2;
         int b = 3;
-        c(a,b);
+        c(a,3,b);
     }
 
     void c(){

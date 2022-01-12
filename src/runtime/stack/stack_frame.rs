@@ -4,6 +4,7 @@ use crate::core::code_reader::code_reader::CodeReader;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::method::Method;
 use crate::runtime::stack::operand_stack::OperandStack;
+use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::stack::variables_table::VariableTable;
 
 #[derive(Debug)]
@@ -16,13 +17,13 @@ pub struct StackFrame {
 }
 
 impl StackFrame {
-    pub fn new(class: Rc<Class>, method: Rc<Method>) -> StackFrame {
+    pub fn new(class: Rc<Class>, method: Rc<Method>, args: Option<Vec<VariableSlot>>) -> StackFrame {
         let Method {
             max_stack,
             ..
         } = *method;
 
-        let local_variable_table = VariableTable::new();
+        let local_variable_table = VariableTable::new(args);
         let operand_stack = OperandStack::new(max_stack);
 
         StackFrame {
@@ -83,10 +84,10 @@ mod tests {
             super_class: None,
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
-            static_variable_table: VariableTable::new(),
+            static_variable_table: VariableTable::new(None),
             class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None))))))),
         });
-        let frame = StackFrame::new(class_ref, method_ref);
+        let frame = StackFrame::new(class_ref, method_ref, None);
         check_local_variable_table(frame.local_variable_table);
         check_operand_stack(frame.operand_stack);
     }

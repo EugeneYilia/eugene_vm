@@ -2,7 +2,7 @@ pub mod class_util;
 pub mod converter;
 pub mod file_util;
 pub mod instruction_util;
-
+pub mod bootstrap_util;
 
 #[cfg(test)]
 mod tests {
