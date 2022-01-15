@@ -59,7 +59,7 @@ mod tests {
             super_class: None,
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
-            static_variable_table: VariableTable::new(),
+            static_variable_table: VariableTable::new(None),
             class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None)))))))
         })
     }
@@ -77,7 +77,7 @@ mod tests {
             super_class: None,
             next_instance_slot_id: 0usize,
             next_static_slot_id: 0usize,
-            static_variable_table: VariableTable::new(),
+            static_variable_table: VariableTable::new(None),
             class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None)))))))
         }
     }

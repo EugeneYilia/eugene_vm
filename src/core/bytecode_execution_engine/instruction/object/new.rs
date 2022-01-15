@@ -30,8 +30,8 @@ pub fn new(mut thread: &mut RefMut<Thread>) {
             if let Some(class_loader) = class_loader {
                 let class_ref = ClassLoader::load_class(Rc::clone(class_loader), class_name.to_owned(), &mut thread);
                 let object = Rc::new(RefCell::new(Object::new(Rc::clone(&class_ref))));
-                debug!("object: {:?}",object.fields);
-                debug!("object: {:?}",object.class.class_name);
+                debug!("object fields: {:?}",object.deref().borrow().fields);
+                debug!("object class_name: {:?}",object.deref().borrow().class.class_name);
                 stack_frame.operand_stack.push(VariableSlot::ObjectReference(object));
             } else {
                 panic!("instruction new error: classloader is None");

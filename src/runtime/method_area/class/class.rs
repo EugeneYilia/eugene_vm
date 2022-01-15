@@ -39,7 +39,7 @@ impl Class {
                 method.get_name() == name &&
                     if descriptor.is_none() { true } else { method.get_descriptor() == descriptor.unwrap() }
                     &&
-                    if access_flags.is_none() { true } else { check_access_flags_all(method.get_access_flags(), &access_flags.unwrap()) }
+                    if access_flags.is_none() { true } else { check_access_flags_all(method.get_access_flags(), access_flags.as_ref().unwrap()) }
             }).map(|method| Rc::clone(method))
     }
 

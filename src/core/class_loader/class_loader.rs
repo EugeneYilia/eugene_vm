@@ -49,7 +49,7 @@ impl ClassLoader {
             class_loader.deref().borrow_mut().class_map.insert(class_name, Rc::clone(&class_ref));
             // load完之后执行clinit方法
             if let Some(method_ref) = class_ref.get_method("<clinit>", Some("()V"), Some(vec![ACCESS_STATIC])) {
-                Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread);
+                Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread, None);
             }
             class_ref
         }
@@ -165,7 +165,7 @@ impl ClassLoader {
             .map(|class| class.next_instance_slot_id)
             .unwrap_or(0usize);
 
-        let slot_id_accumulator: SlotIdAccumulator = (next_instance_slot_id, 0usize, VariableTable::new(), constant_pool);
+        let slot_id_accumulator: SlotIdAccumulator = (next_instance_slot_id, 0usize, VariableTable::new(None), constant_pool);
 
         let (next_instance_slot_id, next_static_slot_id, static_variable_table, constant_pool) = fields.iter().fold(slot_id_accumulator, calc_instance_slot_id);
 

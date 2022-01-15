@@ -2,7 +2,9 @@ public class TestInvoke {
     void a(){
         int x = 1;
         b();
+        long m =4;
         int y = 3;
+        int w = 8;
     }
 
     void b (){
