@@ -1,3 +1,5 @@
+use std::num::Wrapping;
+
 use crate::constants::descriptor::*;
 use crate::constants::instruction_constants::TERMINAL_INSTRUCTION_OPCODES;
 use crate::runtime::stack::variable_slot::VariableSlot;
@@ -27,7 +29,11 @@ pub fn is_terminal_instruction(instruction_op_code: &u8) -> bool {
 // 获取有默认值的变量
 pub fn get_default_variable_slot(descriptor: char) -> VariableSlot {
     match descriptor {
-        OBJ_DESCRIPTOR => VariableSlot::NullReference,
-        _ => panic!("")
+        BYTE_DESCRIPTOR | CHAR_DESCRIPTOR | INT_DESCRIPTOR | SHORT_DESCRIPTOR | BOOLEAN_DESCRIPTOR => VariableSlot::I32(Wrapping(0i32)),
+        LONG_DESCRIPTOR => VariableSlot::I64(Wrapping(0i64)),
+        FLOAT_DESCRIPTOR => VariableSlot::F32(0f32),
+        DOUBLE_DESCRIPTOR => VariableSlot::F64(0f64),
+        OBJ_DESCRIPTOR | ARRAY_DESCRIPTOR => VariableSlot::NullReference,
+        _ => panic!("invalid descriptor: {}", descriptor)
     }
 }

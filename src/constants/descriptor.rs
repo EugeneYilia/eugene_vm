@@ -8,3 +8,4 @@ pub const SHORT_DESCRIPTOR: char = 'S';
 pub const BOOLEAN_DESCRIPTOR: char = 'Z';
 pub const VOID_DESCRIPTOR: char = 'V';
 pub const OBJ_DESCRIPTOR: char = 'L';
+pub const ARRAY_DESCRIPTOR: char = '[';

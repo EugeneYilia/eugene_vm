@@ -150,7 +150,7 @@ impl ClassLoader {
                             }
                         }
                         _ => {
-                            panic!("Invalid descriptor type: {} name: {}", field.get_descriptor(), field.get_name())
+                            panic!("invalid descriptor type: {} name: {}", field.get_descriptor(), field.get_name())
                         }
                     }
                     (next_instance_slot_id, next_static_slot_id + used_slot_amount, static_variable_table, constant_pool)

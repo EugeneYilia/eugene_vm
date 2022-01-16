@@ -29,7 +29,14 @@ pub fn invoke_virtual(mut thread: &mut RefMut<Thread>) {
                                 debug!("method_name: {}",method_name);
                                 debug!("method_descriptor: {}",method_descriptor);
 
-                                // let method_ref = class_ref.get_method();
+                                if let Some(method_ref) = class_ref.get_method(method_name, None, None) {
+                                    error!("method: {:?}",method_ref);
+                                    let args_types = &method_ref.args_type;
+                                    error!("method args type: {:?}",args_types);
+                                    Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread, None);
+                                } else {
+                                    panic!("invoke_virtual error can't find method: {}", method_name);
+                                }
                             } else {
                                 panic!("virtual_method_index: {} name_and_type_index: {} descriptor_index: {} not point to ConstantInfo::ModifiedUTF8", virtual_method_index, name_and_type_index, descriptor_index);
                             }
@@ -52,8 +59,8 @@ pub fn invoke_virtual(mut thread: &mut RefMut<Thread>) {
         panic!("virtual_method_index: {} not point to ConstantInfo::MethodRef", virtual_method_index);
     }
 
-    let value = stack_frame.operand_stack.pop_i32();
-    info!("{}", value);
+    // let value = stack_frame.operand_stack.pop_i32();
+    // info!("{}", value);
     // println!("{}", value);
 }
 

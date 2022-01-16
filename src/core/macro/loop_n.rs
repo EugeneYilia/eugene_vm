@@ -1,6 +1,6 @@
 macro_rules! loopn {
-    ($n:expr,$body:block) => {
-        for _ in 0..$n
+    ($amount: expr, $body: block) => {
+        for _ in 0..$amount
             $body
     };
 }

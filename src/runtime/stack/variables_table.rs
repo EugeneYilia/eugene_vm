@@ -10,10 +10,11 @@ pub struct VariableTable {
 
 impl VariableTable {
     // 构建局部变量表的时候，将传递进来的参数variable_slot填充进去
+    // 实例方法时 index = 0 为这个实例的引用
     pub fn new(args: Option<Vec<VariableSlot>>) -> VariableTable {
         let mut slot_map = HashMap::new();
         if let Some(args) = args {
-            let mut index = 1;
+            let mut index = 0;
             args.iter().for_each(|variable_slot| {
                 slot_map.insert(index, variable_slot.clone());
                 if variable_slot_type_is_kind_one(variable_slot) {

@@ -52,7 +52,6 @@ impl Thread {
         engine::execute_instruction(&mut thread.deref().borrow_mut());
     }
 
-    // todo: 补充方法参数传入  将方法参数存放到局部变量表上local_variable_table
     pub fn invoke_method(class: Rc<Class>, method: Rc<Method>, thread: &mut RefMut<Thread>, args: Option<Vec<VariableSlot>>) {
         let stack_frame = Rc::new(RefCell::new(StackFrame::new(class, method, args)));
         thread.push_stack_frame(stack_frame);
