@@ -5,6 +5,7 @@ use std::rc::Rc;
 use crate::core::class_loader::class_loader::ClassLoader;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
+use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::thread::Thread;
 
 /// 实例方法调用参数收集形式
@@ -32,6 +33,8 @@ pub fn invoke_virtual(mut thread: &mut RefMut<Thread>) {
                                 if let Some(method_ref) = class_ref.get_method(method_name, None, None) {
                                     error!("method: {:?}",method_ref);
                                     let args_types = &method_ref.args_type;
+                                    let args: Vec<VariableSlot> = vec![];
+
                                     error!("method args type: {:?}",args_types);
                                     Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread, None);
                                 } else {
@@ -74,4 +77,16 @@ pub fn invoke_special(thread: &mut RefMut<Thread>) {
     if let ConstantInfo::MethodRef { class_index, name_and_type_index } = class.constant_pool.get(special_method_index) {} else {
         panic!("special_method_index: {} not point to ConstantInfo::MethodRef", special_method_index);
     }
+}
+
+#[test]
+fn test_drain() {
+    let mut source = vec![1, 2, 3, 4, 5];
+    println!("{:?}", source);
+    // let result:Vec<i32> = source.drain(2..5).collect();
+    let result: Vec<i32> = source.drain(2..5).collect();
+    println!("{:?}", result);
+    println!("{:?}", result.len());
+    println!("{:?}", source);
+    println!("{:?}", source.len());
 }
