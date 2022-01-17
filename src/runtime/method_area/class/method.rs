@@ -54,6 +54,7 @@ impl Method {
     }
 
     // 1. 先定位出来) 然后就可以判断要不要创建初始Vec   2. 创建好Vec根据具体的元素数量来返回None还是Some(Vec)   目前选择第一种
+    // descriptor: (IJLjava/lang/String;[Ljava/lang/String;I)V
     fn parse_args_type(descriptor: &str) -> Option<Vec<VariableSlot>> {
         let mut end_index_option = descriptor.find(")");
         let end_index: usize;
