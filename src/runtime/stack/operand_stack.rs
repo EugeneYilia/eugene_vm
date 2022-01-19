@@ -84,6 +84,14 @@ impl OperandStack {
     pub fn extend_with_slice(&mut self, slice: &[VariableSlot]) {
         self.variable_slot_vec.extend_from_slice(slice)
     }
+
+    pub fn get_variable_slot_vec(&mut self) -> &mut Vec<VariableSlot> {
+        &mut self.variable_slot_vec
+    }
+
+    pub fn get_length(&self) -> usize {
+        self.variable_slot_vec.len()
+    }
 }
 
 #[test]

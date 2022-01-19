@@ -33,10 +33,21 @@ pub fn invoke_virtual(mut thread: &mut RefMut<Thread>) {
                                 if let Some(method_ref) = class_ref.get_method(method_name, None, None) {
                                     error!("method: {:?}",method_ref);
                                     let args_types = &method_ref.args_type;
-                                    let args: Vec<VariableSlot> = vec![];
+                                    let mut args: Option<Vec<VariableSlot>> = None;
+                                    if let Some(arg_type_vec) = args_types {
+                                        let variable_slot_vec: Vec<VariableSlot> = vec![];
+                                        let args_size = arg_type_vec.len() + 1usize;
+                                        let original_stack_size = stack_frame.operand_stack.get_length();
+                                        let variable_slot_args: Vec<VariableSlot> = stack_frame.operand_stack.get_variable_slot_vec().drain(original_stack_size - args_size..original_stack_size).collect();
+                                        for (index, arg_type) in arg_type_vec.iter().enumerate() {
+                                            let arg = variable_slot_args.get(index).unwrap();
+                                        }
+                                    } else {
+                                        args = None;
+                                    }
 
                                     error!("method args type: {:?}",args_types);
-                                    Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread, None);
+                                    Thread::invoke_method(Rc::clone(&class_ref), method_ref, &mut thread, args);
                                 } else {
                                     panic!("invoke_virtual error can't find method: {}", method_name);
                                 }
