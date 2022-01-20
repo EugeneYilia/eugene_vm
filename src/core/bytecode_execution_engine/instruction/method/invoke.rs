@@ -1,3 +1,5 @@
+use std::any::Any;
+use std::any::TypeId;
 use std::cell::RefMut;
 use std::ops::Deref;
 use std::rc::Rc;
@@ -38,9 +40,12 @@ pub fn invoke_virtual(mut thread: &mut RefMut<Thread>) {
                                         let variable_slot_vec: Vec<VariableSlot> = vec![];
                                         let args_size = arg_type_vec.len() + 1usize;
                                         let original_stack_size = stack_frame.operand_stack.get_length();
-                                        let variable_slot_args: Vec<VariableSlot> = stack_frame.operand_stack.get_variable_slot_vec().drain(original_stack_size - args_size..original_stack_size).collect();
+                                        let variable_slot_args: Vec<VariableSlot> = stack_frame.operand_stack.get_variable_slot_vec().drain((original_stack_size - args_size)..original_stack_size).collect();
                                         for (index, arg_type) in arg_type_vec.iter().enumerate() {
                                             let arg = variable_slot_args.get(index).unwrap();
+                                            let arg_type = arg_type_vec.get(index).unwrap();
+                                            error!("arg: {:?}   typeId: {:?}",arg,arg.type_id());
+                                            error!("arg: {:?}   typeId: {:?}",arg_type,arg_type.type_id());
                                         }
                                     } else {
                                         args = None;
