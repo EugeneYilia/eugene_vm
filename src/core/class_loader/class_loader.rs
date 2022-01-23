@@ -10,6 +10,7 @@ use crate::constants::descriptor::*;
 use crate::core::class_loader::class_reader::ClassReader;
 use crate::core::classfile::classfile::ClassFile;
 use crate::core::classpath::classpath::ClassPath;
+use crate::runtime::heap::object_field::ObjectField;
 use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::class::field::Field;
 use crate::runtime::method_area::class::method::Method;
@@ -19,9 +20,7 @@ use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::runtime::stack::variables_table::VariableTable;
 use crate::runtime::thread::Thread;
 use crate::util::converter;
-
-///       下一个实例字段slot_id  下一个静态字段slot_id  static变量表  常量池
-type SlotIdAccumulator = (usize, usize, VariableTable, ConstantPool);
+use crate::util::instruction_util::get_default_variable_slot;
 
 // TODO: 加入双亲委派机制
 #[derive(Debug)]
@@ -91,21 +90,21 @@ impl ClassLoader {
             .collect();
 
 
-        fn calc_instance_slot_id(slot_id_accumulator: SlotIdAccumulator, field: &Field) -> SlotIdAccumulator {
-            let (next_instance_slot_id, next_static_slot_id, mut static_variable_table, constant_pool) = slot_id_accumulator;
-            let used_slot_amount = if field.is_need_two_slot() { 2usize } else { 1usize };
+        let mut static_variable_table = HashMap::<String, ObjectField>::new();
+        // 构建class的静态字段表
+        fields.iter().for_each(|field| {
             if field.get_access_flags() & ACCESS_STATIC != 0 {
                 if field.constant_value_index.is_none() {
-                    // 普通静态变量  需要在clinit中赋值
-                    (next_instance_slot_id, next_static_slot_id, static_variable_table, constant_pool)
+                    // 普通静态变量  需要在clinit中赋值  先构建初始值存储
+                    static_variable_table.insert(field.get_name().to_owned(), ObjectField::new(field.get_class_member(), get_default_variable_slot(field.get_descriptor())));
                 } else {
-                    // 添加到static variable table中
+                    // 直接将初始化好的静态字段添加到static variable table中
                     let constant_value_index = field.constant_value_index.unwrap();
                     match field.get_descriptor() {
                         BYTE_DESCRIPTOR | CHAR_DESCRIPTOR | INT_DESCRIPTOR | SHORT_DESCRIPTOR | BOOLEAN_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Integer(value) => {
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(*value)))
+                                    static_variable_table.insert(field.get_name().to_owned(), ObjectField::new(field.get_class_member(), VariableSlot::I32(Wrapping(*value))));
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Integer", constant_value_index)
                             }
@@ -113,9 +112,7 @@ impl ClassLoader {
                         DOUBLE_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Double(value) => {
-                                    let [first, second] = converter::f64_to_i32seq(*value);
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(first)));
-                                    static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(Wrapping(second)));
+                                    static_variable_table.insert(field.get_name().to_owned(), ObjectField::new(field.get_class_member(), VariableSlot::F64(*value)));
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Double", constant_value_index)
                             }
@@ -123,7 +120,7 @@ impl ClassLoader {
                         FLOAT_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Float(value) => {
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::F32(*value))
+                                    static_variable_table.insert(field.get_name().to_owned(), ObjectField::new(field.get_class_member(), VariableSlot::F32(*value)));
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Float", constant_value_index)
                             }
@@ -131,9 +128,7 @@ impl ClassLoader {
                         LONG_DESCRIPTOR => {
                             match constant_pool.get(constant_value_index) {
                                 ConstantInfo::Long(value) => {
-                                    let [first, second] = converter::i64_to_i32seq(*value);
-                                    static_variable_table.set_variable_slot(next_static_slot_id, VariableSlot::I32(Wrapping(first)));
-                                    static_variable_table.set_variable_slot(next_static_slot_id + 1, VariableSlot::I32(Wrapping(second)));
+                                    static_variable_table.insert(field.get_name().to_owned(), ObjectField::new(field.get_class_member(), VariableSlot::I64(Wrapping(*value))));
                                 }
                                 _ => panic!("constant_value_index: {} is not ConstantInfo::Long", constant_value_index)
                             }
@@ -153,21 +148,10 @@ impl ClassLoader {
                             panic!("invalid descriptor type: {} name: {}", field.get_descriptor(), field.get_name())
                         }
                     }
-                    (next_instance_slot_id, next_static_slot_id + used_slot_amount, static_variable_table, constant_pool)
                 }
-            } else {
-                (next_instance_slot_id + used_slot_amount, next_static_slot_id, static_variable_table, constant_pool)
             }
-        }
+        });
 
-        let next_instance_slot_id = super_class
-            .clone()
-            .map(|class| class.next_instance_slot_id)
-            .unwrap_or(0usize);
-
-        let slot_id_accumulator: SlotIdAccumulator = (next_instance_slot_id, 0usize, VariableTable::new(None), constant_pool);
-
-        let (next_instance_slot_id, next_static_slot_id, static_variable_table, constant_pool) = fields.iter().fold(slot_id_accumulator, calc_instance_slot_id);
 
         let class_ref = Rc::new(Class {
             access_flags,
@@ -176,8 +160,6 @@ impl ClassLoader {
             fields,
             methods,
             super_class,
-            next_instance_slot_id,
-            next_static_slot_id,
             static_variable_table,
             class_loader: Some(Rc::clone(&class_loader)),
         });

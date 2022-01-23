@@ -39,7 +39,7 @@ impl StackFrame {
 #[cfg(test)]
 mod tests {
     use std::cell::RefCell;
-    use std::collections::BTreeMap;
+    use std::collections::{BTreeMap, HashMap};
     use std::num::Wrapping;
     use std::rc::Rc;
 
@@ -82,9 +82,7 @@ mod tests {
             fields: Vec::new(),
             methods: Vec::new(),
             super_class: None,
-            next_instance_slot_id: 0usize,
-            next_static_slot_id: 0usize,
-            static_variable_table: VariableTable::new(None),
+            static_variable_table: HashMap::new(),
             class_loader: Some(Rc::new(RefCell::new(ClassLoader::new(mock_classpath(), Rc::new(RefCell::new(Thread::new(None))))))),
         });
         let frame = StackFrame::new(class_ref, method_ref, None);

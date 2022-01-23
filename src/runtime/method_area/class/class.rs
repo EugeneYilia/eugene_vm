@@ -21,9 +21,7 @@ pub struct Class {
     pub methods: Vec<Rc<Method>>,
     pub super_class: Option<Rc<Class>>,
     // fields中一个field不一定占据一个或者两个slot  需要记录下接下来应该分配的next_instance_slot_id 和 next_static_slot_id
-    pub next_instance_slot_id: usize,
-    pub next_static_slot_id: usize,
-    pub static_variable_table: VariableTable,
+    pub static_variable_table: HashMap<String, ObjectField>,
     pub class_loader: Option<Rc<RefCell<ClassLoader>>>,
 }
 

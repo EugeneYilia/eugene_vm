@@ -7,6 +7,7 @@ use crate::runtime::stack::variable_slot::VariableSlot;
 /// 实现过程中  可以认为在局部变量表中也是一个槽位
 #[derive(Debug)]
 pub struct OperandStack {
+    // 应该存Vec<Rc<RefCell<VariableSlot>>>  类静态变量需要和这里会同时需要有VariableSlot的可变权限
     variable_slot_vec: Vec<VariableSlot>,
 }
 

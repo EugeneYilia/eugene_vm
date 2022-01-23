@@ -7,6 +7,8 @@ use crate::runtime::method_area::class::class::Class;
 use crate::runtime::method_area::constant_pool::constant_info::ConstantInfo;
 use crate::runtime::thread::Thread;
 
+// Java 子类继承父类的时候  会将父类的静态字段一起继承下来
+
 pub fn get_static(mut thread: &mut RefMut<Thread>) {
     let stack_frame = thread.get_stack_frame_last();
     let mut stack_frame = stack_frame.deref().borrow_mut();
@@ -26,7 +28,11 @@ pub fn get_static(mut thread: &mut RefMut<Thread>) {
                     if let ConstantInfo::NameAndType { name_index, descriptor_index } = class.constant_pool.get(*name_and_type_index as usize) {
                         if let ConstantInfo::ModifiedUTF8(ref field_name) = class.constant_pool.get(*name_index as usize) {
                             if let ConstantInfo::ModifiedUTF8(ref field_descriptor) = class.constant_pool.get(*descriptor_index as usize) {
-                                debug!("static field field_name: {}  field_descriptor: {}", field_name, field_descriptor);
+                                if let Some(static_field) = class_ref.static_variable_table.get(field_name) {
+                                    // stack_frame.operand_stack.push();
+                                } else {
+                                    panic!("class name: {} static field field_name: {}  field_descriptor: {} not found", class_ref.class_name, field_name, field_descriptor)
+                                }
                             } else {
                                 panic!("name_and_type_index: {}  descriptor_index: {} should point to ConstantInfo::ModifiedUTF8", name_and_type_index, descriptor_index);
                             }
