@@ -3,6 +3,14 @@ public class TestStatic {
         Children children = new Children();
         System.out.println(Children.number);
         System.out.println(Children.number2);
+        Children.number = 4;
+        a(Children.number);
+        System.out.println(Children.number);
+        System.out.println(Children.number2);
+    }
+
+    public static void a(int number){
+        number = 3;
     }
 }
 

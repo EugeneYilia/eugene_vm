@@ -9,6 +9,9 @@ use crate::runtime::thread::Thread;
 
 // Java 子类继承父类的时候  会将父类的静态字段一起继承下来
 
+/// get到ObjectReference/ArrayReference时拿到的相当于是Rc::clone完之后的Rc<RefCell<Object/Array>>这个具体的数据对象的引用  我们通过修改这个对象的字段值会影响到之前的对象的字段值  因为只是引用的复制
+/// get到I32/I64/F32/F64相当于拿到了这个值的clone  我们修改这个值不会影响到之前的值
+
 pub fn get_static(mut thread: &mut RefMut<Thread>) {
     let stack_frame = thread.get_stack_frame_last();
     let mut stack_frame = stack_frame.deref().borrow_mut();
@@ -29,7 +32,7 @@ pub fn get_static(mut thread: &mut RefMut<Thread>) {
                         if let ConstantInfo::ModifiedUTF8(ref field_name) = class.constant_pool.get(*name_index as usize) {
                             if let ConstantInfo::ModifiedUTF8(ref field_descriptor) = class.constant_pool.get(*descriptor_index as usize) {
                                 if let Some(static_field) = class_ref.static_variable_table.get(field_name) {
-                                    // stack_frame.operand_stack.push();
+                                    stack_frame.operand_stack.push(static_field.variable_slot.clone());
                                 } else {
                                     panic!("class name: {} static field field_name: {}  field_descriptor: {} not found", class_ref.class_name, field_name, field_descriptor)
                                 }
