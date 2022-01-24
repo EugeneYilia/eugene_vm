@@ -43,7 +43,8 @@ impl Class {
 
     pub fn collect_instance_fields(&self, mut fields: HashMap<String, ObjectField>) -> HashMap<String, ObjectField> {
         if let Some(super_class) = &self.super_class {
-            fields = super_class.collect_instance_fields(fields)
+            // 把所有权传递进递归 再用该变量将递归返回的map所有权对象接回来  给后续继续使用有所有权的map
+            fields = super_class.collect_instance_fields(fields);
         }
 
         self.fields.iter().for_each(|field| {

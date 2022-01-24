@@ -14,10 +14,11 @@
 1. 字符串常量池是共有的
 2. ldc string的时候如何将ref更好的推到operand stack
 3. class_loader加入双亲委派机制
-7. 增加更多的字节码指令
+4. 增加更多的字节码指令
+5. String的实现 a. class_loader obj_descriptor
+6. 内置函数的实现
+7. gc的是实现
 8. 多线程的支持
-9. String的实现 a. class_loader obj_descriptor
-10. 内置函数的实现
 
 ## 重构方案
 
