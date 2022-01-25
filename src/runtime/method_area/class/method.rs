@@ -7,8 +7,8 @@ use crate::runtime::method_area::class::class_member::ClassMember;
 use crate::runtime::stack::variable_slot::VariableSlot;
 use crate::util::instruction_util::get_default_variable_slot;
 
-// access_flags   descriptor      name        descriptor
-//  public          String       getName    (String name){}
+// access_flags  access_flags   descriptor      name        descriptor
+//  public          static       String       getName    (String name){..}
 #[derive(Debug)]
 pub struct Method {
     class_member: ClassMember,

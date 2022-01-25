@@ -5,7 +5,7 @@
  */
 
 public class TestAdd {
-    String author = "EugeneLiu";
+    final static String author = "EugeneLiu";
 
     public static void main(String[] args) {
         int a = 0;
