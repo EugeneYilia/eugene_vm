@@ -44,8 +44,8 @@ pub fn invoke_virtual(mut thread: &mut RefMut<Thread>) {
                                         for (index, arg_type) in arg_type_vec.iter().enumerate() {
                                             let arg = variable_slot_args.get(index).unwrap();
                                             let arg_type = arg_type_vec.get(index).unwrap();
-                                            error!("arg: {:?}   typeId: {:?}",arg,arg.type_id());
-                                            error!("arg: {:?}   typeId: {:?}",arg_type,arg_type.type_id());
+                                            error!("real arg: {:?}   typeId: {:?}",arg,arg.type_id());
+                                            error!("required arg: {:?}   typeId: {:?}",arg_type,arg_type.type_id());
                                         }
                                     } else {
                                         args = None;

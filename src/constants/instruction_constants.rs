@@ -6,6 +6,7 @@ use crate::core::bytecode_execution_engine::instruction::comparison::lcmp::lcmp;
 use crate::core::bytecode_execution_engine::instruction::control::goto::goto;
 use crate::core::bytecode_execution_engine::instruction::control::if_icmp::{if_icmpeq, if_icmpge, if_icmpgt, if_icmple, if_icmplt, if_icmpne};
 use crate::core::bytecode_execution_engine::instruction::control::r#if::*;
+use crate::core::bytecode_execution_engine::instruction::load::aload::{aload_0, aload_1, aload_2, aload_3};
 use crate::core::bytecode_execution_engine::instruction::load::constant::ldc::{ldc, ldc2_w, ldc_w};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xconst::{aconst_null, dconst_0, dconst_1, fconst_0, fconst_1, fconst_2, iconst_0, iconst_1, iconst_2, iconst_3, iconst_4, iconst_5, iconst_m1, lconst_0, lconst_1};
 use crate::core::bytecode_execution_engine::instruction::load::constant::xipush::{bipush, sipush};
@@ -71,6 +72,10 @@ pub fn get_instruction_fn(instruction_op_code: u8) -> fn(&mut RefMut<Thread>) {
         0x1b => iload_1,
         0x1c => iload_2,
         0x1d => iload_3,
+        0x2a => aload_0,
+        0x2b => aload_1,
+        0x2c => aload_2,
+        0x2d => aload_3,
         0x3b => istore_0,
         0x3c => istore_1,
         0x3d => istore_2,

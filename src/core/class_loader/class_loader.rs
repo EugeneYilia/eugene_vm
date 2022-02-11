@@ -186,4 +186,11 @@ mod tests {
         let result = source.iter().fold(0i32, |acc, value| { acc + value });
         println!("{}", result)
     }
+
+    #[test]
+    fn test_print_format() {
+        println!("{:#?}", vec![Some("Hello"), None, Some("World")]);
+        println!();
+        println!("{:?}", vec![Some("Hello"), None, Some("World")]);
+    }
 }
