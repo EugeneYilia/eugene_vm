@@ -7,3 +7,5 @@
 /eugene_test/byte_code/rt
 
 /log
+
+**/*.class
